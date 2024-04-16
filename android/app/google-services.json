@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "757105304257",
+    "project_id": "redela-81338",
+    "storage_bucket": "redela-81338.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757105304257:android:f33502c4023baaf1f8ea40",
+        "android_client_info": {
+          "package_name": "es.ubu.tfg2324.ela.red_ela"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdabpO7hQBIolmQu9pFPCFCWIBXCHGI3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
