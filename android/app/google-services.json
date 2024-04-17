@@ -12,7 +12,12 @@
           "package_name": "es.ubu.tfg2324.ela.red_ela"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "757105304257-ka5c5iuaq68bhr9scof2hkj3o0pmgbic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCdabpO7hQBIolmQu9pFPCFCWIBXCHGI3A"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757105304257-ka5c5iuaq68bhr9scof2hkj3o0pmgbic.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "757105304257-6rj8m34ma2h1nlc0ig6llgmgunag5942.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "es.ubu.tfg2324.ela.redEla"
+              }
+            }
+          ]
         }
       }
     }

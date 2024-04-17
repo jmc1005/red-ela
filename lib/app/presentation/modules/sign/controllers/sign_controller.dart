@@ -1,4 +1,4 @@
-import 'package:red_ela/app/presentation/global/state_notifier.dart';
+import 'package:red_ela/app/presentation/global/controllers/state/state_notifier.dart';
 import 'package:red_ela/app/presentation/modules/sign/controllers/state/sign_state.dart';
 
 class SignController extends StateNotifier<SignState> {

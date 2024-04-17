@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:red_ela/app/presentation/global/widgets/text_gesture_detector_widget.dart';
@@ -7,6 +6,8 @@ import 'package:red_ela/app/presentation/global/widgets/text_form_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:red_ela/app/presentation/modules/sign/controllers/sign_controller.dart';
 import 'package:red_ela/app/presentation/modules/sign/controllers/state/sign_state.dart';
+import 'package:red_ela/app/presentation/routes/app_routes.dart';
+import 'package:red_ela/app/presentation/routes/routes.dart';
 import 'package:red_ela/app/utils/validators/validator_mixin.dart';
 
 class SignView extends StatefulWidget with ValidatorMixin {
@@ -63,7 +64,7 @@ class _SignViewState extends State<SignView> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     TextFormWidget(
                       controller: emailController,
                       focusNode: emailFocusNode,
@@ -75,7 +76,7 @@ class _SignViewState extends State<SignView> {
                         controller.onEmailChanged(text);
                       },
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     TextFormWidget(
                       controller: passController,
                       focusNode: passFocusNode,
@@ -102,13 +103,13 @@ class _SignViewState extends State<SignView> {
                         },
                       ),
                     ),
-                    if (!widget.isSignIn) const SizedBox(height: 30),
+                    if (!widget.isSignIn) const SizedBox(height: 20),
                     if (!widget.isSignIn)
                       TextFormWidget(
                         controller: confirmPassController,
                         focusNode: confirmPassFocusNode,
-                        label: language.email,
-                        keyboardType: TextInputType.emailAddress,
+                        label: language.confirmar_password,
+                        keyboardType: TextInputType.text,
                         validator: (value) {
                           final validPassword = widget.passwordValidator(
                             value,
@@ -143,11 +144,16 @@ class _SignViewState extends State<SignView> {
                     ElevatedButton(
                         onPressed: () {
                           debugPrint('Acceder/Registrarse');
+                          navigateTo(Routes.admin, context);
                         },
                         child: Text(
                           widget.isSignIn
                               ? language.acceder
                               : language.registrarse,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
                         )),
                     TextGestureDetectorWidget(
                       onTap: widget.onTap,

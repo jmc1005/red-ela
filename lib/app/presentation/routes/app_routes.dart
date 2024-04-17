@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_ela/app/presentation/modules/admin/views/admin_view.dart';
 import 'package:red_ela/app/presentation/modules/sign/views/sign_in_view.dart';
 import 'package:red_ela/app/presentation/modules/sign/views/sign_out_view.dart';
 
@@ -8,6 +9,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
   return {
     Routes.signIn: (context) => SignInView(),
     Routes.signOut: (context) => SignOutView(),
+    Routes.admin: (context) => AdminView(),
   };
 }
 

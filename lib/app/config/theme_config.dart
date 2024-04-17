@@ -3,10 +3,12 @@ import 'package:red_ela/app/config/color_config.dart';
 
 class ThemeConfig {
   ThemeData get light {
+    final fontFamily = "Montserrat";
+
     return ThemeData(
       primaryColor: ColorConfig.primary,
       splashColor: Colors.transparent,
-      fontFamily: 'Montserrat',
+      fontFamily: fontFamily,
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: ColorConfig.primary,
         selectedItemColor: Colors.purple,
@@ -31,7 +33,7 @@ class ThemeConfig {
       ),
       inputDecorationTheme: InputDecorationTheme(
         labelStyle: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: fontFamily,
           letterSpacing: 0,
         ),
         enabledBorder: OutlineInputBorder(
