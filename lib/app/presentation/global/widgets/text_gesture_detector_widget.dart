@@ -18,11 +18,12 @@ class TextGestureDetectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Row(
         children: [
           Text(pregunta, textAlign: TextAlign.center),
           GestureDetector(
+            onTap: onTap,
             child: Text(
               tapString,
               style: const TextStyle(
@@ -31,7 +32,6 @@ class TextGestureDetectorWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            onTap: onTap,
           ),
         ],
       ),

@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:red_ela/app/presentation/global/widgets/text_gesture_detector_widget.dart';
-import 'package:red_ela/app/presentation/global/widgets/text_form_widget.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:red_ela/app/presentation/modules/sign/controllers/sign_controller.dart';
-import 'package:red_ela/app/presentation/modules/sign/controllers/state/sign_state.dart';
-import 'package:red_ela/app/presentation/routes/app_routes.dart';
-import 'package:red_ela/app/presentation/routes/routes.dart';
-import 'package:red_ela/app/utils/validators/validator_mixin.dart';
+import 'package:provider/provider.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+
+import '../../../../domain/repository/connection_repo.dart';
+import '../../../../domain/repository/usuario_repo.dart';
+import '../../../../utils/validators/validator_mixin.dart';
+import '../../../global/widgets/text_form_widget.dart';
+import '../../../global/widgets/text_gesture_detector_widget.dart';
+import '../controllers/sign_controller.dart';
+import '../controllers/state/sign_state.dart';
 
 class SignView extends StatefulWidget with ValidatorMixin {
-  SignView({super.key, this.isSignIn = true, this.onTap});
+  SignView({
+    super.key,
+    this.isSignIn = true,
+    this.onTap,
+  });
 
   final bool isSignIn;
   final Function()? onTap;
@@ -30,12 +36,30 @@ class _SignViewState extends State<SignView> {
   final confirmPassController = TextEditingController();
   final confirmPassFocusNode = FocusNode();
 
+  var hasInternet = true;
+
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  Future<void> _init() async {
+    final ConnectionRepo connectionRepo = context.read();
+    hasInternet = await connectionRepo.hasInternet;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final UsuarioRepo usuarioRepo = context.read();
+
     return ChangeNotifierProvider<SignController>(
-      create: (context) => SignController(const SignState()),
+      create: (context) => SignController(
+        const SignState(),
+        usuarioRepo: usuarioRepo,
+      ),
       child: Scaffold(
         body: SafeArea(
           child: Form(
@@ -47,9 +71,19 @@ class _SignViewState extends State<SignView> {
                 var obscurePassword = controller.state.obscurePassword;
                 var obscureConfirmPassword =
                     controller.state.obscureConfirmPassword;
+                var validConfirmPassword = widget.isSignIn;
+                final enabledButton = controller.state.enabledButton;
+
+                if (!hasInternet) {
+                  showTopSnackBar(Overlay.of(context),
+                      CustomSnackBar.info(message: language.sin_conexion),
+                      dismissType: DismissType.onSwipe,
+                      dismissDirection: [DismissDirection.endToStart],
+                      snackBarPosition: SnackBarPosition.bottom);
+                }
 
                 return ListView(
-                  padding: EdgeInsets.all(30),
+                  padding: const EdgeInsets.all(30),
                   children: [
                     Container(
                       margin: const EdgeInsets.symmetric(
@@ -58,7 +92,7 @@ class _SignViewState extends State<SignView> {
                       ),
                       width: MediaQuery.of(context).size.width,
                       height: 100,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('images/nodos.png'),
                         ),
@@ -70,8 +104,10 @@ class _SignViewState extends State<SignView> {
                       focusNode: emailFocusNode,
                       label: language.email,
                       keyboardType: TextInputType.emailAddress,
-                      validator: (text) =>
-                          widget.emailValidator(text, language),
+                      validator: (text) => widget.emailValidator(
+                        text,
+                        language,
+                      ),
                       onChanged: (text) {
                         controller.onEmailChanged(text);
                       },
@@ -82,14 +118,16 @@ class _SignViewState extends State<SignView> {
                       focusNode: passFocusNode,
                       label: language.password,
                       keyboardType: TextInputType.text,
-                      validator: (text) =>
-                          widget.passwordValidator(text, language),
-                      obscureText: controller.state.obscurePassword,
+                      validator: (text) => widget.passwordValidator(
+                        text,
+                        language,
+                      ),
+                      obscureText: obscurePassword,
                       onChanged: (text) {
                         controller.onPasswordChanged(text);
                       },
                       suffixIcon: IconButton(
-                        icon: Icon(!controller.state.obscurePassword
+                        icon: Icon(!obscurePassword
                             ? Icons.visibility
                             : Icons.visibility_off),
                         onPressed: () {
@@ -115,26 +153,33 @@ class _SignViewState extends State<SignView> {
                             value,
                             language,
                           );
+
                           final password = passController.text;
 
                           if (validPassword == null) {
-                            if (password != confirmPassController.text) {
+                            validConfirmPassword =
+                                password == confirmPassController.text;
+
+                            if (!validConfirmPassword) {
                               return language.password_no_coincide;
                             }
                           }
 
                           return validPassword;
                         },
-                        obscureText: controller.state.obscureConfirmPassword,
+                        onChanged: (text) {
+                          controller.onConfirmPasswordChanged(text);
+                        },
+                        obscureText: obscureConfirmPassword,
                         suffixIcon: IconButton(
-                          icon: Icon(!controller.state.obscureConfirmPassword
+                          icon: Icon(!obscureConfirmPassword
                               ? Icons.visibility
                               : Icons.visibility_off),
                           onPressed: () {
                             setState(() {
                               obscureConfirmPassword = !obscureConfirmPassword;
                               controller.onVisibilityConfirmPasswordChanged(
-                                !controller.state.obscureConfirmPassword,
+                                !obscureConfirmPassword,
                               );
                             });
                           },
@@ -142,19 +187,23 @@ class _SignViewState extends State<SignView> {
                       ),
                     const SizedBox(height: 30),
                     ElevatedButton(
-                        onPressed: () {
-                          debugPrint('Acceder/Registrarse');
-                          navigateTo(Routes.admin, context);
-                        },
-                        child: Text(
-                          widget.isSignIn
-                              ? language.acceder
-                              : language.registrarse,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                        )),
+                      onPressed: () async {
+                        controller.access(
+                          isSignIn: widget.isSignIn,
+                          context: context,
+                          language: language,
+                        );
+                      },
+                      child: Text(
+                        widget.isSignIn
+                            ? language.acceder
+                            : language.registrarse,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
                     TextGestureDetectorWidget(
                       onTap: widget.onTap,
                       pregunta: widget.isSignIn

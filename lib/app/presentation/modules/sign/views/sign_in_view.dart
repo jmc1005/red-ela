@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:red_ela/app/presentation/modules/sign/views/sign_view.dart';
-import 'package:red_ela/app/presentation/routes/app_routes.dart';
-import 'package:red_ela/app/presentation/routes/routes.dart';
+import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
+import 'sign_view.dart';
 
 class SignInView extends StatefulWidget {
-  SignInView({super.key});
+  const SignInView({super.key});
 
   @override
   State<SignInView> createState() => _SignInViewState();

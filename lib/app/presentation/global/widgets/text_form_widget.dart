@@ -11,6 +11,7 @@ class TextFormWidget extends StatelessWidget {
     this.focusNode,
     this.suffixIcon,
     this.controller,
+    this.initialValue,
   });
 
   final String label;
@@ -21,10 +22,12 @@ class TextFormWidget extends StatelessWidget {
   final FocusNode? focusNode;
   final Widget? suffixIcon;
   final TextEditingController? controller;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       controller: controller,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: onChanged,
