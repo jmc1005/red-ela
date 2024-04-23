@@ -82,5 +82,18 @@
   "gestion_ensayos": "Essays management",
   "ensayos": "Essays",
   "gestion_articulos_investigacion": "Management research articles",
-  "articulos_investigacion": "Research articles"
+  "articulos_investigacion": "Research articles",
+  "usuarioNoEncontrado": "User not found",
+  "registroFallido": "User sign in failed",
+  "obtenerDatosFallido": "Get data failed",
+  "actualizarDatos": "Updated data successfully",
+  "actualizarDatosFallido": "Updated data failed",
+  "insertarDatos": "Data added successfully",
+  "insertarDatosFallido": "Add data failed",
+  "borrarDatos": "Data deleted successfully",
+  "borrarDatosFallido": "Deleta data failed",
+  "passwordIncorrecta": "Wrong password",
+  "passwordDebil": "Weak password",
+  "emailEnUso": "Email already in use",
+  "compruebaDatosAccesso": "Check access data"
 }

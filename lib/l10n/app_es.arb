@@ -82,5 +82,18 @@
   "gestion_ensayos": "Gestión Ensayos",
   "ensayos": "Ensayos",
   "gestion_articulos_investigacion": "Gestión Artículos Investigación",
-  "articulos_investigacion": "Artículos Investigación"
+  "articulos_investigacion": "Artículos Investigación",
+  "usuarioNoEncontrado": "Usuario no encontrado",
+  "registroFallido": "Acceso fallido",
+  "obtenerDatosFallido": "Error al obtener los datos",
+  "actualizarDatos": "Registro actualizado correctamente",
+  "actualizarDatosFallido": "Actualización fallida",
+  "insertarDatos": "Registro insertado correctamente",
+  "insertarDatosFallido": "Inserción fallida",
+  "borrarDatos": "Registro borrado correctamente",
+  "borrarDatosFallido": "Borrado fallido",
+  "passwordIncorrecta": "Contraseña incorrecta",
+  "passwordDebil": "Contraseña débil",
+  "emailEnUso": "Email ya está en uso",
+  "compruebaDatosAccesso": "Comprueba los datos de acceso"
 }
