@@ -12,6 +12,8 @@ abstract class UsuarioRepo {
 
   Future<Result<UsuarioModel, dynamic>> getUsuario();
 
+  Future<Result<List<UsuarioModel>, dynamic>> getAllUsuario();
+
   Future<Result<dynamic, dynamic>> addUsuario(
     String email,
   );

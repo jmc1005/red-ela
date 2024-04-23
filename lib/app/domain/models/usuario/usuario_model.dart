@@ -14,8 +14,14 @@ class UsuarioModel with _$UsuarioModel {
     String apellido1,
     String apellido2,
     String email,
-    List<String> roles,
+    @JsonKey(name: 'roles', readValue: readRoles) List<String> roles,
   ) = _UsuarioModel;
 
   factory UsuarioModel.fromJson(Json json) => _$UsuarioModelFromJson(json);
+}
+
+Object? readRoles(Map map, String _) {
+  final roles = map['roles'];
+
+  return roles;
 }

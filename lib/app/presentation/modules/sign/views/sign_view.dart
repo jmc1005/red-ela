@@ -72,7 +72,6 @@ class _SignViewState extends State<SignView> {
                 var obscureConfirmPassword =
                     controller.state.obscureConfirmPassword;
                 var validConfirmPassword = widget.isSignIn;
-                final enabledButton = controller.state.enabledButton;
 
                 if (!hasInternet) {
                   showTopSnackBar(Overlay.of(context),

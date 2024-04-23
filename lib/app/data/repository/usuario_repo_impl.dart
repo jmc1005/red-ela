@@ -104,10 +104,15 @@ class UsuarioRepoImpl extends UsuarioRepo {
   @override
   Future<Result<dynamic, dynamic>> addUsuario(String email) {
     final currentUser = fireAuthService.currentUser()!;
+    final roles = [];
 
     final data = {
       'uid': currentUser.uid,
       'email': currentUser.email,
+      'nombre': '',
+      'apellido1': '',
+      'apellido2': '',
+      'roles': roles,
     };
 
     return firebaseService
@@ -133,5 +138,20 @@ class UsuarioRepoImpl extends UsuarioRepo {
             .then((value) => const Success('data-deleted'))
             .catchError((error) => const Error('data-delete-failed')))
         .catchError((error) => const Error('data-delete-failed'));
+  }
+
+  @override
+  Future<Result<List<UsuarioModel>, dynamic>> getAllUsuario() async {
+    final List<UsuarioModel> list = [];
+
+    final usuarios = await firebaseService.getFromCollection(
+      collectionPath: collection,
+    );
+
+    for (final element in usuarios) {
+      list.add(UsuarioModel.fromJson(element));
+    }
+
+    return Success(list);
   }
 }

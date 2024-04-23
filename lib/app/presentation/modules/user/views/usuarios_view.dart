@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
+import '../../../../domain/repository/usuario_repo.dart';
+import '../../../../utils/firebase/firebase_response.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
@@ -17,7 +21,7 @@ class UsuariosView extends StatefulWidget {
 }
 
 class _UsuariosViewState extends State<UsuariosView> {
-  late final Future<List<UsuarioModel>> _future;
+  late final Future<Result<List<UsuarioModel>, dynamic>> _future;
 
   @override
   void initState() {
@@ -25,19 +29,9 @@ class _UsuariosViewState extends State<UsuariosView> {
     _future = _init();
   }
 
-  Future<List<UsuarioModel>> _init() async {
-    final List<UsuarioModel> usuarios = [];
-
-    usuarios.add(const UsuarioModel(
-      'uid',
-      'nombre',
-      'apellido1',
-      'apellido2',
-      'email@prueba.com',
-      ['admin', 'gestor'],
-    ));
-
-    return usuarios;
+  Future<Result<List<UsuarioModel>, dynamic>> _init() async {
+    final UsuarioRepo repo = context.read();
+    return repo.getAllUsuario();
   }
 
   @override
@@ -46,6 +40,7 @@ class _UsuariosViewState extends State<UsuariosView> {
       create: (_) => UsuarioController(),
       child: Builder(builder: (context) {
         final usuarioController = Provider.of<UsuarioController>(context);
+        final language = AppLocalizations.of(context)!;
 
         return Scaffold(
           appBar: AppBarWidget(
@@ -85,16 +80,25 @@ class _UsuariosViewState extends State<UsuariosView> {
                     future: _future,
                     builder: (_, snapshot) {
                       if (snapshot.hasData) {
-                        return ListView.builder(
-                          itemBuilder: (_, index) {
-                            final usuarioModel = snapshot.data![index];
-                            return UsuarioRowWidget(
-                              usuarioModel: usuarioModel,
-                              usuarioController: usuarioController,
-                            );
-                          },
-                          itemCount: snapshot.data!.length,
+                        final data = snapshot.data!;
+
+                        var result = data.when(
+                          (success) => success,
+                          (error) => error,
                         );
+
+                        if (result is List<UsuarioModel>) {
+                          return ListView.builder(
+                            itemBuilder: (_, index) {
+                              final usuarioModel = result[index];
+                              return UsuarioRowWidget(
+                                usuarioModel: usuarioModel,
+                                usuarioController: usuarioController,
+                              );
+                            },
+                            itemCount: result.length,
+                          );
+                        }
                       } else if (snapshot.connectionState ==
                           ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
