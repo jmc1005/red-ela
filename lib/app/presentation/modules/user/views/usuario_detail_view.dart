@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
+import '../../../../domain/repository/usuario_repo.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
@@ -17,10 +18,13 @@ class UsuarioDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UsuarioController>(
-      create: (_) => UsuarioController(),
+      create: (_) => UsuarioController(
+        usuarioRepo: context.read(),
+      ),
       child: Scaffold(
         appBar: AppBarWidget(
           asset: 'images/nodos.png',
+          backgroundColor: ColorConfig.primary,
           leading: IconButton(
             onPressed: () {
               navigateTo(Routes.userList, context);
@@ -30,7 +34,6 @@ class UsuarioDetailView extends StatelessWidget {
               color: ColorConfig.secondary,
             ),
           ),
-          backgroundColor: Colors.blueGrey[100],
         ),
         body: SafeArea(
           child: SingleChildScrollView(child: Builder(

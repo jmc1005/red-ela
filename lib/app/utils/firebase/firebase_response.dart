@@ -55,6 +55,7 @@ class FirebaseResponse {
       CustomSnackBar.success(message: codeString),
       dismissType: DismissType.onSwipe,
       dismissDirection: [DismissDirection.endToStart],
+      snackBarPosition: SnackBarPosition.bottom,
     );
   }
 
@@ -64,6 +65,7 @@ class FirebaseResponse {
       CustomSnackBar.error(message: codeString),
       dismissType: DismissType.onSwipe,
       dismissDirection: [DismissDirection.endToStart],
+      snackBarPosition: SnackBarPosition.bottom,
     );
   }
 
@@ -73,6 +75,7 @@ class FirebaseResponse {
       CustomSnackBar.info(message: codeString),
       dismissType: DismissType.onSwipe,
       dismissDirection: [DismissDirection.endToStart],
+      snackBarPosition: SnackBarPosition.bottom,
     );
   }
 }

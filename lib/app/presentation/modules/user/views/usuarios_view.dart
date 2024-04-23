@@ -37,7 +37,9 @@ class _UsuariosViewState extends State<UsuariosView> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UsuarioController>(
-      create: (_) => UsuarioController(),
+      create: (_) => UsuarioController(
+        usuarioRepo: context.read(),
+      ),
       child: Builder(builder: (context) {
         final usuarioController = Provider.of<UsuarioController>(context);
         final language = AppLocalizations.of(context)!;

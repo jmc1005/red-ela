@@ -177,8 +177,9 @@ class _SignViewState extends State<SignView> {
                           onPressed: () {
                             setState(() {
                               obscureConfirmPassword = !obscureConfirmPassword;
+
                               controller.onVisibilityConfirmPasswordChanged(
-                                !obscureConfirmPassword,
+                                obscureConfirmPassword,
                               );
                             });
                           },

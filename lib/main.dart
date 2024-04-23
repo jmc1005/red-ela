@@ -65,7 +65,9 @@ void main() async {
           ),
         ),
         ChangeNotifierProvider<UsuarioController>(
-          create: (context) => UsuarioController(),
+          create: (context) => UsuarioController(
+            usuarioRepo: context.read(),
+          ),
         ),
       ],
       child: const Redela(),

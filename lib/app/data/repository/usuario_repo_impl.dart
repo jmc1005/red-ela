@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../domain/models/usuario/usuario_model.dart';
 import '../../domain/repository/usuario_repo.dart';
+import '../../utils/constants/app_constants.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
 
@@ -78,18 +82,27 @@ class UsuarioRepoImpl extends UsuarioRepo {
     String apellido1,
     String apellido2,
     String email,
+    String fechaNacimiento,
     List<String> roles,
   ) async {
     final currentUser = fireAuthService.currentUser()!;
+
+    final format = DateFormat(AppConstants.formatDate);
+    final dateTime = format.parse(fechaNacimiento);
 
     final data = {
       'uid': currentUser.uid,
       'nombre': nombre,
       'apellido1': apellido1,
       'apellido2': apellido2,
-      'email': currentUser.email,
+      'email': email,
+      'fecha_nacimiento': dateTime,
       'roles': jsonEncode(roles)
     };
+
+    if (currentUser.email != email) {
+      fireAuthService.updateEmail(email);
+    }
 
     return firebaseService
         .updateDataOnDocument(
@@ -112,6 +125,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
       'nombre': '',
       'apellido1': '',
       'apellido2': '',
+      'fecha_nacimiento': '',
       'roles': roles,
     };
 
@@ -143,15 +157,19 @@ class UsuarioRepoImpl extends UsuarioRepo {
   @override
   Future<Result<List<UsuarioModel>, dynamic>> getAllUsuario() async {
     final List<UsuarioModel> list = [];
+    try {
+      final usuarios = await firebaseService.getFromCollection(
+        collectionPath: collection,
+      );
 
-    final usuarios = await firebaseService.getFromCollection(
-      collectionPath: collection,
-    );
+      for (final element in usuarios) {
+        list.add(UsuarioModel.fromJson(element));
+      }
 
-    for (final element in usuarios) {
-      list.add(UsuarioModel.fromJson(element));
+      return Success(list);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+      return const Error('data-get-failed');
     }
-
-    return Success(list);
   }
 }

@@ -34,6 +34,7 @@ class ThemeConfig {
       inputDecorationTheme: InputDecorationTheme(
         labelStyle: const TextStyle(
           fontFamily: fontFamily,
+          fontSize: 16,
           letterSpacing: 0,
         ),
         enabledBorder: OutlineInputBorder(

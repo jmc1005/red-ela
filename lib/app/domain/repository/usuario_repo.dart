@@ -23,6 +23,7 @@ abstract class UsuarioRepo {
     String apellido1,
     String apellido2,
     String email,
+    String fechaNacimiento,
     List<String> roles,
   );
 
