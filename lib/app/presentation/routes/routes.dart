@@ -4,4 +4,5 @@ class Routes {
   static const signIn = '/sign-in';
   static const signOut = '/sign-out';
   static const admin = '/admin';
+  static const userList = '/user-list';
 }

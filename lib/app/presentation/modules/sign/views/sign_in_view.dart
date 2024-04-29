@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 
-import 'package:red_ela/app/presentation/modules/sign/views/sign_view.dart';
-import 'package:red_ela/app/presentation/routes/app_routes.dart';
-import 'package:red_ela/app/presentation/routes/routes.dart';
+import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
+import 'sign_view.dart';
 
 class SignInView extends StatefulWidget {
-  SignInView({super.key});
+  const SignInView({super.key});
 
   @override
   State<SignInView> createState() => _SignInViewState();
 }
 
 class _SignInViewState extends State<SignInView> {
+  final _formKey = GlobalKey<FormState>();
+
   _onTap() {
-    navigateTo(Routes.signOut, context);
+    if (_formKey.currentState!.validate()) {
+      navigateTo(Routes.signOut, context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return SignView(
       onTap: _onTap,
+      formKey: _formKey,
     );
   }
 }

@@ -10,5 +10,6 @@ class SignState with _$SignState {
     @Default(true) bool obscurePassword,
     @Default('') String confirmPassword,
     @Default(true) bool obscureConfirmPassword,
+    @Default(false) bool enabledButton,
   }) = _SignState;
 }

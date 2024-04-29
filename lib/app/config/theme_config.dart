@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:red_ela/app/config/color_config.dart';
+import 'color_config.dart';
 
 class ThemeConfig {
   ThemeData get light {
-    final fontFamily = "Montserrat";
+    const fontFamily = 'Montserrat';
 
     return ThemeData(
       primaryColor: ColorConfig.primary,
@@ -32,8 +32,9 @@ class ThemeConfig {
         backgroundColor: Colors.white,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontFamily: fontFamily,
+          fontSize: 16,
           letterSpacing: 0,
         ),
         enabledBorder: OutlineInputBorder(
@@ -51,14 +52,14 @@ class ThemeConfig {
           borderRadius: BorderRadius.circular(12),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: ColorConfig.alternate,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: ColorConfig.alternate,
             width: 2,
           ),

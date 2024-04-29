@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<bool> showConfirmDialog(
   BuildContext context, {
@@ -21,7 +20,6 @@ Future<bool> showConfirmDialog(
 
 class _DialogContent extends StatelessWidget {
   const _DialogContent({
-    super.key,
     required this.title,
     required this.actions,
   });

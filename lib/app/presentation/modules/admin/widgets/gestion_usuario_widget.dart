@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:red_ela/app/config/color_config.dart';
-import 'package:red_ela/app/presentation/global/widgets/cabecera_widget.dart';
-import 'package:red_ela/app/presentation/global/widgets/item_widget.dart';
-import 'package:red_ela/app/presentation/modules/admin/widgets/gestion_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../../config/color_config.dart';
+import '../../../global/widgets/cabecera_widget.dart';
+import '../../../global/widgets/item_widget.dart';
+import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
+import 'gestion_widget.dart';
 
 class GestionUsuarioWidget extends StatelessWidget {
   const GestionUsuarioWidget({super.key});
@@ -12,14 +15,16 @@ class GestionUsuarioWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
 
-    List<Widget> children = [
+    final List<Widget> children = [
       CabeceraWidget(
         label: language.gestion_usuarios,
         color: ColorConfig.cabeceraAdmin,
       ),
       ItemWidget(
         label: language.usuarios,
-        onTap: () {},
+        onTap: () {
+          navigateTo(Routes.userList, context);
+        },
       ),
       ItemWidget(
         label: language.roles,

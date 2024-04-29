@@ -1,9 +1,4 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-// ignore: unused_import
-import 'package:uuid/uuid.dart';
-
 import '../../domain/models/typedefs.dart';
 
 class FirebaseService {
@@ -13,19 +8,11 @@ class FirebaseService {
 
   /// Collection Operations
 
-  Future<Json> addToCollection({
-    required Json data,
+  Future<DocumentReference<Json>> addToCollection({
     required String collectionPath,
+    required Json data,
   }) async {
-    late final Json json;
-
-    firestore
-        .collection(collectionPath)
-        .add(data)
-        .whenComplete(() => json = {'success': 'success'})
-        .catchError((e) => json = {'error': e});
-
-    return Future.value(json);
+    return firestore.collection(collectionPath).add(data);
   }
 
   Future<List<Json>> getFromCollection({
@@ -46,72 +33,36 @@ class FirebaseService {
 
   /// Document Operations
 
-  Future<Json> setDataOnDocument({
-    required String collection,
+  Future<void> setDataOnDocument({
+    required String collectionPath,
     required String documentPath,
     required Json data,
   }) async {
-    late final Json json;
-
-    await firestore
-        .collection(collection)
-        .doc(documentPath)
-        .set(data)
-        .whenComplete(() => json = {'success': 'success'})
-        .catchError((e) => json = {'error': e});
-
-    return Future.value(json);
+    return firestore.collection(collectionPath).doc(documentPath).set(data);
   }
 
   Future<Json> getFromDocument({
     required String collectionPath,
     required String documentPath,
   }) async {
-    final data = await firestore
-        .collection(
-          collectionPath,
-        )
-        .doc(
-          documentPath,
-        )
-        .get();
-
-    log('$data');
+    final data =
+        await firestore.collection(collectionPath).doc(documentPath).get();
 
     return Future.value(data.data());
   }
 
-  Future<Json> updateDataOnDocument({
-    required String collection,
+  Future<void> updateDataOnDocument({
+    required String collectionPath,
     required String uuid,
     required Json data,
   }) async {
-    late final Json json;
-
-    await firestore
-        .collection(collection)
-        .doc(uuid)
-        .update(data)
-        .whenComplete(() => json = {'success': 'success'})
-        .catchError((e) => json = {'error': e});
-
-    return Future.value(json);
+    return firestore.collection(collectionPath).doc(uuid).update(data);
   }
 
-  Future<Json> deleteDocumentFromCollection({
-    required String collection,
-    required String uuid,
-    required Json data,
+  Future<void> deleteDocumentFromCollection({
+    required String collectionPath,
+    required String uid,
   }) async {
-    late final Json json;
-
-    await firestore
-        .collection(collection)
-        .doc(uuid)
-        .delete()
-        .whenComplete(() => json = {'success': 'success'})
-        .catchError((e) => json = {'error': e});
-
-    return Future.value(json);
+    return firestore.collection(collectionPath).doc(uid).delete();
   }
 }
