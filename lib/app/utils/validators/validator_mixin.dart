@@ -11,7 +11,7 @@ mixin ValidatorMixin {
     text ??= '';
     final isValid = RegExp(patron).hasMatch(text);
 
-    if (isValid) {
+    if (text.isNotEmpty && isValid) {
       return null;
     }
 
@@ -21,7 +21,7 @@ mixin ValidatorMixin {
   String? passwordValidator(text, language) {
     text ??= '';
     text = text.trim();
-    if (text.length >= 8) {
+    if (text.isNotEmpty && text.length >= 8) {
       return null;
     }
 

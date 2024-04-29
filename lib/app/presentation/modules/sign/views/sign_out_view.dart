@@ -12,8 +12,12 @@ class SignOutView extends StatefulWidget {
 }
 
 class _SignOutViewState extends State<SignOutView> {
+  final _formKey = GlobalKey<FormState>();
+
   _onTap() {
-    navigateTo(Routes.signIn, context);
+    if (_formKey.currentState!.validate()) {
+      navigateTo(Routes.signIn, context);
+    }
   }
 
   @override
@@ -21,6 +25,7 @@ class _SignOutViewState extends State<SignOutView> {
     return SignView(
       isSignIn: false,
       onTap: _onTap,
+      formKey: _formKey,
     );
   }
 }

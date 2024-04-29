@@ -21,7 +21,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
     required this.firebaseService,
   });
 
-  final String collection = 'users';
+  final String collection = 'usuarios';
 
   @override
   Future<Result<UsuarioModel, dynamic>> getUsuario() async {
