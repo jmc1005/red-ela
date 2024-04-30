@@ -26,6 +26,7 @@
   "cuidador": "Caregiver",
   "doctor": "Doctor",
   "paciente": "Patient",
+  "gestor_casos": "Management cases",
   "hombre": "Male",
   "mujer": "Female",
   "otro": "Other",

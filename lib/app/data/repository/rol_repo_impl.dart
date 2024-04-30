@@ -1,7 +1,10 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../domain/models/rol/rol_model.dart';
+import '../../domain/models/typedefs.dart';
 import '../../domain/repository/rol_repo.dart';
 import '../firebase/firebase_service.dart';
 
@@ -16,9 +19,6 @@ class RolRepoImpl implements RolRepo {
 
   @override
   Future<Result> addRol(String rol, String descripcion) {
-    const uuid = Uuid();
-    final uuidDoc = uuid.v1();
-
     final data = {
       'rol': rol,
       'descripcion': descripcion,
@@ -27,7 +27,7 @@ class RolRepoImpl implements RolRepo {
     return firebaseService
         .setDataOnDocument(
           collectionPath: collection,
-          documentPath: uuidDoc,
+          documentPath: rol,
           data: data,
         )
         .then((value) => const Success('data-added'))
@@ -35,11 +35,11 @@ class RolRepoImpl implements RolRepo {
   }
 
   @override
-  Future<Result<RolModel, dynamic>> getRol(String uuid) {
+  Future<Result<RolModel, dynamic>> getRol(String rol) {
     return firebaseService
         .getFromDocument(
           collectionPath: collection,
-          documentPath: uuid,
+          documentPath: rol,
         )
         .then((json) => Success(RolModel.fromJson(json)))
         .catchError((onError) => Error('data-get-failed'));
@@ -54,5 +54,25 @@ class RolRepoImpl implements RolRepo {
         })
         .then((json) => const Success('data-updated'))
         .catchError((onError) => const Error('data-update-failed'));
+  }
+
+  @override
+  Future<Result<dynamic, dynamic>> deleteRol(String rol) async {
+    final usuarios = await FirebaseFirestore.instance
+        .collection('users')
+        .where('rol', isEqualTo: rol)
+        .get();
+
+    if (usuarios.docs.isNotEmpty) {
+      return const Error('data-delete-failed');
+    }
+
+    return firebaseService
+        .deleteDocumentFromCollection(
+          collectionPath: collection,
+          uid: rol,
+        )
+        .then((value) => const Success('data-deleted'))
+        .catchError((error) => const Error('data-delete-failed'));
   }
 }

@@ -26,6 +26,7 @@
   "cuidador": "Cuidador/a",
   "doctor": "Doctor",
   "paciente": "Paciente",
+  "gestor_casos": "Enfermero/a gestor/a casos",
   "hombre": "Hombre",
   "mujer": "Mujer",
   "otro": "Otro",
