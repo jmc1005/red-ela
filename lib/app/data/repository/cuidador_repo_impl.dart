@@ -101,4 +101,15 @@ class CuidadorRepoImpl implements CuidadorRepo {
         .then((json) => Success(CuidadorModel.fromJson(json)))
         .catchError((onError) => const Error('data-get-failed'));
   }
+
+  @override
+  Future<Result<CuidadorModel, dynamic>> findCuidadorByUid(String uidCuidador) {
+    return firebaseService
+        .getFromDocument(
+          collectionPath: collection,
+          documentPath: uidCuidador,
+        )
+        .then((json) => Success(CuidadorModel.fromJson(json)))
+        .catchError((onError) => const Error('data-get-failed'));
+  }
 }

@@ -1,14 +1,17 @@
-import 'package:flutter/cupertino.dart';
+import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:googleapis/walletobjects/v1.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
+import '../../../../utils/enums/usuario_tipo.dart';
+import '../../../global/widgets/accordion_widget.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
+import '../../cuidador/widgets/cuidador_data_widget.dart';
+import '../../paciente/widgets/paciente_data_widget.dart';
 import '../controllers/usuario_controller.dart';
 import '../widgets/usuario_data_widget.dart';
 
@@ -25,6 +28,9 @@ class UsuarioDetailView extends StatefulWidget {
 }
 
 class _UsuarioDetailViewState extends State<UsuarioDetailView> {
+  final _formKey = GlobalKey<FormState>();
+  var openDatosPersonales = true;
+
   @override
   void initState() {
     super.initState();
@@ -32,10 +38,14 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
+    var usuario = widget.usuarioModel;
+
     return ChangeNotifierProvider<UsuarioController>(
       create: (_) => UsuarioController(
         usuarioRepo: context.read(),
         context: context,
+        pacienteController: context.read(),
       ),
       child: Scaffold(
         appBar: AppBarWidget(
@@ -53,37 +63,121 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Builder(builder: (context) {
-              final UsuarioController usuarioController = context.read();
-              usuarioController.usuario = widget.usuarioModel;
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // const CircleAvatar(
+                  //   backgroundColor: ColorConfig.secondary,
+                  //   radius: 50,
+                  //   child: Text(
+                  //     'Avatar',
+                  //     style: TextStyle(
+                  //       fontSize: 25,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ), //Text
+                  // ),
+                  const SizedBox(height: 8),
+                  Flexible(
+                    child: Wrap(
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Builder(builder: (context) {
+                            final UsuarioController usuarioController =
+                                context.read();
 
-              return Container(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CircleAvatar(
-                      backgroundColor: ColorConfig.secondary,
-                      radius: 50,
-                      child: Text(
-                        'Avatar',
-                        style: TextStyle(fontSize: 25, color: Colors.white),
-                      ), //Text
+                            if (usuarioController.state == null) {
+                              usuarioController.usuario = usuario;
+                            }
+
+                            final usuarioModel =
+                                usuarioController.state!.usuario;
+
+                            final tipo = usuarioModel.rol != null &&
+                                    usuarioModel.rol!.isNotEmpty
+                                ? usuarioModel.rol
+                                : UsuarioTipo.paciente.value;
+                            return Column(
+                              children: [
+                                AccordionWidget(children: [
+                                  AccordionSection(
+                                    header: Text(language.datos_personales),
+                                    contentVerticalPadding: 20,
+                                    content: UsuarioDataWidget(
+                                      usuarioController: usuarioController,
+                                    ),
+                                    isOpen: openDatosPersonales,
+                                  ),
+                                  AccordionSection(
+                                    header: Text(language.tipo_usuario),
+                                    contentVerticalPadding: 20,
+                                    content: Column(
+                                      children: [
+                                        DropdownButtonFormField(
+                                          items: usuarioController.typeList,
+                                          value: tipo,
+                                          decoration: InputDecoration(
+                                            label: Text(language.tipo_usuario),
+                                          ),
+                                          onChanged: (value) {
+                                            if (value != null) {
+                                              setState(() {
+                                                usuarioController
+                                                    .onChangeValueTipo(value);
+                                                usuario = usuarioController
+                                                    .state!.usuario;
+                                                openDatosPersonales = false;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                        if (tipo == UsuarioTipo.paciente.value)
+                                          PacienteDataWidget(
+                                            usuarioController:
+                                                usuarioController,
+                                          ),
+                                        if (tipo == UsuarioTipo.cuidador.value)
+                                          CuidadorDataWidget(
+                                            usuarioController:
+                                                usuarioController,
+                                          ),
+                                      ],
+                                    ),
+                                    isOpen: !openDatosPersonales,
+                                  ),
+                                ]),
+                                SizedBox(
+                                  height: 54,
+                                  width: 200,
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        usuarioController.update(
+                                            context, language);
+                                      }
+                                    },
+                                    child: Text(
+                                      language.guardar,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        )
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Flexible(
-                      child: Wrap(
-                        children: [
-                          UsuarioDataWidget(
-                            usuarioController: usuarioController,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

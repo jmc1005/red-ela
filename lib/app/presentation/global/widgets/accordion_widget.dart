@@ -8,6 +8,14 @@ class AccordionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Accordion(children: children);
+    return Accordion(
+      headerPadding: const EdgeInsets.symmetric(
+        vertical: 7,
+        horizontal: 15,
+      ),
+      scaleWhenAnimating: true,
+      openAndCloseAnimation: true,
+      children: children,
+    );
   }
 }

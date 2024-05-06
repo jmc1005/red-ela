@@ -101,5 +101,6 @@
   "tratamiento": "Treatment",
   "campo_vacio": "Empty field",
   "fecha_diagnostico": "Diagnosis date",
-  "inicio": "Start"
+  "inicio": "Start",
+  "relacion": "Relationship"
 }

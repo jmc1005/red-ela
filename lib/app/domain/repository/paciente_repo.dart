@@ -14,10 +14,10 @@ abstract class PacienteRepo {
   );
 
   Future<Result<dynamic, dynamic>> updatePaciente(
-    String tratamiento,
-    String fechaDiagnostico,
-    String inicio,
-    CuidadorModel cuidador,
+    String? tratamiento,
+    String? fechaDiagnostico,
+    String? inicio,
+    CuidadorModel? cuidador,
   );
 
   Future<Result<dynamic, dynamic>> deletePaciente();

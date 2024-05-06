@@ -46,10 +46,10 @@ class PacienteRepoImpl implements PacienteRepo {
 
   @override
   Future<Result> updatePaciente(
-    String tratamiento,
-    String fechaDiagnostico,
-    String inicio,
-    CuidadorModel cuidador,
+    String? tratamiento,
+    String? fechaDiagnostico,
+    String? inicio,
+    CuidadorModel? cuidador,
   ) {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
@@ -99,10 +99,10 @@ class PacienteRepoImpl implements PacienteRepo {
 
   Json getDataPaciente(
     String usuarioUid,
-    String tratamiento,
-    String fechaDiagnostico,
-    String inicio,
-    CuidadorModel cuidador,
+    String? tratamiento,
+    String? fechaDiagnostico,
+    String? inicio,
+    CuidadorModel? cuidador,
   ) {
     final data = {
       'usuario_uid': usuarioUid,
@@ -111,21 +111,23 @@ class PacienteRepoImpl implements PacienteRepo {
       'inicio': inicio,
     };
 
-    if (cuidador.usuarioUid != null && cuidador.usuarioUid!.isNotEmpty) {
-      data['cuidador'] = jsonEncode(
-        {'usuario_uid': cuidador.usuarioUid!},
-      );
-    } else {
-      data['cuidador'] = jsonEncode(
-        {
-          'nombre': cuidador.nombre,
-          'apellido1': cuidador.apellido1,
-          'apellido2': cuidador.apellido2,
-          'email': cuidador.email,
-          'telefono': cuidador.telefono,
-          'relacion': cuidador.relacion,
-        },
-      );
+    if (cuidador != null) {
+      if (cuidador.usuarioUid != null && cuidador.usuarioUid!.isNotEmpty) {
+        data['cuidador'] = jsonEncode(
+          {'usuario_uid': cuidador.usuarioUid!},
+        );
+      } else {
+        data['cuidador'] = jsonEncode(
+          {
+            'nombre': cuidador.nombre,
+            'apellido1': cuidador.apellido1,
+            'apellido2': cuidador.apellido2,
+            'email': cuidador.email,
+            'telefono': cuidador.telefono,
+            'relacion': cuidador.relacion,
+          },
+        );
+      }
     }
 
     return data;

@@ -20,6 +20,7 @@ import 'app/domain/repository/gestor_casos_repo.dart';
 import 'app/domain/repository/paciente_repo.dart';
 import 'app/domain/repository/rol_repo.dart';
 import 'app/domain/repository/usuario_repo.dart';
+import 'app/presentation/modules/paciente/controllers/paciente_controller.dart';
 import 'app/presentation/modules/sign/controllers/sign_controller.dart';
 import 'app/presentation/modules/sign/controllers/state/sign_state.dart';
 import 'app/presentation/modules/user/controllers/usuario_controller.dart';
@@ -42,6 +43,16 @@ void main() async {
     persistenceEnabled: true,
   );
 
+  final pacienteRepo = PacienteRepoImpl(
+    firebaseService: FirebaseService(firestore: firestore),
+    fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+  );
+
+  final cuidadorRepo = CuidadorRepoImpl(
+    firebaseService: FirebaseService(firestore: firestore),
+    fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -62,23 +73,19 @@ void main() async {
             fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
           ),
         ),
-        Provider<PacienteRepo>(
-          create: (_) => PacienteRepoImpl(
-            firebaseService: FirebaseService(firestore: firestore),
-            fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
-          ),
-        ),
-        Provider<CuidadorRepo>(
-          create: (_) => CuidadorRepoImpl(
-            firebaseService: FirebaseService(firestore: firestore),
-            fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
-          ),
-        ),
+        Provider<PacienteRepo>(create: (_) => pacienteRepo),
+        Provider<CuidadorRepo>(create: (_) => cuidadorRepo),
         Provider<GestorCasosRepo>(
           create: (_) => GestorCasosRepoImpl(
             firebaseService: FirebaseService(firestore: firestore),
             fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
           ),
+        ),
+        Provider<PacienteController>(
+          create: (context) => PacienteController(
+              context: context,
+              cuidadorRepo: cuidadorRepo,
+              pacienteRepo: pacienteRepo),
         ),
         ChangeNotifierProvider<SignController>(
           create: (context) => SignController(
@@ -90,6 +97,7 @@ void main() async {
           create: (context) => UsuarioController(
             usuarioRepo: context.read(),
             context: context,
+            pacienteController: context.read(),
           ),
         ),
       ],

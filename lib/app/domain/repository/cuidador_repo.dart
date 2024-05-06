@@ -5,6 +5,8 @@ import '../models/cuidador/cuidador_model.dart';
 abstract class CuidadorRepo {
   Future<Result<CuidadorModel, dynamic>> getCuidador();
 
+  Future<Result<CuidadorModel, dynamic>> findCuidadorByUid(String uidCuidador);
+
   Future<Result<dynamic, dynamic>> addCuidador(
     String relacion,
   );

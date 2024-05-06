@@ -18,12 +18,12 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   UsuarioController({
     required this.context,
     required this.usuarioRepo,
-    this.pacienteController,
+    required this.pacienteController,
   }) : super(null);
 
   final BuildContext context;
   final UsuarioRepo usuarioRepo;
-  final PacienteController? pacienteController;
+  final PacienteController pacienteController;
 
   set usuario(UsuarioModel usuarioModel) {
     final usuarioTipoModel = UsuarioTipoModel(usuario: usuarioModel);

@@ -8,7 +8,6 @@ import '../../../../domain/repository/usuario_repo.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
-import '../controllers/usuario_controller.dart';
 import '../widgets/usuario_row_widget.dart';
 
 class UsuariosView extends StatefulWidget {
