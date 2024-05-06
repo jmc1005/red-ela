@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -83,7 +80,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
     String apellido2,
     String email,
     String fechaNacimiento,
-    List<String> roles,
+    String rol,
   ) async {
     final currentUser = fireAuthService.currentUser()!;
 
@@ -97,7 +94,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
       'apellido2': apellido2,
       'email': email,
       'fecha_nacimiento': dateTime,
-      'roles': jsonEncode(roles)
+      'rol': rol
     };
 
     if (currentUser.email != email) {
@@ -117,16 +114,10 @@ class UsuarioRepoImpl extends UsuarioRepo {
   @override
   Future<Result<dynamic, dynamic>> addUsuario(String email) {
     final currentUser = fireAuthService.currentUser()!;
-    final roles = [];
 
     final data = {
       'uid': currentUser.uid,
       'email': currentUser.email,
-      'nombre': '',
-      'apellido1': '',
-      'apellido2': '',
-      'fecha_nacimiento': '',
-      'roles': roles,
     };
 
     return firebaseService

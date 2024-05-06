@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
-import '../controllers/usuario_controller.dart';
 import '../views/usuario_detail_view.dart';
 import 'usuario_item_widget.dart';
 
@@ -8,11 +7,9 @@ class UsuarioRowWidget extends StatefulWidget {
   const UsuarioRowWidget({
     super.key,
     required this.usuarioModel,
-    required this.usuarioController,
   });
 
   final UsuarioModel usuarioModel;
-  final UsuarioController usuarioController;
 
   @override
   State<UsuarioRowWidget> createState() => _UsuarioRowWidgetState();
@@ -41,7 +38,6 @@ class _UsuarioRowWidgetState extends State<UsuarioRowWidget> {
           child: UsuarioItemWidget(
             usuarioModel: widget.usuarioModel,
             onTap: () {
-              widget.usuarioController.usuarioModel = widget.usuarioModel;
               Navigator.push(
                 context,
                 MaterialPageRoute(

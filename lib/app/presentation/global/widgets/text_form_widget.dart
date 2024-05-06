@@ -12,6 +12,7 @@ class TextFormWidget extends StatelessWidget {
     this.suffixIcon,
     this.controller,
     this.initialValue,
+    this.onTap,
   });
 
   final String label;
@@ -23,6 +24,7 @@ class TextFormWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final TextEditingController? controller;
   final String? initialValue;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class TextFormWidget extends StatelessWidget {
       validator: validator,
       obscureText: obscureText,
       focusNode: focusNode,
+      onTap: onTap,
     );
   }
 

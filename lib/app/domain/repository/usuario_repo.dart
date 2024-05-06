@@ -24,7 +24,7 @@ abstract class UsuarioRepo {
     String apellido2,
     String email,
     String fechaNacimiento,
-    List<String> roles,
+    String rol,
   );
 
   Future<Result<dynamic, dynamic>> deleteUsuario();

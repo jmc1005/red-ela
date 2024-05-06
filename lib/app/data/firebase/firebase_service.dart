@@ -12,13 +12,23 @@ class FirebaseService {
     required String collectionPath,
     required Json data,
   }) async {
-    return firestore.collection(collectionPath).add(data);
+    return getCollection(
+      collectionPath: collectionPath,
+    ).add(data);
+  }
+
+  CollectionReference<Json> getCollection({
+    required String collectionPath,
+  }) {
+    return firestore.collection(collectionPath);
   }
 
   Future<List<Json>> getFromCollection({
     required String collectionPath,
   }) async {
-    final collection = await firestore.collection(collectionPath).get();
+    final collection = await getCollection(
+      collectionPath: collectionPath,
+    ).get();
 
     final List<Json> dataList = collection.docs.map((e) => e.data()).toList();
 
@@ -28,7 +38,9 @@ class FirebaseService {
   Stream<QuerySnapshot<Json>> getSnapshotStreamFromCollection({
     required String collectionPath,
   }) {
-    return firestore.collection(collectionPath).snapshots();
+    return getCollection(
+      collectionPath: collectionPath,
+    ).snapshots();
   }
 
   /// Document Operations
@@ -38,15 +50,18 @@ class FirebaseService {
     required String documentPath,
     required Json data,
   }) async {
-    return firestore.collection(collectionPath).doc(documentPath).set(data);
+    return getCollection(collectionPath: collectionPath)
+        .doc(documentPath)
+        .set(data);
   }
 
   Future<Json> getFromDocument({
     required String collectionPath,
     required String documentPath,
   }) async {
-    final data =
-        await firestore.collection(collectionPath).doc(documentPath).get();
+    final data = await getCollection(collectionPath: collectionPath)
+        .doc(documentPath)
+        .get();
 
     return Future.value(data.data());
   }
@@ -56,13 +71,24 @@ class FirebaseService {
     required String uuid,
     required Json data,
   }) async {
-    return firestore.collection(collectionPath).doc(uuid).update(data);
+    return getCollection(collectionPath: collectionPath).doc(uuid).update(data);
   }
 
   Future<void> deleteDocumentFromCollection({
     required String collectionPath,
     required String uid,
   }) async {
-    return firestore.collection(collectionPath).doc(uid).delete();
+    return getCollection(collectionPath: collectionPath).doc(uid).delete();
+  }
+
+  Future<Json> findDocumentByFieldIsEqualToValue(
+      {required String collectionPath,
+      required String field,
+      required String value}) async {
+    final data = await getCollection(collectionPath: collectionPath)
+        .where(field, isEqualTo: value)
+        .get();
+
+    return Future.value(data.docs[0].data());
   }
 }

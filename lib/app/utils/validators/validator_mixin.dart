@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 mixin ValidatorMixin {
   final String patron = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
       r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
@@ -26,5 +28,13 @@ mixin ValidatorMixin {
     }
 
     return language.password_invalido;
+  }
+
+  String? textValidator(value, language) {
+    if (value == null || value.isEmpty) {
+      return language.campo_vacio;
+    }
+
+    return null;
   }
 }

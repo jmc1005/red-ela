@@ -15,4 +15,6 @@ abstract class RolRepo {
     String rol,
     String descripcion,
   );
+
+  Future<Result<dynamic, dynamic>> deleteRol(String rol);
 }
