@@ -97,5 +97,9 @@
   "passwordIncorrecta": "Contraseña incorrecta",
   "passwordDebil": "Contraseña débil",
   "emailEnUso": "Email ya está en uso",
-  "compruebaDatosAccesso": "Comprueba los datos de acceso"
+  "compruebaDatosAccesso": "Comprueba los datos de acceso",
+  "tratamiento": "Tratamiento",
+  "campo_vacio": "Campo vacío",
+  "fecha_diagnostico": "Fecha diagnóstico",
+  "inicio": "Inicio"
 }

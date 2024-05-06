@@ -97,5 +97,9 @@
   "passwordIncorrecta": "Wrong password",
   "passwordDebil": "Weak password",
   "emailEnUso": "Email already in use",
-  "compruebaDatosAccesso": "Check access data"
+  "compruebaDatosAccesso": "Check access data",
+  "tratamiento": "Treatment",
+  "campo_vacio": "Empty field",
+  "fecha_diagnostico": "Diagnosis date",
+  "inicio": "Start"
 }

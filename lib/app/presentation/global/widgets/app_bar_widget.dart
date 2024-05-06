@@ -22,7 +22,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       leading: leading,
       title: Image.asset(
         asset,
-        width: 56,
+        width: 120,
       ),
       centerTitle: true,
       actions: actions,

@@ -50,7 +50,7 @@ class TarjetaWidget extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.asset(
-                    'assets/images/nodos.png',
+                    'assets/images/redela_logo.png',
                     width: 240,
                     height: 64,
                     fit: BoxFit.contain,

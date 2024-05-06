@@ -17,12 +17,10 @@ class SignView extends StatefulWidget with ValidatorMixin {
     super.key,
     this.isSignIn = true,
     this.onTap,
-    required this.formKey,
   });
 
   final bool isSignIn;
   final Function()? onTap;
-  final GlobalKey<FormState> formKey;
 
   @override
   State<SignView> createState() => _SignViewState();
@@ -39,6 +37,7 @@ class _SignViewState extends State<SignView> {
   final confirmPassFocusNode = FocusNode();
 
   var hasInternet = true;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -63,7 +62,7 @@ class _SignViewState extends State<SignView> {
       child: Scaffold(
         body: SafeArea(
           child: Form(
-            key: widget.formKey,
+            key: _formKey,
             child: Builder(
               builder: (context) {
                 final controller = Provider.of<SignController>(context);
@@ -93,7 +92,7 @@ class _SignViewState extends State<SignView> {
                       height: 100,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('images/nodos.png'),
+                          image: AssetImage('images/redela_logo.png'),
                         ),
                       ),
                     ),
@@ -188,7 +187,7 @@ class _SignViewState extends State<SignView> {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async {
-                        if (widget.formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           controller.access(
                             isSignIn: widget.isSignIn,
                             context: context,
