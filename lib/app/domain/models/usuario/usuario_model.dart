@@ -29,7 +29,13 @@ class UsuarioModel with _$UsuarioModel {
 }
 
 Object? readFechaNacimiento(Map map, String _) {
-  final timestamp = map['fecha_nacimiento'] as Timestamp;
+  final value = map['fecha_nacimiento'];
+
+  if (value == null) {
+    return '';
+  }
+
+  final timestamp = value as Timestamp;
   final date = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
   final fechaNacimiento = DateFormat(AppConstants.formatDate).format(date);
 

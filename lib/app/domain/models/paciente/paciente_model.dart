@@ -27,7 +27,13 @@ class PacienteModel with _$PacienteModel {
 }
 
 Object? readFechaDiagnostico(Map map, String _) {
-  final timestamp = map['fecha_diagnostico'] as Timestamp;
+  final value = map['fecha_nacimiento'];
+
+  if (value == null) {
+    return '';
+  }
+
+  final timestamp = value as Timestamp;
   final date = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
   final fechaDiagnostico = DateFormat(AppConstants.formatDate).format(date);
 

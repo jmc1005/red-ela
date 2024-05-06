@@ -22,10 +22,17 @@ class PacienteRepoImpl implements PacienteRepo {
   final String collection = 'pacientes';
 
   @override
-  Future<Result> addPaciente(CuidadorModel cuidador) async {
+  Future<Result> addPaciente(String tratamiento, String fechaDiagnostico,
+      String inicio, CuidadorModel cuidador) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
-    final data = getDataPaciente(usuarioUid, cuidador);
+    final data = getDataPaciente(
+      usuarioUid,
+      tratamiento,
+      fechaDiagnostico,
+      inicio,
+      cuidador,
+    );
 
     return firebaseService
         .setDataOnDocument(
@@ -38,10 +45,21 @@ class PacienteRepoImpl implements PacienteRepo {
   }
 
   @override
-  Future<Result> updatePaciente(CuidadorModel cuidador) {
+  Future<Result> updatePaciente(
+    String tratamiento,
+    String fechaDiagnostico,
+    String inicio,
+    CuidadorModel cuidador,
+  ) {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
-    final data = getDataPaciente(usuarioUid, cuidador);
+    final data = getDataPaciente(
+      usuarioUid,
+      tratamiento,
+      fechaDiagnostico,
+      inicio,
+      cuidador,
+    );
 
     return firebaseService
         .updateDataOnDocument(
@@ -79,8 +97,19 @@ class PacienteRepoImpl implements PacienteRepo {
         .catchError((onError) => const Error('data-get-failed'));
   }
 
-  Json getDataPaciente(String usuarioUid, CuidadorModel cuidador) {
-    final data = {'usuario_uid': usuarioUid};
+  Json getDataPaciente(
+    String usuarioUid,
+    String tratamiento,
+    String fechaDiagnostico,
+    String inicio,
+    CuidadorModel cuidador,
+  ) {
+    final data = {
+      'usuario_uid': usuarioUid,
+      'tratamiento': tratamiento,
+      'fecha_diagnostico': fechaDiagnostico,
+      'inicio': inicio,
+    };
 
     if (cuidador.usuarioUid != null && cuidador.usuarioUid!.isNotEmpty) {
       data['cuidador'] = jsonEncode(
