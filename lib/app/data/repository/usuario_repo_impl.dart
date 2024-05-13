@@ -55,14 +55,15 @@ class UsuarioRepoImpl extends UsuarioRepo {
   }
 
   @override
-  Future<Result<dynamic, dynamic>> signUp(String email, String password) async {
+  Future<Result<dynamic, dynamic>> signUp(
+      String email, String password, String rol) async {
     final result = await fireAuthService.createUserWithEmailAndPassword(
       email,
       password,
     );
 
     if (result is User) {
-      final resultAdd = await addUsuario(email);
+      final resultAdd = await addUsuario(email, rol);
 
       return resultAdd.when(
         (success) => Success(success),
@@ -112,12 +113,14 @@ class UsuarioRepoImpl extends UsuarioRepo {
   }
 
   @override
-  Future<Result<dynamic, dynamic>> addUsuario(String email) {
+  Future<Result<dynamic, dynamic>> addUsuario(String email, String rol) {
     final currentUser = fireAuthService.currentUser()!;
 
     final data = {
       'uid': currentUser.uid,
       'email': currentUser.email,
+      'rol': rol,
+      'estado': 'verificación'
     };
 
     return firebaseService

@@ -11,17 +11,17 @@ part 'paciente_model.g.dart';
 
 @freezed
 class PacienteModel with _$PacienteModel {
-  const factory PacienteModel(
-    @JsonKey(name: 'usuario_uid') String usuarioUid,
-    String tratamiento,
+  const factory PacienteModel({
+    @JsonKey(name: 'usuario_uid') required String usuarioUid,
+    String? tratamiento,
     @JsonKey(
       name: 'fecha_diagnostico',
       readValue: readFechaDiagnostico,
     )
     String? fechaDiagnostico,
-    String inicio,
-    CuidadorModel cuidador,
-  ) = _PacienteModel;
+    String? inicio,
+    CuidadorModel? cuidador,
+  }) = _PacienteModel;
 
   factory PacienteModel.fromJson(Json json) => _$PacienteModelFromJson(json);
 }

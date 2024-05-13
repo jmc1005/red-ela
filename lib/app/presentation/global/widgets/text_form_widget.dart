@@ -13,6 +13,7 @@ class TextFormWidget extends StatelessWidget {
     this.controller,
     this.initialValue,
     this.onTap,
+    this.readOnly = false,
   });
 
   final String label;
@@ -25,6 +26,7 @@ class TextFormWidget extends StatelessWidget {
   final TextEditingController? controller;
   final String? initialValue;
   final Function()? onTap;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class TextFormWidget extends StatelessWidget {
       obscureText: obscureText,
       focusNode: focusNode,
       onTap: onTap,
+      readOnly: readOnly,
     );
   }
 

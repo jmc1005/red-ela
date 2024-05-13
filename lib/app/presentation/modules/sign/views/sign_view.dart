@@ -11,6 +11,7 @@ import '../../../global/widgets/text_form_widget.dart';
 import '../../../global/widgets/text_gesture_detector_widget.dart';
 import '../controllers/sign_controller.dart';
 import '../controllers/state/sign_state.dart';
+import '../widgets/sign_up_widget.dart';
 
 class SignView extends StatefulWidget with ValidatorMixin {
   SignView({
@@ -33,9 +34,6 @@ class _SignViewState extends State<SignView> {
   final passController = TextEditingController();
   final passFocusNode = FocusNode();
 
-  final confirmPassController = TextEditingController();
-  final confirmPassFocusNode = FocusNode();
-
   var hasInternet = true;
   final _formKey = GlobalKey<FormState>();
 
@@ -55,10 +53,8 @@ class _SignViewState extends State<SignView> {
     final UsuarioRepo usuarioRepo = context.read();
 
     return ChangeNotifierProvider<SignController>(
-      create: (context) => SignController(
-        const SignState(),
-        usuarioRepo: usuarioRepo,
-      ),
+      create: (context) => SignController(const SignState(),
+          usuarioRepo: usuarioRepo, context: context),
       child: Scaffold(
         body: SafeArea(
           child: Form(
@@ -68,9 +64,9 @@ class _SignViewState extends State<SignView> {
                 final controller = Provider.of<SignController>(context);
                 final language = AppLocalizations.of(context)!;
                 var obscurePassword = controller.state.obscurePassword;
-                var obscureConfirmPassword =
+                final obscureConfirmPassword =
                     controller.state.obscureConfirmPassword;
-                var validConfirmPassword = widget.isSignIn;
+                final validConfirmPassword = widget.isSignIn;
 
                 if (!hasInternet) {
                   showTopSnackBar(Overlay.of(context),
@@ -139,50 +135,12 @@ class _SignViewState extends State<SignView> {
                         },
                       ),
                     ),
-                    if (!widget.isSignIn) const SizedBox(height: 20),
                     if (!widget.isSignIn)
-                      TextFormWidget(
-                        controller: confirmPassController,
-                        focusNode: confirmPassFocusNode,
-                        label: language.confirmar_password,
-                        keyboardType: TextInputType.text,
-                        validator: (value) {
-                          final validPassword = widget.passwordValidator(
-                            value,
-                            language,
-                          );
-
-                          final password = passController.text;
-
-                          if (validPassword == null) {
-                            validConfirmPassword =
-                                password == confirmPassController.text;
-
-                            if (!validConfirmPassword) {
-                              return language.password_no_coincide;
-                            }
-                          }
-
-                          return validPassword;
-                        },
-                        onChanged: (text) {
-                          controller.onConfirmPasswordChanged(text);
-                        },
-                        obscureText: obscureConfirmPassword,
-                        suffixIcon: IconButton(
-                          icon: Icon(!obscureConfirmPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              obscureConfirmPassword = !obscureConfirmPassword;
-
-                              controller.onVisibilityConfirmPasswordChanged(
-                                obscureConfirmPassword,
-                              );
-                            });
-                          },
-                        ),
+                      SignUpWidget(
+                        signController: controller,
+                        password: passController.text,
+                        obscureConfirmPassword: obscureConfirmPassword,
+                        validConfirmPassword: validConfirmPassword,
                       ),
                     const SizedBox(height: 30),
                     ElevatedButton(

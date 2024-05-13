@@ -8,7 +8,11 @@ abstract class UsuarioRepo {
 
   Future<Result<User, dynamic>> signIn(String email, String password);
 
-  Future<Result<dynamic, dynamic>> signUp(String email, String password);
+  Future<Result<dynamic, dynamic>> signUp(
+    String email,
+    String password,
+    String rol,
+  );
 
   Future<Result<UsuarioModel, dynamic>> getUsuario();
 
@@ -16,6 +20,7 @@ abstract class UsuarioRepo {
 
   Future<Result<dynamic, dynamic>> addUsuario(
     String email,
+    String rol,
   );
 
   Future<Result<dynamic, dynamic>> updateUsuario(
