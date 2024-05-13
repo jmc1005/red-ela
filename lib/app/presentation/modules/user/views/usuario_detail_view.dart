@@ -116,24 +116,6 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                     contentVerticalPadding: 20,
                                     content: Column(
                                       children: [
-                                        DropdownButtonFormField(
-                                          items: usuarioController.typeList,
-                                          value: tipo,
-                                          decoration: InputDecoration(
-                                            label: Text(language.tipo_usuario),
-                                          ),
-                                          onChanged: (value) {
-                                            if (value != null) {
-                                              setState(() {
-                                                usuarioController
-                                                    .onChangeValueTipo(value);
-                                                usuario = usuarioController
-                                                    .state!.usuario;
-                                                openDatosPersonales = false;
-                                              });
-                                            }
-                                          },
-                                        ),
                                         if (tipo == UsuarioTipo.paciente.value)
                                           PacienteDataWidget(
                                             usuarioController:

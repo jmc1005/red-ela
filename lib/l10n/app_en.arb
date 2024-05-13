@@ -102,5 +102,20 @@
   "campo_vacio": "Empty field",
   "fecha_diagnostico": "Diagnosis date",
   "inicio": "Start",
-  "relacion": "Relationship"
+  "relacion": "Relationship",
+  "validacion": "Validation",
+  "activo": "Active",
+  "inactivo": "Inactive",
+  "gestor": "Management",
+  "admin": "Admin",
+  "usuario_estado": "User {item}. Please, contact with admin",
+  "@usuario_estado": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Artículo"
+      }
+    }
+  }
 }

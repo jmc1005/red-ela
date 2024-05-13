@@ -91,6 +91,7 @@ void main() async {
           create: (context) => SignController(
             const SignState(),
             usuarioRepo: context.read(),
+            context: context,
           ),
         ),
         ChangeNotifierProvider<UsuarioController>(

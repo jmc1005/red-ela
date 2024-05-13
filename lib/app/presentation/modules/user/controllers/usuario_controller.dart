@@ -69,10 +69,6 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     usuario = state!.usuario.copyWith(fechaNacimiento: text);
   }
 
-  void onChangeValueTipo(String text) {
-    usuario = state!.usuario.copyWith(rol: text);
-  }
-
   void onChangeTratamiento(String text) {
     paciente = state!.paciente!.copyWith(tratamiento: text);
   }
@@ -167,37 +163,6 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
       response.showSuccess();
     } else {
       response.showError();
-    }
-  }
-
-  List<DropdownMenuItem<String>> get typeList {
-    final language = AppLocalizations.of(context)!;
-
-    return UsuarioTipo.values.map<DropdownMenuItem<String>>(
-      (UsuarioTipo type) {
-        final label = getEnumTypeString(type, language);
-
-        return DropdownMenuItem<String>(
-          value: type.value,
-          alignment: Alignment.centerLeft,
-          child: Text(label),
-        );
-      },
-    ).toList();
-  }
-
-  String getEnumTypeString(UsuarioTipo enumValue, AppLocalizations language) {
-    switch (enumValue) {
-      case UsuarioTipo.cuidador:
-        return language.cuidador;
-      case UsuarioTipo.paciente:
-        return language.paciente;
-      // case UsuarioTipo.gestorCasos:
-      //   return language.gestor_casos;
-      // case UsuarioTipo.gestor:
-      //   return language.gestor_casos;
-      // case UsuarioTipo.admin:
-      //   return language.gestor_casos;
     }
   }
 }

@@ -146,6 +146,7 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
                   Flexible(
                     child: TextFormWidget(
                       label: language.inicio,

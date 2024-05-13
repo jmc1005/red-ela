@@ -4,14 +4,14 @@ import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import 'sign_view.dart';
 
-class SignOutView extends StatefulWidget {
-  const SignOutView({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<SignOutView> createState() => _SignOutViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignOutViewState extends State<SignOutView> {
+class _SignUpViewState extends State<SignUpView> {
   void _onTap() {
     navigateTo(Routes.signIn, context);
   }
