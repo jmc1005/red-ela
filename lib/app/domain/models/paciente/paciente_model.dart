@@ -20,7 +20,7 @@ class PacienteModel with _$PacienteModel {
     )
     String? fechaDiagnostico,
     String? inicio,
-    CuidadorModel? cuidador,
+    @JsonKey(name: 'cuidador') CuidadorModel? cuidador,
   }) = _PacienteModel;
 
   factory PacienteModel.fromJson(Json json) => _$PacienteModelFromJson(json);

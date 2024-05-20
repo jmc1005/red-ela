@@ -13,7 +13,7 @@ class SignInView extends StatefulWidget {
 
 class _SignInViewState extends State<SignInView> {
   void _onTap() {
-    navigateTo(Routes.signOut, context);
+    navigateTo(Routes.sendOTP, context);
   }
 
   @override

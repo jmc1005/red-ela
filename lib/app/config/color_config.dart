@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ColorConfig {
-  static const Color primary = Color.fromARGB(255, 133, 219, 24);
-  static const Color primaryBackground = Color(0xFFE5E7EB);
-  static const Color alternate = Color.fromARGB(255, 223, 237, 236);
+  ColorConfig._();
+
+  static const Color primary = Color(0xFF00416a);
+  static const Color primaryBackground = Color.fromARGB(255, 254, 252, 252);
+  static const Color alternate = Color.fromARGB(255, 23, 131, 177);
   static const Color secondary = Color(0xFF022653);
   static const Color cabeceraAdmin = Color(0xFF022653);
   static const Color cabeceraUser = Color.fromARGB(255, 205, 62, 22);

@@ -12,4 +12,8 @@ abstract class FirebaseCode {
   static const String weakPassword = 'weak-password';
   static const String emailAlreadyInUse = 'email-already-in-use';
   static const String checkEmailPassword = 'check-email-password';
+  static const String otpError = 'invalid-phone-number';
+  static const String userRegistered = 'user-registered';
+  static const String invalidVerificationCode = 'invalid-verification-code';
+  static const String reviewFormData = 'review-form-data';
 }

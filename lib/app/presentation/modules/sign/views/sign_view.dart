@@ -7,20 +7,18 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../../domain/repository/connection_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/validators/validator_mixin.dart';
+import '../../../global/widgets/submit_button_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../global/widgets/text_gesture_detector_widget.dart';
 import '../controllers/sign_controller.dart';
 import '../controllers/state/sign_state.dart';
-import '../widgets/sign_up_widget.dart';
 
 class SignView extends StatefulWidget with ValidatorMixin {
   SignView({
     super.key,
-    this.isSignIn = true,
     this.onTap,
   });
 
-  final bool isSignIn;
   final Function()? onTap;
 
   @override
@@ -64,9 +62,6 @@ class _SignViewState extends State<SignView> {
                 final controller = Provider.of<SignController>(context);
                 final language = AppLocalizations.of(context)!;
                 var obscurePassword = controller.state.obscurePassword;
-                final obscureConfirmPassword =
-                    controller.state.obscureConfirmPassword;
-                final validConfirmPassword = widget.isSignIn;
 
                 if (!hasInternet) {
                   showTopSnackBar(Overlay.of(context),
@@ -135,42 +130,22 @@ class _SignViewState extends State<SignView> {
                         },
                       ),
                     ),
-                    if (!widget.isSignIn)
-                      SignUpWidget(
-                        signController: controller,
-                        password: passController.text,
-                        obscureConfirmPassword: obscureConfirmPassword,
-                        validConfirmPassword: validConfirmPassword,
-                      ),
                     const SizedBox(height: 30),
-                    ElevatedButton(
-                      onPressed: () async {
+                    SubmitButtonWidget(
+                      label: language.acceder,
+                      onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           controller.access(
-                            isSignIn: widget.isSignIn,
                             context: context,
                             language: language,
                           );
                         }
                       },
-                      child: Text(
-                        widget.isSignIn
-                            ? language.acceder
-                            : language.registrarse,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                        ),
-                      ),
                     ),
                     TextGestureDetectorWidget(
                       onTap: widget.onTap,
-                      pregunta: widget.isSignIn
-                          ? language.no_tienes_cuenta
-                          : language.tienes_cuenta,
-                      tapString: widget.isSignIn
-                          ? language.registrarse
-                          : language.acceder,
+                      pregunta: language.acceder_otp,
+                      tapString: language.registrarse,
                     ),
                   ],
                 );

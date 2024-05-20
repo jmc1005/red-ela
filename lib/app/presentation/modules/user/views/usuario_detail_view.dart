@@ -8,6 +8,7 @@ import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/accordion_widget.dart';
 import '../../../global/widgets/app_bar_widget.dart';
+import '../../../global/widgets/submit_button_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import '../../cuidador/widgets/cuidador_data_widget.dart';
@@ -39,7 +40,7 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
-    var usuario = widget.usuarioModel;
+    final usuario = widget.usuarioModel;
 
     return ChangeNotifierProvider<UsuarioController>(
       create: (_) => UsuarioController(
@@ -53,7 +54,11 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
           backgroundColor: ColorConfig.primary,
           leading: IconButton(
             onPressed: () {
-              navigateTo(Routes.userList, context);
+              if (_formKey.currentState!.validate()) {
+                if (usuario.rol == UsuarioTipo.admin.value) {
+                  navigateTo(Routes.userList, context);
+                } else {}
+              }
             },
             icon: const Icon(
               Icons.arrow_back_ios,
@@ -131,24 +136,21 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                     isOpen: !openDatosPersonales,
                                   ),
                                 ]),
-                                SizedBox(
-                                  height: 54,
-                                  width: 200,
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      if (_formKey.currentState!.validate()) {
-                                        usuarioController.update(
-                                            context, language);
-                                      }
-                                    },
-                                    child: Text(
-                                      language.guardar,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
+                                SubmitButtonWidget(
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      usuarioController.update(
+                                        context,
+                                        language,
+                                      );
+                                    } else {
+                                      usuarioController.showWarning(
+                                        context,
+                                        language,
+                                      );
+                                    }
+                                  },
+                                  label: language.guardar,
                                 ),
                               ],
                             );

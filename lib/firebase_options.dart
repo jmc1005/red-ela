@@ -64,6 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '757105304257',
     projectId: 'redela-81338',
     storageBucket: 'redela-81338.appspot.com',
+    iosClientId: '757105304257-6rj8m34ma2h1nlc0ig6llgmgunag5942.apps.googleusercontent.com',
     iosBundleId: 'es.ubu.tfg2324.ela.redEla',
   );
 
@@ -73,6 +74,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '757105304257',
     projectId: 'redela-81338',
     storageBucket: 'redela-81338.appspot.com',
+    iosClientId: '757105304257-6rj8m34ma2h1nlc0ig6llgmgunag5942.apps.googleusercontent.com',
     iosBundleId: 'es.ubu.tfg2324.ela.redEla',
   );
 

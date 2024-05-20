@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
+import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
+import '../../../global/widgets/submit_button_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
 
@@ -20,6 +24,8 @@ class PacienteDataWidget extends StatefulWidget with ValidatorMixin {
 
 class _PacienteDataWidgetState extends State<PacienteDataWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
+  late final UsuarioModel? usuarioCuidador;
+
   final dateInput = TextEditingController();
 
   void _showError(error, language) {
@@ -56,29 +62,16 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
     final cuidadorRepo = controller.pacienteController.cuidadorRepo;
 
     if (paciente!.cuidador != null) {
-      final cuidador = paciente.cuidador!;
+      final cuidadorUid = paciente.cuidador!.usuarioUid;
+      final futureCuidador =
+          await cuidadorRepo.getUsuarioCuidadorByUid(cuidadorUid);
 
-      if (cuidador.usuarioUid != null && cuidador.usuarioUid!.isNotEmpty) {
-        final resultCuidador =
-            await cuidadorRepo.findCuidadorByUid(cuidador.usuarioUid!);
-
-        resultCuidador.when(
-          (success) => controller.paciente = paciente.copyWith(
-            cuidador: success,
-          ),
-          (error) => _showError(error, language),
-        );
-      } else if (cuidador.email != null && cuidador.email!.isNotEmpty) {
-        final resultCuidador =
-            await cuidadorRepo.findCuidadorByEmail(cuidador.email!);
-
-        resultCuidador.when(
-          (success) => controller.paciente = paciente.copyWith(
-            cuidador: success,
-          ),
-          (error) => _showError(error, language),
-        );
-      }
+      futureCuidador.when(
+        (success) {
+          usuarioCuidador = success;
+        },
+        (error) {},
+      );
     }
   }
 
@@ -88,7 +81,7 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
     final language = AppLocalizations.of(context)!;
 
     PacienteModel? paciente = controller.state?.paciente;
-    CuidadorModel? cuidador = controller.state?.paciente?.cuidador;
+    CuidadorModel? cuidador = controller.state?.cuidador;
 
     return FutureBuilder(
       future: _getFuturePaciente(),
@@ -105,11 +98,14 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
             controller.paciente = result;
             _getCuidadorPaciente(controller, language);
             paciente = controller.state!.paciente;
-            cuidador = controller.state!.paciente!.cuidador;
+            cuidador = paciente?.cuidador;
 
             if (paciente!.fechaDiagnostico != null &&
                 paciente!.fechaDiagnostico!.isNotEmpty) {
               dateInput.text = paciente!.fechaDiagnostico!;
+            }
+            if (usuarioCuidador != null) {
+              debugPrint(usuarioCuidador!.toString());
             }
           } else {
             final response = FirebaseResponse(
@@ -179,18 +175,70 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
                   dateInput,
                 ),
               ),
-              const SizedBox(height: 8),
-              TextFormWidget(
-                label: '${language.nombre} ${language.cuidador}',
-                initialValue: cuidador?.nombre != null ? cuidador!.nombre : '',
-                keyboardType: TextInputType.text,
-                onChanged: (text) => controller.onChangeTratamiento(text),
-                validator: (value) => widget.textValidator(
-                  value,
-                  language,
+              if (cuidador != null)
+                Column(
+                  children: [
+                    const Divider(),
+                    TextFormWidget(
+                      label: '${language.nombre} ${language.cuidador}',
+                      initialValue: usuarioCuidador?.nombre != null
+                          ? usuarioCuidador!.nombre
+                          : '',
+                      keyboardType: TextInputType.text,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormWidget(
+                      label: '${language.apellido} ${language.cuidador}',
+                      initialValue: usuarioCuidador?.apellido1 != null
+                          ? usuarioCuidador!.apellido1
+                          : '',
+                      keyboardType: TextInputType.text,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormWidget(
+                      label: '${language.apellido2} ${language.cuidador}',
+                      initialValue: usuarioCuidador?.apellido2 != null
+                          ? usuarioCuidador!.apellido2
+                          : '',
+                      keyboardType: TextInputType.text,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormWidget(
+                      label: '${language.relacion} ${language.cuidador}',
+                      initialValue:
+                          cuidador?.relacion != null ? cuidador!.relacion : '',
+                      keyboardType: TextInputType.text,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 8),
+              if (cuidador == null)
+                Column(
+                  children: [
+                    const Divider(),
+                    const Text(
+                      'Introduzca el teléfono de contacto de su cuidador',
+                    ),
+                    TextFormWidget(
+                      label: '${language.telefono} ${language.cuidador}',
+                      keyboardType: TextInputType.text,
+                      readOnly: true,
+                    ),
+                    SubmitButtonWidget(
+                      label: 'Enviar',
+                      onPressed: () {
+                        // usuario existe por teléfono => asignar usuario
+
+                        // usuario no existe por teléfono => enviar invitación
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
             ],
           ),
         );

@@ -117,5 +117,15 @@
         "example": "Artículo"
       }
     }
-  }
+  },
+  "telefono": "Mobile",
+  "confirmar": "Confirm",
+  "enviar_codigo": "Send Code",
+  "acceder_otp": "Access with OTP",
+  "otp_error": "Error to get OTP",
+  "numero_invalido": "Invalid phone number",
+  "registrado": "User registered",
+  "codigoVerificacionInvalido": "Invalid verification code",
+  "reviseDatosFormulario": "Review the form data",
+  "infoInvitacion": "To be able to access with code you have received an invitation email."
 }

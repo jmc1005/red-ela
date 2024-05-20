@@ -55,48 +55,29 @@ class SignController extends StateNotifier<SignState> {
     onlyUpdate(state.copyWith(rol: text));
   }
 
-  Future<void> access({isSignIn = true, context, language}) async {
-    final isOk = validarIsNotEmpty(isSignIn: isSignIn);
+  Future<void> access({context, language}) async {
+    final isOk = validarIsNotEmpty();
 
     if (isOk) {
       late Result<dynamic, dynamic> result;
-
-      if (isSignIn) {
-        result = await usuarioRepo.signIn(state.email, state.password);
-      } else {
-        result = await usuarioRepo.signUp(
-          state.email,
-          state.password,
-          state.rol,
-        );
-      }
+      result = await usuarioRepo.signIn(state.email, state.password);
 
       result.when(
         (success) async {
           final usuario = await usuarioRepo.getUsuario();
 
           usuario.when((success) {
-            if (success.estado == UsuarioEstado.activo.value) {
-              if (success.rol == UsuarioTipo.admin.value) {
-                navigateTo(Routes.admin, context);
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UsuarioDetailView(
-                      usuarioModel: success,
-                    ),
-                  ),
-                );
-              }
+            if (success.rol == UsuarioTipo.admin.value) {
+              navigateTo(Routes.admin, context);
             } else {
-              final estado = getEstadoUsuarioLanguage(
-                  language,
-                  UsuarioEstado.values
-                      .where((element) => element.value == success.estado)
-                      .first);
-              final mensaje = language.usuario_estado(estado);
-              showWarning(mensaje);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UsuarioDetailView(
+                    usuarioModel: success,
+                  ),
+                ),
+              );
             }
           }, (error) => showError(error, language));
         },
@@ -109,14 +90,8 @@ class SignController extends StateNotifier<SignState> {
     }
   }
 
-  bool validarIsNotEmpty({isSignIn = false}) {
-    if (isSignIn) {
-      return state.email.isNotEmpty && state.password.isNotEmpty;
-    }
-
-    return state.email.isNotEmpty &&
-        state.password.isNotEmpty &&
-        state.confirmPassword.isNotEmpty;
+  bool validarIsNotEmpty() {
+    return state.email.isNotEmpty && state.password.isNotEmpty;
   }
 
   List<DropdownMenuItem<String>> get typeList {

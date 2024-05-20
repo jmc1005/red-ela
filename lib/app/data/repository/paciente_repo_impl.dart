@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../domain/models/cuidador/cuidador_model.dart';
@@ -9,6 +10,7 @@ import '../../domain/models/typedefs.dart';
 import '../../domain/repository/paciente_repo.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
+import '../services/local/encrypt_data.dart';
 
 class PacienteRepoImpl implements PacienteRepo {
   final FireAuthService fireAuthService;
@@ -22,11 +24,15 @@ class PacienteRepoImpl implements PacienteRepo {
   final String collection = 'pacientes';
 
   @override
-  Future<Result> addPaciente(String tratamiento, String fechaDiagnostico,
-      String inicio, CuidadorModel cuidador) async {
+  Future<Result> addPaciente({
+    required String tratamiento,
+    required String fechaDiagnostico,
+    required String inicio,
+    CuidadorModel? cuidador,
+  }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
-    final data = getDataPaciente(
+    final data = await getDataPaciente(
       usuarioUid,
       tratamiento,
       fechaDiagnostico,
@@ -34,26 +40,30 @@ class PacienteRepoImpl implements PacienteRepo {
       cuidador,
     );
 
-    return firebaseService
-        .setDataOnDocument(
-          collectionPath: collection,
-          documentPath: usuarioUid,
-          data: data,
-        )
-        .then((value) => const Success('data-added'))
-        .catchError((error) => const Error('data-add-failed'));
+    try {
+      return firebaseService
+          .setDataOnDocument(
+            collectionPath: collection,
+            documentPath: usuarioUid,
+            data: data,
+          )
+          .then((value) => const Success('data-added'));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-add-failed'));
+    }
   }
 
   @override
-  Future<Result> updatePaciente(
+  Future<Result> updatePaciente({
     String? tratamiento,
     String? fechaDiagnostico,
     String? inicio,
     CuidadorModel? cuidador,
-  ) {
+  }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
-    final data = getDataPaciente(
+    final data = await getDataPaciente(
       usuarioUid,
       tratamiento,
       fechaDiagnostico,
@@ -61,71 +71,79 @@ class PacienteRepoImpl implements PacienteRepo {
       cuidador,
     );
 
-    return firebaseService
-        .updateDataOnDocument(
-          collectionPath: collection,
-          uuid: usuarioUid,
-          data: data,
-        )
-        .then((value) => const Success('data-updated'))
-        .catchError((error) => const Error('data-update-failed'));
+    try {
+      return firebaseService
+          .updateDataOnDocument(
+            collectionPath: collection,
+            uuid: usuarioUid,
+            data: data,
+          )
+          .then((value) => const Success('data-updated'));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-update-failed'));
+    }
   }
 
   @override
   Future<Result> deletePaciente() {
     final currentUser = fireAuthService.currentUser()!;
 
-    return firebaseService
-        .deleteDocumentFromCollection(
-          collectionPath: collection,
-          uid: currentUser.uid,
-        )
-        .then((value) => const Success('data-deleted'))
-        .catchError((error) => const Error('data-delete-failed'));
+    try {
+      return firebaseService
+          .deleteDocumentFromCollection(
+            collectionPath: collection,
+            uid: currentUser.uid,
+          )
+          .then((value) => const Success('data-deleted'));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-delete-failed'));
+    }
   }
 
   @override
   Future<Result<PacienteModel, dynamic>> getPaciente() {
     final currentUser = fireAuthService.currentUser();
 
-    return firebaseService
-        .getFromDocument(
-          collectionPath: collection,
-          documentPath: currentUser!.uid,
-        )
-        .then((json) => Success(PacienteModel.fromJson(json)))
-        .catchError((onError) => const Error('data-get-failed'));
+    try {
+      return firebaseService
+          .getFromDocument(
+            collectionPath: collection,
+            documentPath: currentUser!.uid,
+          )
+          .then((json) async => successFromJson(json));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-get-failed'));
+    }
   }
 
-  Json getDataPaciente(
+  Future<Success<PacienteModel, dynamic>> successFromJson(Json json) async {
+    json = await EncryptData.decryptDataJson(json);
+    return Success(PacienteModel.fromJson(json));
+  }
+
+  Future<Json> getDataPaciente(
     String usuarioUid,
     String? tratamiento,
     String? fechaDiagnostico,
     String? inicio,
     CuidadorModel? cuidador,
-  ) {
+  ) async {
     final data = {
-      'usuario_uid': usuarioUid,
-      'tratamiento': tratamiento,
+      'usuario_uid': await EncryptData.encryptData(usuarioUid),
+      'tratamiento': tratamiento != null
+          ? await EncryptData.encryptData(tratamiento)
+          : null,
       'fecha_diagnostico': fechaDiagnostico,
       'inicio': inicio,
     };
 
     if (cuidador != null) {
-      if (cuidador.usuarioUid != null && cuidador.usuarioUid!.isNotEmpty) {
+      if (cuidador.usuarioUid.isNotEmpty) {
         data['cuidador'] = jsonEncode(
-          {'usuario_uid': cuidador.usuarioUid!},
-        );
-      } else {
-        data['cuidador'] = jsonEncode(
-          {
-            'nombre': cuidador.nombre,
-            'apellido1': cuidador.apellido1,
-            'apellido2': cuidador.apellido2,
-            'email': cuidador.email,
-            'telefono': cuidador.telefono,
-            'relacion': cuidador.relacion,
-          },
+          {'usuario_uid': cuidador.usuarioUid},
         );
       }
     }
@@ -134,10 +152,10 @@ class PacienteRepoImpl implements PacienteRepo {
   }
 
   @override
-  Future<Result<List<String>, dynamic>> getAllPacientesByUidOrEmailCuidador(
-    String uidCuidador,
-    String email,
-  ) async {
+  Future<Result<List<String>, dynamic>> getAllPacientesByUidOrEmailCuidador({
+    required String uidCuidador,
+    required String email,
+  }) async {
     final filterCuidadorUid = Filter(
       'cuidador.usuario_uid',
       isEqualTo: uidCuidador,

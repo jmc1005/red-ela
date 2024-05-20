@@ -15,15 +15,15 @@ class UsuarioModel with _$UsuarioModel {
     String? nombre,
     String? apellido1,
     String? apellido2,
-    String email,
+    String? email,
     String? telefono,
+    String? password,
     @JsonKey(
       name: 'fecha_nacimiento',
       readValue: readFechaNacimiento,
     )
     String? fechaNacimiento,
     String? rol,
-    String estado,
   ) = _UsuarioModel;
 
   factory UsuarioModel.fromJson(Json json) => _$UsuarioModelFromJson(json);

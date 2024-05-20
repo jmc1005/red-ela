@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'app/data/firebase/fireauth_service.dart';
@@ -10,16 +11,21 @@ import 'app/data/firebase/firebase_service.dart';
 import 'app/data/repository/connection_repo_impl.dart';
 import 'app/data/repository/cuidador_repo_impl.dart';
 import 'app/data/repository/gestor_caso_repo_impl.dart';
+import 'app/data/repository/invitacion_repo_impl.dart';
 import 'app/data/repository/paciente_repo_impl.dart';
 import 'app/data/repository/rol_repo_impl.dart';
 import 'app/data/repository/usuario_repo_impl.dart';
+import 'app/data/services/local/session_service.dart';
 import 'app/data/services/remote/check_connection.dart';
 import 'app/domain/repository/connection_repo.dart';
 import 'app/domain/repository/cuidador_repo.dart';
 import 'app/domain/repository/gestor_casos_repo.dart';
+import 'app/domain/repository/invitacion_repo.dart';
 import 'app/domain/repository/paciente_repo.dart';
 import 'app/domain/repository/rol_repo.dart';
 import 'app/domain/repository/usuario_repo.dart';
+import 'app/presentation/modules/otp/controllers/otp_controller.dart';
+import 'app/presentation/modules/otp/controllers/state/otp_state.dart';
 import 'app/presentation/modules/paciente/controllers/paciente_controller.dart';
 import 'app/presentation/modules/sign/controllers/sign_controller.dart';
 import 'app/presentation/modules/sign/controllers/state/sign_state.dart';
@@ -27,10 +33,10 @@ import 'app/presentation/modules/user/controllers/usuario_controller.dart';
 import 'firebase_options.dart';
 import 'red_ela.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //final sessionService = SessionService(const FlutterSecureStorage());
+  final sessionService = SessionService(const FlutterSecureStorage());
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -69,9 +75,9 @@ void main() async {
         ),
         Provider<UsuarioRepo>(
           create: (_) => UsuarioRepoImpl(
-            firebaseService: FirebaseService(firestore: firestore),
-            fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
-          ),
+              firebaseService: FirebaseService(firestore: firestore),
+              fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+              sessionService: sessionService),
         ),
         Provider<PacienteRepo>(create: (_) => pacienteRepo),
         Provider<CuidadorRepo>(create: (_) => cuidadorRepo),
@@ -81,11 +87,25 @@ void main() async {
             fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
           ),
         ),
+        Provider<InvitacionRepo>(
+          create: (_) => InvitacionRepoImpl(
+            firebaseService: FirebaseService(firestore: firestore),
+            fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+          ),
+        ),
         Provider<PacienteController>(
           create: (context) => PacienteController(
-              context: context,
-              cuidadorRepo: cuidadorRepo,
-              pacienteRepo: pacienteRepo),
+            context: context,
+            cuidadorRepo: cuidadorRepo,
+            pacienteRepo: pacienteRepo,
+          ),
+        ),
+        Provider<OTPController>(
+          create: (context) => OTPController(
+            const OTPState(),
+            usuarioRepo: context.read(),
+            invitacionRepo: context.read(),
+          ),
         ),
         ChangeNotifierProvider<SignController>(
           create: (context) => SignController(
@@ -99,6 +119,13 @@ void main() async {
             usuarioRepo: context.read(),
             context: context,
             pacienteController: context.read(),
+          ),
+        ),
+        ChangeNotifierProvider<OTPController>(
+          create: (context) => OTPController(
+            const OTPState(),
+            usuarioRepo: context.read(),
+            invitacionRepo: context.read(),
           ),
         ),
       ],
