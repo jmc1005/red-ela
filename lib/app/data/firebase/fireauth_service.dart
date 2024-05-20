@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../presentation/modules/otp/views/otp_codigo_view.dart';
+
 class FireAuthService {
   final FirebaseAuth firebaseAuth;
 
@@ -61,6 +63,10 @@ class FireAuthService {
     await currentUser()?.updatePassword(newPassword);
   }
 
+  Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
+    await currentUser()?.updatePhoneNumber(phoneCredential);
+  }
+
   Future<void> sendPasswordResetEmail(String email) async {
     await firebaseAuth.sendPasswordResetEmail(email: email);
   }
@@ -100,7 +106,9 @@ class FireAuthService {
   }
 
   Future<dynamic> signInWithEmailAndPassword(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -134,10 +142,56 @@ class FireAuthService {
     );
 
     // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    return signInWithCredential(credential);
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await firebaseAuth.signOut();
+  }
+
+  Future<UserCredential> signInWithCredential(AuthCredential credential) async {
+    return firebaseAuth.signInWithCredential(credential);
+  }
+
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required String rol,
+    required BuildContext context,
+  }) async {
+    await firebaseAuth.verifyPhoneNumber(
+      phoneNumber: '+34$phoneNumber',
+      timeout: const Duration(seconds: 60),
+      codeSent: (String verificationId, int? resendToken) async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OTPCodigoWidget(
+              verificationId: verificationId,
+              phoneNumber: phoneNumber,
+              rol: rol,
+            ),
+          ),
+        );
+      },
+      verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {},
+      verificationFailed: (FirebaseAuthException error) async {
+        debugPrint(error.toString());
+      },
+      codeAutoRetrievalTimeout: (String verificationId) async {},
+    );
+  }
+
+  Future<dynamic> phoneCredential({
+    required String verificationId,
+    required String smsCode,
+  }) async {
+    final phoneAuthCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+
+    final credential = await signInWithCredential(phoneAuthCredential);
+
+    return credential.user ?? 'user-not-found';
   }
 }

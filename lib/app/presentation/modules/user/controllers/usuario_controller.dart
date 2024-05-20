@@ -10,6 +10,7 @@ import '../../../../domain/models/usuario_tipo/usuario_tipo_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
+import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../global/controllers/state/state_notifier.dart';
 import '../../paciente/controllers/paciente_controller.dart';
@@ -61,8 +62,16 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     usuario = state!.usuario.copyWith(apellido2: text);
   }
 
+  void onChangeValueTelefono(String text) {
+    usuario = state!.usuario.copyWith(telefono: text);
+  }
+
   void onChangeValueEmail(String text) {
     usuario = state!.usuario.copyWith(email: text);
+  }
+
+  void onPasswordChanged(String text) {
+    usuario = state!.usuario.copyWith(password: text);
   }
 
   void onChangeValueFechaNacimiento(String text) {
@@ -79,6 +88,10 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
 
   void onChangeValueFechaDiagnostico(String text) {
     paciente = state!.paciente!.copyWith(fechaDiagnostico: text);
+  }
+
+  void onChangeRelacion(String text) {
+    cuidador = state!.cuidador!.copyWith(relacion: text);
   }
 
   Future<void> openDatePicker(
@@ -138,7 +151,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
       state!.usuario.nombre!,
       state!.usuario.apellido1!,
       state!.usuario.apellido2!,
-      state!.usuario.email,
+      state!.usuario.email!,
       state!.usuario.fechaNacimiento!,
       state!.usuario.rol!,
     );
@@ -164,5 +177,34 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     } else {
       response.showError();
     }
+  }
+
+  void showWarning(context, language) {
+    final response = FirebaseResponse(
+      context: context,
+      language: language,
+      code: FirebaseCode.reviewFormData,
+    );
+
+    response.showWarning();
+  }
+
+  Future<void> updateUsuarioPorTipo(rol) async {
+    if (rol == UsuarioTipo.paciente.value) {
+      await pacienteController.pacienteRepo.updatePaciente(
+        tratamiento: state!.paciente?.tratamiento ?? '',
+        fechaDiagnostico: state!.paciente?.fechaDiagnostico ?? '',
+        inicio: state!.paciente?.inicio ?? '',
+        cuidador: state!.paciente?.cuidador,
+      );
+    } else if (rol == UsuarioTipo.cuidador.value) {
+      await pacienteController.pacienteRepo.getAllPacientesByUidOrEmailCuidador(
+          uidCuidador: state!.cuidador!.usuarioUid,
+          email: state!.usuario.email!);
+
+      await pacienteController.cuidadorRepo.updateCuidador(
+        relacion: state!.cuidador?.relacion ?? '',
+      );
+    } else if (rol == UsuarioTipo.gestorCasos.value) {}
   }
 }

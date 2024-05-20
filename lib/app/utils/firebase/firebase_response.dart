@@ -43,6 +43,14 @@ class FirebaseResponse {
         return language.emailEnUso;
       case FirebaseCode.checkEmailPassword:
         return language.compruebaDatosAccesso;
+      case FirebaseCode.otpError:
+        return language.otp_error;
+      case FirebaseCode.userRegistered:
+        return language.registrado;
+      case FirebaseCode.invalidVerificationCode:
+        return language.codigoVerificacionInvalido;
+      case FirebaseCode.reviewFormData:
+        return language.reviseDatosFormulario;
     }
 
     return language.unknown;

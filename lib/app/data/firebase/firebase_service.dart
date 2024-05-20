@@ -91,4 +91,15 @@ class FirebaseService {
 
     return Future.value(data.docs[0].data());
   }
+
+  Future<void> updateFieldsOnDocument({
+    required String collectionPath,
+    required String documentPath,
+    required Json data,
+  }) async {
+    return getCollection(collectionPath: collectionPath).doc(documentPath).set(
+          data,
+          SetOptions(merge: true),
+        );
+  }
 }

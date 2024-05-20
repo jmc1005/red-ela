@@ -30,9 +30,27 @@ mixin ValidatorMixin {
     return language.password_invalido;
   }
 
+  String? passwordConfirmValidator(text, password, language) {
+    text ??= '';
+    text = text.trim();
+    if (text == password) {
+      return null;
+    }
+
+    return language.password_no_coincide;
+  }
+
   String? textValidator(value, language) {
     if (value == null || value.isEmpty) {
       return language.campo_vacio;
+    }
+
+    return null;
+  }
+
+  String? phoneValidator(value, language) {
+    if (value!.length != 9) {
+      return language.numero_invalido;
     }
 
     return null;

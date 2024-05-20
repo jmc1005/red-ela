@@ -117,5 +117,15 @@
         "example": "Artículo"
       }
     }
-  }
+  },
+  "telefono": "Móvil",
+  "confirmar": "Confirmar",
+  "enviar_codigo": "Enviar Código",
+  "acceder_otp": "Acceder con código",
+  "otp_error": "Error al obtener código de un sólo uso",
+  "numero_invalido": "Número teléfono no válido",
+  "registrado": "Usuario registrado",
+  "codigoVerificacionInvalido": "Código verification inválido",
+  "reviseDatosFormulario": "Revise los datos del formulario",
+  "infoInvitacion": "Para poder acceder con código debes haber recibido un correo de invitación."
 }

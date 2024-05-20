@@ -20,8 +20,12 @@ class TextGestureDetectorWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(pregunta, textAlign: TextAlign.center),
+          const SizedBox(
+            width: 5,
+          ),
           GestureDetector(
             onTap: onTap,
             child: Text(

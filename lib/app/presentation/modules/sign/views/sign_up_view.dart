@@ -19,7 +19,6 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return SignView(
-      isSignIn: false,
       onTap: _onTap,
     );
   }

@@ -15,6 +15,8 @@ class CuidadorDataWidget extends StatefulWidget with ValidatorMixin {
 }
 
 class _CuidadorDataWidgetState extends State<CuidadorDataWidget> {
+  final FocusNode relacionFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     final controller = widget.usuarioController;
@@ -31,7 +33,8 @@ class _CuidadorDataWidgetState extends State<CuidadorDataWidget> {
           TextFormWidget(
             label: language.relacion,
             keyboardType: TextInputType.text,
-            onChanged: (text) => controller.onChangeTratamiento(text),
+            focusNode: relacionFocus,
+            onChanged: (text) => controller.onChangeRelacion(text),
             validator: (value) => widget.textValidator(
               value,
               language,

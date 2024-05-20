@@ -18,10 +18,10 @@ class PacienteController {
 
   Future<void> update(context, language, PacienteModel paciente) async {
     final result = await pacienteRepo.updatePaciente(
-      paciente.tratamiento,
-      paciente.fechaDiagnostico!,
-      paciente.inicio,
-      paciente.cuidador,
+      tratamiento: paciente.tratamiento!,
+      fechaDiagnostico: paciente.fechaDiagnostico!,
+      inicio: paciente.inicio!,
+      cuidador: paciente.cuidador,
     );
 
     late String code;

@@ -14,6 +14,7 @@ class TextFormWidget extends StatelessWidget {
     this.initialValue,
     this.onTap,
     this.readOnly = false,
+    this.prefixText,
   });
 
   final String label;
@@ -27,24 +28,29 @@ class TextFormWidget extends StatelessWidget {
   final String? initialValue;
   final Function()? onTap;
   final bool readOnly;
+  final String? prefixText;
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: initialValue,
-      controller: controller,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      onChanged: onChanged,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        label: Text(label),
-        suffixIcon: suffixIcon,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 1.5,
+      child: TextFormField(
+        initialValue: initialValue,
+        controller: controller,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          label: Text(label),
+          suffixIcon: suffixIcon,
+          prefixText: prefixText,
+        ),
+        validator: validator,
+        obscureText: obscureText,
+        focusNode: focusNode,
+        onTap: onTap,
+        readOnly: readOnly,
       ),
-      validator: validator,
-      obscureText: obscureText,
-      focusNode: focusNode,
-      onTap: onTap,
-      readOnly: readOnly,
     );
   }
 
