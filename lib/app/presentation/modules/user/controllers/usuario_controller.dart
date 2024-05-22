@@ -148,12 +148,13 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
 
   Future<void> update(context, language) async {
     final result = await usuarioRepo.updateUsuario(
-      state!.usuario.nombre!,
-      state!.usuario.apellido1!,
-      state!.usuario.apellido2!,
-      state!.usuario.email!,
-      state!.usuario.fechaNacimiento!,
-      state!.usuario.rol!,
+      nombre: state!.usuario.nombre!,
+      apellido1: state!.usuario.apellido1!,
+      apellido2: state!.usuario.apellido2!,
+      email: state!.usuario.email!,
+      fechaNacimiento: state!.usuario.fechaNacimiento!,
+      telefono: state!.usuario.telefono!,
+      rol: state!.usuario.rol,
     );
 
     late String code;

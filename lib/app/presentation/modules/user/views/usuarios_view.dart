@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
 
@@ -6,33 +9,84 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../global/widgets/app_bar_widget.dart';
+import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import '../widgets/usuario_row_widget.dart';
+import 'usuario_detail_view.dart';
 
 class UsuariosView extends StatefulWidget {
-  const UsuariosView({super.key});
+  const UsuariosView({super.key, required this.filterRol});
+
+  final String filterRol;
 
   @override
   State<UsuariosView> createState() => _UsuariosViewState();
 }
 
 class _UsuariosViewState extends State<UsuariosView> {
-  late final Future<Result<List<UsuarioModel>, dynamic>> _future;
+  List<UsuarioModel> _usuarios = [];
+  final StreamController<List<UsuarioModel>> _usuariosStream =
+      StreamController();
+  final _textNombreController = TextEditingController();
+  final _textApellido1Controller = TextEditingController();
+  final _textApellido2Controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _future = _init();
+    _loadUsuarios();
   }
 
-  Future<Result<List<UsuarioModel>, dynamic>> _init() async {
+  Future<void> _loadUsuarios() async {
     final UsuarioRepo repo = context.read();
-    return repo.getAllUsuario();
+    final usuarios = await repo.getAllUsuario();
+
+    final result = usuarios.when(
+      (success) => success,
+      (error) => error,
+    );
+    if (result is List<UsuarioModel>) {
+      final nombre = _textNombreController.text;
+      final apellido1 = _textApellido1Controller.text;
+      final apellido2 = _textApellido2Controller.text;
+
+      _usuarios = result.where((r) => r.rol == widget.filterRol).toList();
+
+      if (nombre.isNotEmpty) {
+        _usuarios = _usuarios
+            .where((u) => u.nombre != null && u.nombre!.contains(nombre.trim()))
+            .toList();
+      }
+
+      if (apellido1.isNotEmpty) {
+        _usuarios = _usuarios
+            .where(
+              (u) =>
+                  u.apellido1 != null &&
+                  u.apellido1!.contains(apellido1.trim()),
+            )
+            .toList();
+      }
+
+      if (apellido2.isNotEmpty) {
+        _usuarios = _usuarios
+            .where(
+              (u) =>
+                  u.apellido2 != null &&
+                  u.apellido2!.contains(apellido2.trim()),
+            )
+            .toList();
+      }
+      _usuariosStream.add(_usuarios);
+      debugPrint(_usuarios.toString());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final language = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBarWidget(
         asset: 'assets/images/redela_logo.png',
@@ -46,14 +100,15 @@ class _UsuariosViewState extends State<UsuariosView> {
           ),
         ),
         backgroundColor: Colors.blueGrey[100],
+        width: 90,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigator.push(
           //   context,
           //   MaterialPageRoute(
-          //     builder: (context) => ArticleDetailView(
-          //       editMode: editMode,
+          //     builder: (context) => UsuarioDetailView(
+          //       usuarioModel: ,
           //     ),
           //   ),
           // );
@@ -66,37 +121,52 @@ class _UsuariosViewState extends State<UsuariosView> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
           children: [
+            Row(
+              children: [
+                TextFormWidget(
+                  label: language.nombre,
+                  keyboardType: TextInputType.text,
+                  controller: _textNombreController,
+                  onChanged: (value) {
+                    _loadUsuarios();
+                  },
+                ),
+                TextFormWidget(
+                  label: language.apellido,
+                  keyboardType: TextInputType.text,
+                  controller: _textApellido1Controller,
+                  onChanged: (value) {
+                    _loadUsuarios();
+                  },
+                ),
+                TextFormWidget(
+                  label: language.apellido2,
+                  keyboardType: TextInputType.text,
+                  controller: _textApellido2Controller,
+                  onChanged: (value) {
+                    _loadUsuarios();
+                  },
+                ),
+              ],
+            ),
             Expanded(
-              child: FutureBuilder(
-                future: _future,
+              child: StreamBuilder(
+                stream: _usuariosStream.stream,
                 builder: (_, snapshot) {
-                  if (snapshot.hasData) {
-                    final data = snapshot.data!;
+                  return snapshot.hasData
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ScrollPhysics(),
+                          itemBuilder: (_, index) {
+                            final usuarioModel = snapshot.data![index];
 
-                    final result = data.when(
-                      (success) => success,
-                      (error) => error,
-                    );
-
-                    if (result is List<UsuarioModel>) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        itemBuilder: (_, index) {
-                          final usuarioModel = result[index];
-                          return UsuarioRowWidget(
-                            usuarioModel: usuarioModel,
-                          );
-                        },
-                        itemCount: result.length,
-                      );
-                    }
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  return const Text('Error');
+                            return UsuarioRowWidget(
+                              usuarioModel: usuarioModel,
+                            );
+                          },
+                          itemCount: snapshot.data!.length,
+                        )
+                      : const Center(child: CircularProgressIndicator());
                 },
               ),
             ),

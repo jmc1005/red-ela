@@ -73,8 +73,8 @@ class _RedelaState extends State<Redela> {
               child: MaterialApp(
                 navigatorKey: _navigatorKey,
                 initialRoute: Routes.signIn,
-                // onGenerateRoute: generateRoute,
-                routes: appRoutes,
+                onGenerateRoute: generateRoute,
+                // routes: appRoutes,
                 theme: theme.light,
                 locale: provider.locale,
                 supportedLocales: L10n.support,

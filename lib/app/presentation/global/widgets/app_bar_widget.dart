@@ -7,12 +7,14 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     required this.asset,
     this.backgroundColor,
+    this.width,
   });
 
   final Widget? leading;
   final List<Widget>? actions;
   final String asset;
   final Color? backgroundColor;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       leading: leading,
       title: Image.asset(
         asset,
-        width: 150,
+        width: width,
       ),
       centerTitle: true,
       actions: actions,

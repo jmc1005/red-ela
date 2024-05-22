@@ -52,6 +52,7 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
         appBar: AppBarWidget(
           asset: 'images/redela_logo.png',
           backgroundColor: ColorConfig.primary,
+          width: 90,
           leading: IconButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
@@ -101,15 +102,17 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                             final usuarioModel =
                                 usuarioController.state!.usuario;
 
-                            final tipo = usuarioModel.rol != null &&
-                                    usuarioModel.rol!.isNotEmpty
+                            final tipo = usuarioModel.rol.isNotEmpty
                                 ? usuarioModel.rol
                                 : UsuarioTipo.paciente.value;
+
                             return Column(
                               children: [
                                 AccordionWidget(children: [
                                   AccordionSection(
                                     header: Text(language.datos_personales),
+                                    headerBackgroundColor: Colors.white,
+                                    headerBackgroundColorOpened: Colors.white,
                                     contentVerticalPadding: 20,
                                     content: UsuarioDataWidget(
                                       usuarioController: usuarioController,
@@ -118,6 +121,8 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                   ),
                                   AccordionSection(
                                     header: Text(language.tipo_usuario),
+                                    headerBackgroundColor: Colors.white,
+                                    headerBackgroundColorOpened: Colors.white,
                                     contentVerticalPadding: 20,
                                     content: Column(
                                       children: [

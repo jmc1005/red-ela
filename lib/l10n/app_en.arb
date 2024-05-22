@@ -127,5 +127,9 @@
   "registrado": "User registered",
   "codigoVerificacionInvalido": "Invalid verification code",
   "reviseDatosFormulario": "Review the form data",
-  "infoInvitacion": "To be able to access with code you have received an invitation email."
+  "infoInvitacion": "To be able to access with code you have received an invitation email.",
+  "gestores_casos": "Managements cases",
+  "pacientes": "Patients",
+  "cuidadores": "Caregivers",
+  "buscar": "Search"
 }

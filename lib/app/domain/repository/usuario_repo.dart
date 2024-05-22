@@ -22,17 +22,18 @@ abstract class UsuarioRepo {
   Future<Result<dynamic, dynamic>> addUsuario({
     required String rol,
     String? email,
-    String? phonNumber,
+    String? phoneNumber,
   });
 
-  Future<Result<dynamic, dynamic>> updateUsuario(
-    String nombre,
-    String apellido1,
-    String apellido2,
-    String email,
-    String fechaNacimiento,
-    String rol,
-  );
+  Future<Result<dynamic, dynamic>> updateUsuario({
+    required String nombre,
+    required String apellido1,
+    required String apellido2,
+    required String email,
+    required String fechaNacimiento,
+    required String telefono,
+    required String rol,
+  });
 
   Future<Result<dynamic, dynamic>> deleteUsuario();
 

@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../domain/models/typedefs.dart';
 import '../../domain/models/usuario/usuario_model.dart';
 import '../../domain/repository/usuario_repo.dart';
-import '../../utils/constants/app_constants.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
 import '../services/local/encrypt_data.dart';
@@ -29,6 +27,10 @@ class UsuarioRepoImpl extends UsuarioRepo {
   Future<Result<UsuarioModel, dynamic>> getUsuario() async {
     try {
       final currentUid = await sessionService.currentUid;
+
+      // 4SPQWrLCPFQcxJdFnRvXVA==
+      final rol = await EncryptData.encryptData('admin');
+      debugPrint('rol $rol');
 
       return await firebaseService
           .getFromDocument(
@@ -95,19 +97,17 @@ class UsuarioRepoImpl extends UsuarioRepo {
   }
 
   @override
-  Future<Result<dynamic, dynamic>> updateUsuario(
-    String nombre,
-    String apellido1,
-    String apellido2,
-    String email,
-    String fechaNacimiento,
-    String rol,
-  ) async {
+  Future<Result<dynamic, dynamic>> updateUsuario({
+    required String nombre,
+    required String apellido1,
+    required String apellido2,
+    required String email,
+    required String fechaNacimiento,
+    required String telefono,
+    required String rol,
+  }) async {
     try {
       final currentUser = fireAuthService.currentUser()!;
-
-      final format = DateFormat(AppConstants.formatDate);
-      final dateTime = format.parse(fechaNacimiento);
 
       final data = {
         'uid': currentUser.uid,
@@ -115,7 +115,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
         'apellido1': await EncryptData.encryptData(apellido1),
         'apellido2': await EncryptData.encryptData(apellido2),
         'email': email,
-        'fecha_nacimiento': dateTime,
+        'fecha_nacimiento': await EncryptData.encryptData(fechaNacimiento),
+        'telefono': telefono,
         'rol': await EncryptData.encryptData(rol)
       };
 
@@ -140,17 +141,15 @@ class UsuarioRepoImpl extends UsuarioRepo {
   Future<Result<dynamic, dynamic>> addUsuario({
     String? email,
     required String rol,
-    String? phonNumber,
+    String? phoneNumber,
   }) async {
     final currentUser = fireAuthService.currentUser()!;
 
     final data = {
       'uid': currentUser.uid,
-      'email': currentUser.email ?? '',
+      'email': email ?? '',
       'rol': await EncryptData.encryptData(rol),
-      'telefono': currentUser.phoneNumber != null
-          ? currentUser.phoneNumber!.replaceAll('+34', '')
-          : '',
+      'telefono': phoneNumber != null ? phoneNumber.replaceAll('+34', '') : '',
     };
 
     try {
@@ -204,7 +203,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
       );
 
       for (final element in usuarios) {
-        list.add(UsuarioModel.fromJson(element));
+        final json = await EncryptData.decryptDataJson(element);
+        list.add(UsuarioModel.fromJson(json));
       }
 
       return Success(list);
@@ -233,7 +233,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
         final resultAdd = await addUsuario(
           rol: rol,
-          phonNumber: currentUser.phoneNumber,
+          phoneNumber: currentUser.phoneNumber,
         );
 
         return resultAdd.when(

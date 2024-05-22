@@ -23,7 +23,7 @@ class UsuarioModel with _$UsuarioModel {
       readValue: readFechaNacimiento,
     )
     String? fechaNacimiento,
-    String? rol,
+    String rol,
   ) = _UsuarioModel;
 
   factory UsuarioModel.fromJson(Json json) => _$UsuarioModelFromJson(json);

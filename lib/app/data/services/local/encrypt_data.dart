@@ -10,6 +10,8 @@ class EncryptData {
   static String _encryptKey = '';
   static String _encryptIV = ''; // 128-bit IV
 
+  static const List<String> notDecryptList = ['uid', 'email', 'telefono'];
+
   EncryptData._() {
     getSecureKey();
   }
@@ -54,8 +56,10 @@ class EncryptData {
     final Json result = json;
 
     json.forEach((key, value) async {
-      final decrypt = await decryptData(value);
-      result[key] = decrypt;
+      if (!notDecryptList.contains(key) && value.toString().isNotEmpty) {
+        final decrypt = await decryptData(value);
+        result[key] = decrypt;
+      }
     });
 
     material.debugPrint(jsonEncode(result));

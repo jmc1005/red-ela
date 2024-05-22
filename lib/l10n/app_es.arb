@@ -127,5 +127,9 @@
   "registrado": "Usuario registrado",
   "codigoVerificacionInvalido": "Código verification inválido",
   "reviseDatosFormulario": "Revise los datos del formulario",
-  "infoInvitacion": "Para poder acceder con código debes haber recibido un correo de invitación."
+  "infoInvitacion": "Para poder acceder con código debes haber recibido un correo de invitación.",
+  "gestores_casos": "Gestores de casos",
+  "pacientes": "Pacientes",
+  "cuidadores": "Cuidadores",
+  "buscar": "Buscar"
 }
