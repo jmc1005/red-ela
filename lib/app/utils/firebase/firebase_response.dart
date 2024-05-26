@@ -51,6 +51,8 @@ class FirebaseResponse {
         return language.codigoVerificacionInvalido;
       case FirebaseCode.reviewFormData:
         return language.reviseDatosFormulario;
+      case FirebaseCode.invalidPassword:
+        return language.password_invalido;
     }
 
     return language.unknown;

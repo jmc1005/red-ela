@@ -27,7 +27,7 @@ class GestionUsuarioWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => UsuariosView(
-                filterRol: UsuarioTipo.gestorCasos.value,
+                rol: UsuarioTipo.gestorCasos.value,
               ),
             ),
           );
@@ -40,7 +40,7 @@ class GestionUsuarioWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => UsuariosView(
-                filterRol: UsuarioTipo.paciente.value,
+                rol: UsuarioTipo.paciente.value,
               ),
             ),
           );
@@ -53,7 +53,7 @@ class GestionUsuarioWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => UsuariosView(
-                filterRol: UsuarioTipo.cuidador.value,
+                rol: UsuarioTipo.cuidador.value,
               ),
             ),
           );

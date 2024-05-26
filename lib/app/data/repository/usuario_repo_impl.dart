@@ -5,6 +5,7 @@ import 'package:multiple_result/multiple_result.dart';
 import '../../domain/models/typedefs.dart';
 import '../../domain/models/usuario/usuario_model.dart';
 import '../../domain/repository/usuario_repo.dart';
+import '../../utils/firebase/firebase_code_enum.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
 import '../services/local/encrypt_data.dart';
@@ -28,14 +29,38 @@ class UsuarioRepoImpl extends UsuarioRepo {
     try {
       final currentUid = await sessionService.currentUid;
 
-      // 4SPQWrLCPFQcxJdFnRvXVA==
-      final rol = await EncryptData.encryptData('admin');
-      debugPrint('rol $rol');
+      // admin: 4SPQWrLCPFQcxJdFnRvXVA==
+      final admin = await EncryptData.encryptData('admin');
+      debugPrint('rol $admin');
+
+      // paciente: 4SPQWrLCPFQcxJdFnRvXVA==
+      final paciente = await EncryptData.encryptData('paciente');
+      debugPrint('rol $paciente');
+
+      // cuidador: 4SPQWrLCPFQcxJdFnRvXVA==
+      final cuidador = await EncryptData.encryptData('cuidador');
+      debugPrint('rol $cuidador');
 
       return await firebaseService
           .getFromDocument(
             collectionPath: collection,
             documentPath: currentUid!,
+          )
+          .then((json) async => successFromJson(json));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-get-failed'));
+    }
+  }
+
+  @override
+  Future<Result<UsuarioModel, dynamic>> getUsuarioByUid(
+      {required String uid}) async {
+    try {
+      return await firebaseService
+          .getFromDocument(
+            collectionPath: collection,
+            documentPath: uid,
           )
           .then((json) async => successFromJson(json));
     } catch (e) {
@@ -61,11 +86,12 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
     if (result is User) {
       sessionService.saveCurrentUid(result.uid);
+      sessionService.saveRol(result.uid);
 
       return Success(result);
     }
 
-    return const Error('user-not-found');
+    return const Error(FirebaseCode.invalidPassword);
   }
 
   @override
@@ -98,36 +124,38 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
   @override
   Future<Result<dynamic, dynamic>> updateUsuario({
+    required String uid,
     required String nombre,
     required String apellido1,
     required String apellido2,
     required String email,
-    required String fechaNacimiento,
+    String? password,
     required String telefono,
-    required String rol,
+    required String fechaNacimiento,
   }) async {
     try {
       final currentUser = fireAuthService.currentUser()!;
 
       final data = {
-        'uid': currentUser.uid,
+        'uid': uid,
         'nombre': await EncryptData.encryptData(nombre),
         'apellido1': await EncryptData.encryptData(apellido1),
         'apellido2': await EncryptData.encryptData(apellido2),
         'email': email,
         'fecha_nacimiento': await EncryptData.encryptData(fechaNacimiento),
         'telefono': telefono,
-        'rol': await EncryptData.encryptData(rol)
       };
 
-      if (currentUser.email != email) {
-        fireAuthService.updateEmail(email);
+      if (currentUser.uid == uid &&
+          currentUser.email == null &&
+          password != null) {
+        await fireAuthService.signInWithEmailAndPassword(email, password);
       }
 
       return await firebaseService
           .updateDataOnDocument(
             collectionPath: collection,
-            uuid: currentUser.uid,
+            uuid: uid,
             data: data,
           )
           .then((value) => const Success('data-updated'));
@@ -140,8 +168,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
   @override
   Future<Result<dynamic, dynamic>> addUsuario({
     String? email,
-    required String rol,
     String? phoneNumber,
+    required String rol,
   }) async {
     final currentUser = fireAuthService.currentUser()!;
 
@@ -252,12 +280,19 @@ class UsuarioRepoImpl extends UsuarioRepo {
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
     required String rol,
+    required String solicitado,
     required BuildContext context,
   }) async {
     await fireAuthService.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       rol: rol,
+      solicitado: solicitado,
       context: context,
     );
+  }
+
+  @override
+  Future<void> resetPassword({required String email}) async {
+    fireAuthService.resetPassword(email: email);
   }
 }

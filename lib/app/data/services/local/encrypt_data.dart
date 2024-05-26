@@ -10,7 +10,14 @@ class EncryptData {
   static String _encryptKey = '';
   static String _encryptIV = ''; // 128-bit IV
 
-  static const List<String> notDecryptList = ['uid', 'email', 'telefono'];
+  static const List<String> notDecryptList = [
+    'uid',
+    'email',
+    'telefono',
+    'pacientes',
+    'cuidador',
+    'gestor_caso'
+  ];
 
   EncryptData._() {
     getSecureKey();

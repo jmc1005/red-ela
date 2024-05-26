@@ -16,4 +16,5 @@ abstract class FirebaseCode {
   static const String userRegistered = 'user-registered';
   static const String invalidVerificationCode = 'invalid-verification-code';
   static const String reviewFormData = 'review-form-data';
+  static const String invalidPassword = 'invalid-password';
 }

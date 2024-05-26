@@ -46,6 +46,9 @@ class _OTPMovilViewState extends State<OTPMovilView> {
         const OTPState(),
         usuarioRepo: context.read(),
         invitacionRepo: context.read(),
+        pacienteRepo: context.read(),
+        cuidadorRepo: context.read(),
+        gestorCasosRepo: context.read(),
       ),
       child: Scaffold(
         body: SafeArea(
@@ -114,6 +117,7 @@ class _OTPMovilViewState extends State<OTPMovilView> {
                                   await otpController.enviarOTP(
                                     phoneNumber: phoneController.text,
                                     rol: success.rol,
+                                    solicitado: success.solicitado,
                                     context: context,
                                   );
                                 } else {

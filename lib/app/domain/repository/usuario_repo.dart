@@ -17,22 +17,25 @@ abstract class UsuarioRepo {
 
   Future<Result<UsuarioModel, dynamic>> getUsuario();
 
+  Future<Result<UsuarioModel, dynamic>> getUsuarioByUid({required String uid});
+
   Future<Result<List<UsuarioModel>, dynamic>> getAllUsuario();
 
   Future<Result<dynamic, dynamic>> addUsuario({
-    required String rol,
     String? email,
     String? phoneNumber,
+    required String rol,
   });
 
   Future<Result<dynamic, dynamic>> updateUsuario({
+    required String uid,
     required String nombre,
     required String apellido1,
     required String apellido2,
     required String email,
-    required String fechaNacimiento,
+    String? password,
     required String telefono,
-    required String rol,
+    required String fechaNacimiento,
   });
 
   Future<Result<dynamic, dynamic>> deleteUsuario();
@@ -42,6 +45,7 @@ abstract class UsuarioRepo {
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
     required String rol,
+    required String solicitado,
     required BuildContext context,
   });
 
@@ -50,4 +54,6 @@ abstract class UsuarioRepo {
     required String verificationId,
     required String smsCode,
   });
+
+  Future<void> resetPassword({required String email});
 }

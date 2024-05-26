@@ -22,4 +22,6 @@ abstract class CuidadorRepo {
   Future<Result<dynamic, dynamic>> deleteCuidador();
 
   Future<Result<CuidadorModel, dynamic>> findCuidadorByEmail(String email);
+
+  Future<void> updateCuidadorRelacion({required String solicitado});
 }

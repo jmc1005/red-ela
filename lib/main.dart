@@ -49,15 +49,20 @@ Future<void> main() async {
     persistenceEnabled: true,
   );
 
-  final pacienteRepo = PacienteRepoImpl(
+  final gestorCasosRepo = GestorCasosRepoImpl(
     firebaseService: FirebaseService(firestore: firestore),
     fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
   );
 
+  final pacienteRepo = PacienteRepoImpl(
+      firebaseService: FirebaseService(firestore: firestore),
+      fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+      gestorCasosRepo: gestorCasosRepo);
+
   final cuidadorRepo = CuidadorRepoImpl(
-    firebaseService: FirebaseService(firestore: firestore),
-    fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
-  );
+      firebaseService: FirebaseService(firestore: firestore),
+      fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+      pacienteRepo: pacienteRepo);
 
   runApp(
     MultiProvider(
@@ -68,6 +73,9 @@ Future<void> main() async {
             CheckConnection(),
           ),
         ),
+        Provider<SessionService>(
+          create: (_) => sessionService,
+        ),
         Provider<RolRepo>(
           create: (_) => RolRepoImpl(
             firebaseService: FirebaseService(firestore: firestore),
@@ -75,17 +83,19 @@ Future<void> main() async {
         ),
         Provider<UsuarioRepo>(
           create: (_) => UsuarioRepoImpl(
-              firebaseService: FirebaseService(firestore: firestore),
-              fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
-              sessionService: sessionService),
-        ),
-        Provider<PacienteRepo>(create: (_) => pacienteRepo),
-        Provider<CuidadorRepo>(create: (_) => cuidadorRepo),
-        Provider<GestorCasosRepo>(
-          create: (_) => GestorCasosRepoImpl(
             firebaseService: FirebaseService(firestore: firestore),
             fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+            sessionService: sessionService,
           ),
+        ),
+        Provider<PacienteRepo>(
+          create: (_) => pacienteRepo,
+        ),
+        Provider<CuidadorRepo>(
+          create: (_) => cuidadorRepo,
+        ),
+        Provider<GestorCasosRepo>(
+          create: (_) => gestorCasosRepo,
         ),
         Provider<InvitacionRepo>(
           create: (_) => InvitacionRepoImpl(
@@ -105,6 +115,9 @@ Future<void> main() async {
             const OTPState(),
             usuarioRepo: context.read(),
             invitacionRepo: context.read(),
+            pacienteRepo: context.read(),
+            cuidadorRepo: context.read(),
+            gestorCasosRepo: context.read(),
           ),
         ),
         ChangeNotifierProvider<SignController>(
@@ -119,6 +132,7 @@ Future<void> main() async {
             usuarioRepo: context.read(),
             context: context,
             pacienteController: context.read(),
+            sessionService: sessionService,
           ),
         ),
         ChangeNotifierProvider<OTPController>(
@@ -126,6 +140,9 @@ Future<void> main() async {
             const OTPState(),
             usuarioRepo: context.read(),
             invitacionRepo: context.read(),
+            pacienteRepo: context.read(),
+            cuidadorRepo: context.read(),
+            gestorCasosRepo: context.read(),
           ),
         ),
       ],

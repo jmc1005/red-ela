@@ -7,10 +7,11 @@ part 'gestor_casos_model.g.dart';
 
 @freezed
 class GestorCasosModel with _$GestorCasosModel {
-  const factory GestorCasosModel(
-    @JsonKey(name: 'usuario_uid') String usuarioUid,
-    String hospital,
-  ) = _GestorCasosModel;
+  const factory GestorCasosModel({
+    @JsonKey(name: 'usuario_uid') required String usuarioUid,
+    String? hospital,
+    List<String>? pacientes,
+  }) = _GestorCasosModel;
 
   factory GestorCasosModel.fromJson(Json json) =>
       _$GestorCasosModelFromJson(json);

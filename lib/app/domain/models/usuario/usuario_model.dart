@@ -15,18 +15,27 @@ class UsuarioModel with _$UsuarioModel {
     String? nombre,
     String? apellido1,
     String? apellido2,
+    @JsonKey(name: 'nombre_completo') String? nombreCompleto,
     String? email,
     String? telefono,
     String? password,
-    @JsonKey(
-      name: 'fecha_nacimiento',
-      readValue: readFechaNacimiento,
-    )
+    @JsonKey(name: 'fecha_nacimiento', readValue: readFechaNacimiento)
     String? fechaNacimiento,
     String rol,
   ) = _UsuarioModel;
 
-  factory UsuarioModel.fromJson(Json json) => _$UsuarioModelFromJson(json);
+  factory UsuarioModel.fromJson(Json json) => _fromJson(json);
+}
+
+UsuarioModel _fromJson(Json json) {
+  final nombre = json['nombre'] ?? '';
+  final apellido1 = json['apellido1'] ?? '';
+  final apellido2 = json['apellido2'] ?? '';
+
+  final nombreCompleto = '$nombre $apellido1 $apellido2';
+  json['nombre_completo'] = nombreCompleto;
+
+  return _$UsuarioModelFromJson(json);
 }
 
 Object? readFechaNacimiento(Map map, String _) {

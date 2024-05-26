@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_constants.dart';
 import '../cuidador/cuidador_model.dart';
+import '../gestor_casos/gestor_casos_model.dart';
 import '../typedefs.dart';
 
 part 'paciente_model.freezed.dart';
@@ -20,6 +21,7 @@ class PacienteModel with _$PacienteModel {
     )
     String? fechaDiagnostico,
     String? inicio,
+    @JsonKey(name: 'gestor_casos') GestorCasosModel? gestorCasos,
     @JsonKey(name: 'cuidador') CuidadorModel? cuidador,
   }) = _PacienteModel;
 

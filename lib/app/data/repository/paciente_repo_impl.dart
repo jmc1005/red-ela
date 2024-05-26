@@ -7,6 +7,7 @@ import 'package:multiple_result/multiple_result.dart';
 import '../../domain/models/cuidador/cuidador_model.dart';
 import '../../domain/models/paciente/paciente_model.dart';
 import '../../domain/models/typedefs.dart';
+import '../../domain/repository/gestor_casos_repo.dart';
 import '../../domain/repository/paciente_repo.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
@@ -15,10 +16,12 @@ import '../services/local/encrypt_data.dart';
 class PacienteRepoImpl implements PacienteRepo {
   final FireAuthService fireAuthService;
   final FirebaseService firebaseService;
+  final GestorCasosRepo gestorCasosRepo;
 
   PacienteRepoImpl({
     required this.fireAuthService,
     required this.firebaseService,
+    required this.gestorCasosRepo,
   });
 
   final String collection = 'pacientes';
@@ -104,19 +107,8 @@ class PacienteRepoImpl implements PacienteRepo {
 
   @override
   Future<Result<PacienteModel, dynamic>> getPaciente() {
-    final currentUser = fireAuthService.currentUser();
-
-    try {
-      return firebaseService
-          .getFromDocument(
-            collectionPath: collection,
-            documentPath: currentUser!.uid,
-          )
-          .then((json) async => successFromJson(json));
-    } catch (e) {
-      debugPrint(e.toString());
-      return Future.value(const Error('data-get-failed'));
-    }
+    final currentUser = fireAuthService.currentUser()!;
+    return _getPacienteFirebase(currentUser.uid);
   }
 
   Future<Success<PacienteModel, dynamic>> successFromJson(Json json) async {
@@ -152,7 +144,7 @@ class PacienteRepoImpl implements PacienteRepo {
   }
 
   @override
-  Future<Result<List<String>, dynamic>> getAllPacientesByUidOrEmailCuidador({
+  Future<Result<List<String>, dynamic>> getAllPacientesByUidCuidador({
     required String uidCuidador,
     required String email,
   }) async {
@@ -161,14 +153,9 @@ class PacienteRepoImpl implements PacienteRepo {
       isEqualTo: uidCuidador,
     );
 
-    final filterCuidadorEmail = Filter(
-      'cuidador.email',
-      isEqualTo: email,
-    );
-
     final data = await firebaseService
         .getCollection(collectionPath: collection)
-        .where(Filter.or(filterCuidadorUid, filterCuidadorEmail))
+        .where(filterCuidadorUid)
         .get();
 
     final List<String> dataList = data.docs
@@ -178,5 +165,74 @@ class PacienteRepoImpl implements PacienteRepo {
         .toList();
 
     return Future.value(Success(dataList));
+  }
+
+  @override
+  Future<void> updatePacienteRelacion({required String solicitado}) async {
+    final currentUser = fireAuthService.currentUser()!;
+
+    final response = await gestorCasosRepo.getGestorCasosByUid(solicitado);
+
+    response.when(
+      (success) async {
+        if (success.pacientes != null && success.pacientes!.isNotEmpty) {
+          var pacientes = success.pacientes!;
+          pacientes.add(currentUser.uid);
+
+          await gestorCasosRepo.updateGestorCasos(
+            hospital: success.hospital!,
+            pacientes: pacientes,
+          );
+        }
+      },
+      (error) => null,
+    );
+
+    try {
+      await firebaseService.updateFieldsOnDocument(
+        collectionPath: collection,
+        documentPath: currentUser.uid,
+        data: {
+          'gestor_caso': solicitado,
+        },
+      ).then((value) => const Success('data-added'));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  Future<void> addCuidador(
+      {required String uidPaciente, required String uidCuidador}) async {
+    try {
+      await firebaseService.updateFieldsOnDocument(
+        collectionPath: collection,
+        documentPath: uidPaciente,
+        data: {
+          'cuidador': uidCuidador,
+        },
+      ).then((value) => const Success('data-added'));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  Future<Result<PacienteModel, dynamic>> getPacienteByUid(String uid) {
+    return _getPacienteFirebase(uid);
+  }
+
+  Future<Result<PacienteModel, dynamic>> _getPacienteFirebase(String uid) {
+    try {
+      return firebaseService
+          .getFromDocument(
+            collectionPath: collection,
+            documentPath: uid,
+          )
+          .then((json) async => successFromJson(json));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-get-failed'));
+    }
   }
 }

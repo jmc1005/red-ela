@@ -98,8 +98,11 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                           Form(
                             key: _formKey,
                             child: Builder(builder: (context) {
-                              final UsuarioController usuarioController =
-                                  context.read();
+                              final usuarioController =
+                                  Provider.of<UsuarioController>(
+                                context,
+                                listen: false,
+                              );
 
                               if (usuarioController.state == null) {
                                 usuarioController.usuario = usuario;
@@ -117,8 +120,10 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                   AccordionWidget(children: [
                                     AccordionSection(
                                       header: Text(language.datos_personales),
-                                      headerBackgroundColor: Colors.white,
-                                      headerBackgroundColorOpened: Colors.white,
+                                      headerBackgroundColor:
+                                          ColorConfig.primary,
+                                      headerBackgroundColorOpened:
+                                          ColorConfig.primary,
                                       contentVerticalPadding: 20,
                                       content: UsuarioDataWidget(
                                         usuarioController: usuarioController,
@@ -127,8 +132,10 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                     ),
                                     AccordionSection(
                                       header: Text(language.tipo_usuario),
-                                      headerBackgroundColor: Colors.white,
-                                      headerBackgroundColorOpened: Colors.white,
+                                      headerBackgroundColor:
+                                          ColorConfig.primary,
+                                      headerBackgroundColorOpened:
+                                          ColorConfig.primary,
                                       contentVerticalPadding: 20,
                                       content: Column(
                                         children: [
