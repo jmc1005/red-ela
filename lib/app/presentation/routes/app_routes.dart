@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../modules/admin/views/admin_view.dart';
 import '../modules/otp/views/otp_movil_view.dart';
+import '../modules/rol/views/roles_view.dart';
 import '../modules/sign/views/sign_in_view.dart';
 import '../modules/sign/views/sign_up_view.dart';
 
@@ -13,6 +14,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.signUp: (_) => const SignUpView(),
     Routes.admin: (_) => const AdminView(),
     Routes.sendOTP: (_) => OTPMovilView(),
+    Routes.rolList: (_) => const RolesView(),
   };
 }
 

@@ -104,7 +104,8 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                 listen: false,
                               );
 
-                              if (usuarioController.state == null) {
+                              if (usuarioController.state == null &&
+                                  usuario != null) {
                                 usuarioController.usuario = usuario;
                               }
 
@@ -159,15 +160,9 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
-                                        usuarioController.update(
-                                          context,
-                                          language,
-                                        );
+                                        usuarioController.update(language);
                                       } else {
-                                        usuarioController.showWarning(
-                                          context,
-                                          language,
-                                        );
+                                        usuarioController.showWarning(language);
                                       }
                                     },
                                     label: language.guardar,

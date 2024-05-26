@@ -132,5 +132,6 @@
   "pacientes": "Patients",
   "cuidadores": "Caregivers",
   "buscar": "Search",
-  "olvido_password": "Forgot password?"
+  "olvido_password": "Forgot password?",
+  "rol": "Role"
 }

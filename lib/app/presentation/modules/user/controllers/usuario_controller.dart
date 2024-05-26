@@ -149,7 +149,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     } else {}
   }
 
-  Future<void> update(context, language) async {
+  Future<void> update(language) async {
     final result = await usuarioRepo.updateUsuario(
       uid: state!.usuario.uid,
       nombre: state!.usuario.nombre!,
@@ -183,7 +183,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     }
   }
 
-  void showWarning(context, language) {
+  void showWarning(language) {
     final response = FirebaseResponse(
       context: context,
       language: language,

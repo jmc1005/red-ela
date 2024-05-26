@@ -10,8 +10,8 @@ part 'usuario_model.g.dart';
 
 @freezed
 class UsuarioModel with _$UsuarioModel {
-  const factory UsuarioModel(
-    String uid,
+  const factory UsuarioModel({
+    required String uid,
     String? nombre,
     String? apellido1,
     String? apellido2,
@@ -21,8 +21,8 @@ class UsuarioModel with _$UsuarioModel {
     String? password,
     @JsonKey(name: 'fecha_nacimiento', readValue: readFechaNacimiento)
     String? fechaNacimiento,
-    String rol,
-  ) = _UsuarioModel;
+    required String rol,
+  }) = _UsuarioModel;
 
   factory UsuarioModel.fromJson(Json json) => _fromJson(json);
 }

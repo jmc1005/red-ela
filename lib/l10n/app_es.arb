@@ -132,5 +132,6 @@
   "pacientes": "Pacientes",
   "cuidadores": "Cuidadores",
   "buscar": "Buscar",
-  "olvido_password": "¿Has olvidado la contraseña?"
+  "olvido_password": "¿Has olvidado la contraseña?",
+  "rol": "Rol"
 }
