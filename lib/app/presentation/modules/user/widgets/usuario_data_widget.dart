@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:googleapis/admin/reports_v1.dart';
 
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
@@ -25,19 +26,31 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
   final confirmPassFocusNode = FocusNode();
   final phoneController = TextEditingController();
 
-  var hasEmail = false;
+  var isEmailEmpty = false;
   var obscurePassword = true;
   var obscureConfirmPassword = true;
   var validConfirmPassword = true;
+  var showPassword = false;
 
   @override
   void initState() {
     final usuarioController = widget.usuarioController;
     final usuario = usuarioController!.state!.usuario;
 
-    hasEmail = usuario.email != null && usuario.email!.isNotEmpty;
+    isEmailEmpty = usuario.email != null && usuario.email!.isEmpty;
+    visiblePassword(isEmailEmpty);
 
     super.initState();
+  }
+
+  Future<void> visiblePassword(isEmailEmpty) async {
+    final usuarioController = widget.usuarioController;
+    final usuario = usuarioController!.state!.usuario;
+
+    final isMismo =
+        usuario.uid == await usuarioController.sessionService.currentUid;
+
+    showPassword = isEmailEmpty && isMismo;
   }
 
   @override
@@ -102,61 +115,61 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
           initialValue: usuario.email,
           label: language.email,
           keyboardType: TextInputType.emailAddress,
-          validator: (text) => widget.emailValidator(text, language),
-          onChanged: (text) => usuarioController.onChangeValueEmail(
-            text,
-          ),
+          readOnly: true,
         ),
-        if (!hasEmail) const SizedBox(height: 8),
-        if (!hasEmail)
-          TextFormWidget(
-            controller: passController,
-            focusNode: passFocusNode,
-            label: language.password,
-            keyboardType: TextInputType.text,
-            validator: (text) => widget.passwordValidator(
-              text,
-              language,
-            ),
-            obscureText: obscurePassword,
-            onChanged: (text) => usuarioController.onPasswordChanged(
-              text,
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                  !obscurePassword ? Icons.visibility : Icons.visibility_off),
-              onPressed: () {
-                setState(() {
-                  obscurePassword = !obscurePassword;
-                });
-              },
-            ),
+        if (showPassword)
+          Column(
+            children: [
+              const SizedBox(height: 8),
+              TextFormWidget(
+                controller: passController,
+                focusNode: passFocusNode,
+                label: language.password,
+                keyboardType: TextInputType.text,
+                validator: (text) => widget.passwordValidator(
+                  text,
+                  language,
+                ),
+                obscureText: obscurePassword,
+                onChanged: (text) => usuarioController.onPasswordChanged(
+                  text,
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(!obscurePassword
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      obscurePassword = !obscurePassword;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormWidget(
+                controller: confirmPassController,
+                focusNode: confirmPassFocusNode,
+                label: language.confirmar_password,
+                keyboardType: TextInputType.text,
+                validator: (value) => widget.passwordConfirmValidator(
+                  value,
+                  passController.text,
+                  language,
+                ),
+                obscureText: obscureConfirmPassword,
+                suffixIcon: IconButton(
+                  icon: Icon(!obscureConfirmPassword
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      obscureConfirmPassword = !obscureConfirmPassword;
+                    });
+                  },
+                ),
+              ),
+            ],
           ),
-        if (!hasEmail) const SizedBox(height: 8),
-        if (!hasEmail)
-          TextFormWidget(
-            controller: confirmPassController,
-            focusNode: confirmPassFocusNode,
-            label: language.confirmar_password,
-            keyboardType: TextInputType.text,
-            validator: (value) => widget.passwordConfirmValidator(
-              value,
-              passController.text,
-              language,
-            ),
-            obscureText: obscureConfirmPassword,
-            suffixIcon: IconButton(
-              icon: Icon(!obscureConfirmPassword
-                  ? Icons.visibility
-                  : Icons.visibility_off),
-              onPressed: () {
-                setState(() {
-                  obscureConfirmPassword = !obscureConfirmPassword;
-                });
-              },
-            ),
-          ),
-        const SizedBox(height: 8),
         TextFormWidget(
           key: const Key('kFechaNacimiento'),
           controller: dateInput,

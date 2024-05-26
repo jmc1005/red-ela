@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
@@ -13,12 +12,11 @@ import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import '../widgets/usuario_row_widget.dart';
-import 'usuario_detail_view.dart';
 
 class UsuariosView extends StatefulWidget {
-  const UsuariosView({super.key, required this.filterRol});
+  const UsuariosView({super.key, required this.rol});
 
-  final String filterRol;
+  final String rol;
 
   @override
   State<UsuariosView> createState() => _UsuariosViewState();
@@ -28,9 +26,7 @@ class _UsuariosViewState extends State<UsuariosView> {
   List<UsuarioModel> _usuarios = [];
   final StreamController<List<UsuarioModel>> _usuariosStream =
       StreamController();
-  final _textNombreController = TextEditingController();
-  final _textApellido1Controller = TextEditingController();
-  final _textApellido2Controller = TextEditingController();
+  final _textSearchController = TextEditingController();
 
   @override
   void initState() {
@@ -47,37 +43,18 @@ class _UsuariosViewState extends State<UsuariosView> {
       (error) => error,
     );
     if (result is List<UsuarioModel>) {
-      final nombre = _textNombreController.text;
-      final apellido1 = _textApellido1Controller.text;
-      final apellido2 = _textApellido2Controller.text;
+      final search = _textSearchController.text;
 
-      _usuarios = result.where((r) => r.rol == widget.filterRol).toList();
+      _usuarios = result.where((r) => r.rol == widget.rol).toList();
 
-      if (nombre.isNotEmpty) {
+      if (search.isNotEmpty) {
         _usuarios = _usuarios
-            .where((u) => u.nombre != null && u.nombre!.contains(nombre.trim()))
+            .where((u) =>
+                u.nombreCompleto != null &&
+                u.nombreCompleto!.contains(search.trim()))
             .toList();
       }
 
-      if (apellido1.isNotEmpty) {
-        _usuarios = _usuarios
-            .where(
-              (u) =>
-                  u.apellido1 != null &&
-                  u.apellido1!.contains(apellido1.trim()),
-            )
-            .toList();
-      }
-
-      if (apellido2.isNotEmpty) {
-        _usuarios = _usuarios
-            .where(
-              (u) =>
-                  u.apellido2 != null &&
-                  u.apellido2!.contains(apellido2.trim()),
-            )
-            .toList();
-      }
       _usuariosStream.add(_usuarios);
       debugPrint(_usuarios.toString());
     }
@@ -107,8 +84,8 @@ class _UsuariosViewState extends State<UsuariosView> {
           // Navigator.push(
           //   context,
           //   MaterialPageRoute(
-          //     builder: (context) => UsuarioDetailView(
-          //       usuarioModel: ,
+          //     builder: (context) => UsuarioAddView(
+          //       rol: widget.rol,
           //     ),
           //   ),
           // );
@@ -120,34 +97,16 @@ class _UsuariosViewState extends State<UsuariosView> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              children: [
-                TextFormWidget(
-                  label: language.nombre,
-                  keyboardType: TextInputType.text,
-                  controller: _textNombreController,
-                  onChanged: (value) {
-                    _loadUsuarios();
-                  },
-                ),
-                TextFormWidget(
-                  label: language.apellido,
-                  keyboardType: TextInputType.text,
-                  controller: _textApellido1Controller,
-                  onChanged: (value) {
-                    _loadUsuarios();
-                  },
-                ),
-                TextFormWidget(
-                  label: language.apellido2,
-                  keyboardType: TextInputType.text,
-                  controller: _textApellido2Controller,
-                  onChanged: (value) {
-                    _loadUsuarios();
-                  },
-                ),
-              ],
+            TextFormWidget(
+              label: language.buscar,
+              keyboardType: TextInputType.text,
+              controller: _textSearchController,
+              onChanged: (value) {
+                _loadUsuarios();
+              },
+              suffixIcon: const Icon(Icons.search),
             ),
             Expanded(
               child: StreamBuilder(

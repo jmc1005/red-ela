@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/gestor_casos/gestor_casos_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
@@ -18,11 +19,13 @@ import '../../paciente/controllers/paciente_controller.dart';
 class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   UsuarioController({
     required this.context,
+    required this.sessionService,
     required this.usuarioRepo,
     required this.pacienteController,
   }) : super(null);
 
   final BuildContext context;
+  final SessionService sessionService;
   final UsuarioRepo usuarioRepo;
   final PacienteController pacienteController;
 
@@ -148,13 +151,13 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
 
   Future<void> update(context, language) async {
     final result = await usuarioRepo.updateUsuario(
+      uid: state!.usuario.uid,
       nombre: state!.usuario.nombre!,
       apellido1: state!.usuario.apellido1!,
       apellido2: state!.usuario.apellido2!,
       email: state!.usuario.email!,
       fechaNacimiento: state!.usuario.fechaNacimiento!,
       telefono: state!.usuario.telefono!,
-      rol: state!.usuario.rol,
     );
 
     late String code;
@@ -199,12 +202,23 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
         cuidador: state!.paciente?.cuidador,
       );
     } else if (rol == UsuarioTipo.cuidador.value) {
-      await pacienteController.pacienteRepo.getAllPacientesByUidOrEmailCuidador(
-          uidCuidador: state!.cuidador!.usuarioUid,
-          email: state!.usuario.email!);
+      final pacientesResult =
+          await pacienteController.pacienteRepo.getAllPacientesByUidCuidador(
+        uidCuidador: state!.usuario.uid,
+        email: state!.usuario.email!,
+      );
+
+      List<String> pacientes = [];
+      pacientesResult.when(
+        (success) {
+          pacientes = success;
+        },
+        (error) => null,
+      );
 
       await pacienteController.cuidadorRepo.updateCuidador(
         relacion: state!.cuidador?.relacion ?? '',
+        pacientes: pacientes,
       );
     } else if (rol == UsuarioTipo.gestorCasos.value) {}
   }

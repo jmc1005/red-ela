@@ -131,5 +131,6 @@
   "gestores_casos": "Gestores de casos",
   "pacientes": "Pacientes",
   "cuidadores": "Cuidadores",
-  "buscar": "Buscar"
+  "buscar": "Buscar",
+  "olvido_password": "¿Has olvidado la contraseña?"
 }
