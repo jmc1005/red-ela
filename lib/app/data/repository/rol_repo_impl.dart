@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../domain/models/rol/rol_model.dart';
 import '../../domain/models/typedefs.dart';
@@ -20,7 +21,13 @@ class RolRepoImpl implements RolRepo {
   final String collection = 'roles';
 
   @override
-  Future<Result> addRol(String rol, String descripcion) async {
+  Future<Result> addRol({
+    required String rol,
+    required String descripcion,
+  }) async {
+    const uuid = Uuid();
+    final uuidDoc = uuid.v1();
+
     final data = {
       'rol': await EncryptData.encryptData(rol),
       'descripcion': await EncryptData.encryptData(descripcion),
@@ -29,7 +36,7 @@ class RolRepoImpl implements RolRepo {
       return firebaseService
           .setDataOnDocument(
             collectionPath: collection,
-            documentPath: rol,
+            documentPath: uuidDoc,
             data: data,
           )
           .then((value) => const Success('data-added'));
@@ -40,12 +47,12 @@ class RolRepoImpl implements RolRepo {
   }
 
   @override
-  Future<Result<RolModel, dynamic>> getRol(String rol) {
+  Future<Result<RolModel, dynamic>> getRol({required String uuid}) {
     try {
       return firebaseService
           .getFromDocument(
             collectionPath: collection,
-            documentPath: rol,
+            documentPath: uuid,
           )
           .then((json) async => successFromJson(json));
     } catch (e) {
@@ -60,7 +67,11 @@ class RolRepoImpl implements RolRepo {
   }
 
   @override
-  Future<Result> updateRol(String uuid, String rol, String descripcion) async {
+  Future<Result> updateRol({
+    required String uuid,
+    required String rol,
+    required String descripcion,
+  }) async {
     try {
       return firebaseService.updateDataOnDocument(
         collectionPath: collection,
@@ -77,8 +88,16 @@ class RolRepoImpl implements RolRepo {
   }
 
   @override
-  Future<Result<dynamic, dynamic>> deleteRol(String rol) async {
+  Future<Result<dynamic, dynamic>> deleteRol({required String uuid}) async {
     try {
+      final responseRol = await getRol(uuid: uuid);
+      var rol = '';
+
+      responseRol.when(
+        (success) => rol = success.rol,
+        (error) => null,
+      );
+
       final usuarios = await FirebaseFirestore.instance
           .collection('users')
           .where('rol', isEqualTo: rol)
@@ -90,12 +109,32 @@ class RolRepoImpl implements RolRepo {
       return firebaseService
           .deleteDocumentFromCollection(
             collectionPath: collection,
-            uid: rol,
+            uid: uuid,
           )
           .then((value) => const Success('data-deleted'));
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-delete-failed'));
+    }
+  }
+
+  @override
+  Future<Result<List<RolModel>, dynamic>> getRoles() async {
+    try {
+      final List<RolModel> list = [];
+      final roles = await firebaseService.getFromCollection(
+        collectionPath: collection,
+      );
+
+      for (final element in roles) {
+        final json = await EncryptData.decryptDataJson(element);
+        list.add(RolModel.fromJson(json));
+      }
+
+      return Success(list);
+    } catch (e) {
+      debugPrint(e.toString());
+      return const Error('data-get-failed');
     }
   }
 }

@@ -7,10 +7,11 @@ part 'rol_model.g.dart';
 
 @freezed
 class RolModel with _$RolModel {
-  const factory RolModel(
-    @JsonKey(name: 'rol_id') String rolId,
-    String descripcion,
-  ) = _RolModel;
+  const factory RolModel({
+    required String uuid,
+    @JsonKey(name: 'rol') required String rol,
+    required String descripcion,
+  }) = _RolModel;
 
   factory RolModel.fromJson(Json json) => _$RolModelFromJson(json);
 }
