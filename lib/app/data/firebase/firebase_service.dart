@@ -97,7 +97,9 @@ class FirebaseService {
     required String documentPath,
     required Json data,
   }) async {
-    return getCollection(collectionPath: collectionPath).doc(documentPath).set(
+    return getCollection(
+      collectionPath: collectionPath,
+    ).doc(documentPath).set(
           data,
           SetOptions(merge: true),
         );

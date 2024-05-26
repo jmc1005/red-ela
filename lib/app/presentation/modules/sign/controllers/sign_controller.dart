@@ -156,4 +156,10 @@ class SignController extends StateNotifier<SignState> {
         return language.validacion;
     }
   }
+
+  Future<void> resetPassword({context, language}) async {
+    if (state.email.isNotEmpty) {
+      usuarioRepo.resetPassword(email: state.email);
+    }
+  }
 }

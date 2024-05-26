@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../config/color_config.dart';
+
 Future<bool> showConfirmDialog(
   BuildContext context, {
   String title = '',
@@ -31,7 +33,7 @@ class _DialogContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       child: AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorConfig.dialogBackground,
         title: Text(
           title,
           textAlign: TextAlign.center,
@@ -41,7 +43,7 @@ class _DialogContent extends StatelessWidget {
           ),
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(8),
         ), // cambiar el borde radius
         actionsAlignment: MainAxisAlignment.center,
         actions: actions,
