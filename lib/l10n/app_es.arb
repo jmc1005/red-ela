@@ -145,5 +145,6 @@
         "example": "Artículo"
       }
     }
-  }
+  },
+  "administradores": "Administradores"
 }

@@ -14,6 +14,8 @@ import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../global/controllers/state/state_notifier.dart';
+import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
 import '../../paciente/controllers/paciente_controller.dart';
 
 class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
@@ -163,6 +165,10 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
 
     result.when((success) {
       code = success;
+
+      if (state!.usuario.rol == UsuarioTipo.admin.value) {
+        navigateTo(Routes.admin, context);
+      }
     }, (error) {
       code = error;
       isSuccess = false;

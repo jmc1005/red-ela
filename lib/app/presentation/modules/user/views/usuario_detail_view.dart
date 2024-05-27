@@ -10,12 +10,11 @@ import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/accordion_widget.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../global/widgets/submit_button_widget.dart';
-import '../../../routes/app_routes.dart';
-import '../../../routes/routes.dart';
 import '../../cuidador/widgets/cuidador_data_widget.dart';
 import '../../paciente/widgets/paciente_data_widget.dart';
 import '../controllers/usuario_controller.dart';
 import '../widgets/usuario_data_widget.dart';
+import 'usuarios_view.dart';
 
 class UsuarioDetailView extends StatefulWidget {
   const UsuarioDetailView({
@@ -31,6 +30,7 @@ class UsuarioDetailView extends StatefulWidget {
 
 class _UsuarioDetailViewState extends State<UsuarioDetailView> {
   final _formKey = GlobalKey<FormState>();
+  late final BuildContext ctx;
   var openDatosPersonales = true;
   var headerStyle = const TextStyle(
     color: Color(0xffffffff),
@@ -64,10 +64,13 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
             backgroundColor: ColorConfig.primary,
             width: 90,
             leading: IconButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  if (sessionService.rol == UsuarioTipo.admin.value) {
-                    navigateTo(Routes.userList, context);
+                  ctx = context;
+                  final currentRol = await sessionService.rol;
+                  if (currentRol != null &&
+                      currentRol == UsuarioTipo.admin.value) {
+                    _navegateToUsuarios(usuario);
                   } else {}
                 }
               },
@@ -108,8 +111,7 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                 listen: false,
                               );
 
-                              if (usuarioController.state == null &&
-                                  usuario != null) {
+                              if (usuarioController.state == null) {
                                 usuarioController.usuario = usuario;
                               }
 
@@ -139,35 +141,36 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                       ),
                                       isOpen: openDatosPersonales,
                                     ),
-                                    AccordionSection(
-                                      header: Text(
-                                        language.tipo_usuario,
-                                        style: headerStyle,
+                                    if (tipo != UsuarioTipo.admin.value)
+                                      AccordionSection(
+                                        header: Text(
+                                          language.tipo_usuario,
+                                          style: headerStyle,
+                                        ),
+                                        headerBackgroundColor:
+                                            ColorConfig.primary,
+                                        headerBackgroundColorOpened:
+                                            ColorConfig.primary,
+                                        contentBackgroundColor: Colors.white,
+                                        contentVerticalPadding: 20,
+                                        content: Column(
+                                          children: [
+                                            if (tipo ==
+                                                UsuarioTipo.paciente.value)
+                                              PacienteDataWidget(
+                                                usuarioController:
+                                                    usuarioController,
+                                              ),
+                                            if (tipo ==
+                                                UsuarioTipo.cuidador.value)
+                                              CuidadorDataWidget(
+                                                usuarioController:
+                                                    usuarioController,
+                                              ),
+                                          ],
+                                        ),
+                                        isOpen: !openDatosPersonales,
                                       ),
-                                      headerBackgroundColor:
-                                          ColorConfig.primary,
-                                      headerBackgroundColorOpened:
-                                          ColorConfig.primary,
-                                      contentBackgroundColor: Colors.white,
-                                      contentVerticalPadding: 20,
-                                      content: Column(
-                                        children: [
-                                          if (tipo ==
-                                              UsuarioTipo.paciente.value)
-                                            PacienteDataWidget(
-                                              usuarioController:
-                                                  usuarioController,
-                                            ),
-                                          if (tipo ==
-                                              UsuarioTipo.cuidador.value)
-                                            CuidadorDataWidget(
-                                              usuarioController:
-                                                  usuarioController,
-                                            ),
-                                        ],
-                                      ),
-                                      isOpen: !openDatosPersonales,
-                                    ),
                                   ]),
                                   SubmitButtonWidget(
                                     onPressed: () async {
@@ -195,6 +198,17 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
           ),
         );
       }),
+    );
+  }
+
+  void _navegateToUsuarios(usuario) {
+    Navigator.push(
+      ctx,
+      MaterialPageRoute(
+        builder: (context) => UsuariosView(
+          rol: usuario.rol,
+        ),
+      ),
     );
   }
 }

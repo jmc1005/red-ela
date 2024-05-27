@@ -6,6 +6,7 @@ import '../modules/rol/views/roles_view.dart';
 import '../modules/sign/views/sign_in_view.dart';
 import '../modules/sign/views/sign_up_view.dart';
 
+import '../modules/user/views/usuarios_view.dart';
 import 'routes.dart';
 
 Map<String, Widget Function(BuildContext)> get appRoutes {
@@ -30,7 +31,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     } else if (routeName == Routes.sendOTP) {
       return MaterialPageRoute(builder: (_) => OTPMovilView());
     } else if (routeName == Routes.rolList) {
-      return MaterialPageRoute(builder: (_) => RolesView());
+      return MaterialPageRoute(builder: (_) => const RolesView());
     }
   }
 

@@ -29,24 +29,22 @@ class UsuarioRepoImpl extends UsuarioRepo {
     try {
       final currentUid = await sessionService.currentUid;
 
-      // admin: 4SPQWrLCPFQcxJdFnRvXVA==
-      final admin = await EncryptData.encryptData('admin');
-      debugPrint('rol $admin');
-
-      // paciente: 4SPQWrLCPFQcxJdFnRvXVA==
-      final paciente = await EncryptData.encryptData('paciente');
-      debugPrint('rol $paciente');
-
-      // cuidador: 4SPQWrLCPFQcxJdFnRvXVA==
-      final cuidador = await EncryptData.encryptData('cuidador');
-      debugPrint('rol $cuidador');
-
       return await firebaseService
           .getFromDocument(
-            collectionPath: collection,
-            documentPath: currentUid!,
-          )
-          .then((json) async => successFromJson(json));
+        collectionPath: collection,
+        documentPath: currentUid!,
+      )
+          .then(
+        (json) async {
+          final rol = json['rol'];
+          final rolDecrypt = await EncryptData.decryptData(rol);
+
+          if (rolDecrypt != null) {
+            sessionService.saveRol(rolDecrypt);
+          }
+          return successFromJson(json);
+        },
+      );
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-get-failed'));
@@ -86,8 +84,6 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
     if (result is User) {
       sessionService.saveCurrentUid(result.uid);
-      sessionService.saveRol(result.uid);
-
       return Success(result);
     }
 
@@ -135,12 +131,18 @@ class UsuarioRepoImpl extends UsuarioRepo {
   }) async {
     try {
       final currentUser = fireAuthService.currentUser()!;
+      final nombreEncrypt = await EncryptData.encryptData(nombre);
+      final apellido1Encrypt = await EncryptData.encryptData(apellido1);
+      final apellido2Encrypt = await EncryptData.encryptData(apellido2);
+      final nombreCompletoEncrypt =
+          '$nombreEncrypt $apellido1Encrypt $apellido2Encrypt';
 
       final data = {
         'uid': uid,
-        'nombre': await EncryptData.encryptData(nombre),
-        'apellido1': await EncryptData.encryptData(apellido1),
-        'apellido2': await EncryptData.encryptData(apellido2),
+        'nombre': nombreEncrypt,
+        'apellido1': apellido1Encrypt,
+        'apellido2': apellido2Encrypt,
+        'nombre_completo': nombreCompletoEncrypt,
         'email': email,
         'fecha_nacimiento': await EncryptData.encryptData(fechaNacimiento),
         'telefono': telefono,

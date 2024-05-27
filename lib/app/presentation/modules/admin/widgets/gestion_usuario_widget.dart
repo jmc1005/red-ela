@@ -21,6 +21,19 @@ class GestionUsuarioWidget extends StatelessWidget {
         color: ColorConfig.cabeceraAdmin,
       ),
       ItemWidget(
+        label: language.administradores,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UsuariosView(
+                rol: UsuarioTipo.admin.value,
+              ),
+            ),
+          );
+        },
+      ),
+      ItemWidget(
         label: language.gestores_casos,
         onTap: () {
           Navigator.push(

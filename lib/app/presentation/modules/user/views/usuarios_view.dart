@@ -29,7 +29,6 @@ class _UsuariosViewState extends State<UsuariosView> {
   List<UsuarioModel> _usuarios = [];
   final _usuariosStream = StreamController<List<UsuarioModel>>();
   final _textSearchController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -68,6 +67,8 @@ class _UsuariosViewState extends State<UsuariosView> {
     final language = AppLocalizations.of(context)!;
     final invitacionRepo = Provider.of<InvitacionRepo>(context, listen: false);
     final size = MediaQuery.of(context).size;
+    final visibleAdd = widget.rol == UsuarioTipo.gestorCasos.value ||
+        widget.rol == UsuarioTipo.admin.value;
 
     return Scaffold(
       appBar: AppBarWidget(
@@ -84,13 +85,12 @@ class _UsuariosViewState extends State<UsuariosView> {
         backgroundColor: Colors.blueGrey[100],
         width: 80,
       ),
-      floatingActionButton: widget.rol == UsuarioTipo.gestorCasos.value
+      floatingActionButton: visibleAdd
           ? FloatingActionButton(
               onPressed: () => showInvitarUsuarioDialog(
                 context,
                 invitacionRepo: invitacionRepo,
                 rol: widget.rol,
-                formKey: _formKey,
               ),
               child: const Icon(Icons.add),
             )
@@ -110,6 +110,7 @@ class _UsuariosViewState extends State<UsuariosView> {
               },
               suffixIcon: const Icon(Icons.search),
             ),
+            const SizedBox(height: 8),
             Expanded(
               child: SizedBox(
                 height: size.height,

@@ -58,6 +58,7 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
     final usuarioController = widget.usuarioController;
     final usuario = usuarioController!.state!.usuario;
     phoneController.text = usuario.telefono ?? '';
+    final readOnlyEmail = usuario.email != null && usuario.email!.isEmpty;
 
     if (usuario.fechaNacimiento != null &&
         usuario.fechaNacimiento!.isNotEmpty) {
@@ -114,7 +115,18 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
           initialValue: usuario.email,
           label: language.email,
           keyboardType: TextInputType.emailAddress,
-          readOnly: true,
+          readOnly: readOnlyEmail,
+          validator: (value) => !readOnlyEmail
+              ? widget.emailValidator(
+                  value,
+                  language,
+                )
+              : null,
+          onChanged: (value) => !readOnlyEmail
+              ? usuarioController.onChangeValueEmail(
+                  value,
+                )
+              : null,
         ),
         if (showPassword)
           Column(
