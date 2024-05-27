@@ -20,11 +20,10 @@ class InvitacionRepoImpl extends InvitacionRepo {
   final String collection = 'invitaciones';
 
   @override
-  Future<Result> addInvitacion(
-    String telefono,
-    String rol,
-    String solicitado,
-  ) async {
+  Future<Result> addInvitacion({
+    required String telefono,
+    required String rol,
+  }) async {
     final currentUser = fireAuthService.currentUser();
     final encrypRol = await EncryptData.encryptData(rol);
 
