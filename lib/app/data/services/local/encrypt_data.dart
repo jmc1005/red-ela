@@ -12,6 +12,7 @@ class EncryptData {
 
   static const List<String> notDecryptList = [
     'uid',
+    'uuid',
     'email',
     'telefono',
     'pacientes',

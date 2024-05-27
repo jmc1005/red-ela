@@ -11,6 +11,7 @@ import '../../../global/widgets/app_bar_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
+import '../widgets/rol_row_widget.dart';
 import 'rol_detail_view.dart';
 
 class RolesView extends StatefulWidget {
@@ -39,11 +40,13 @@ class _RolesViewState extends State<RolesView> {
       (error) => error,
     );
     if (result is List<RolModel>) {
-      final search = _textSearchController.text;
+      final search = _textSearchController.text.toLowerCase();
+      _roles = result;
 
       if (search.isNotEmpty) {
-        _roles =
-            result.where((r) => r.descripcion.contains(search.trim())).toList();
+        _roles = result
+            .where((r) => r.descripcion.toLowerCase().contains(search.trim()))
+            .toList();
       }
 
       _rolesStream.add(_roles);
@@ -54,6 +57,7 @@ class _RolesViewState extends State<RolesView> {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBarWidget(
@@ -68,7 +72,7 @@ class _RolesViewState extends State<RolesView> {
           ),
         ),
         backgroundColor: Colors.blueGrey[100],
-        width: 90,
+        width: 80,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -89,6 +93,7 @@ class _RolesViewState extends State<RolesView> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextFormWidget(
               label: language.buscar,
@@ -99,25 +104,31 @@ class _RolesViewState extends State<RolesView> {
               },
               suffixIcon: const Icon(Icons.search),
             ),
+            const SizedBox(
+              height: 8,
+            ),
             Expanded(
-              child: StreamBuilder(
-                stream: _rolesStream.stream,
-                builder: (_, snapshot) {
-                  return snapshot.hasData
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ScrollPhysics(),
-                          itemBuilder: (_, index) {
-                            final rolModel = snapshot.data![index];
+              child: SizedBox(
+                height: size.height,
+                child: StreamBuilder(
+                  stream: _rolesStream.stream,
+                  builder: (_, snapshot) {
+                    return snapshot.hasData
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            itemBuilder: (_, index) {
+                              final rolModel = snapshot.data![index];
 
-                            return RolDetailView(
-                              rolModel: rolModel,
-                            );
-                          },
-                          itemCount: snapshot.data!.length,
-                        )
-                      : const Center(child: CircularProgressIndicator());
-                },
+                              return RolRowWidget(
+                                rolModel: rolModel,
+                              );
+                            },
+                            itemCount: snapshot.data!.length,
+                          )
+                        : const Center(child: CircularProgressIndicator());
+                  },
+                ),
               ),
             ),
             const SizedBox(

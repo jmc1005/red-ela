@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../global/widgets/tarjeta_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
+import '../widgets/gestion_rol_widget.dart';
 import '../widgets/gestion_usuario_widget.dart';
 
 class AdminView extends StatefulWidget {
@@ -19,6 +20,7 @@ class _AdminViewState extends State<AdminView> {
       onPressed: () => navigateTo(Routes.signIn, context),
       children: const [
         GestionUsuarioWidget(),
+        GestionRolWidget(),
       ],
     );
   }

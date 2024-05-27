@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../../../domain/models/rol/rol_model.dart';
@@ -10,19 +8,12 @@ import '../../../global/controllers/state/state_notifier.dart';
 
 class RolController extends StateNotifier<RolModel?> {
   RolController({
-    required this.context,
     required this.rolRepo,
   }) : super(null);
 
-  final BuildContext context;
   final RolRepo rolRepo;
 
-  set rol(RolModel? rolModel) {
-    rolModel ??= const RolModel(
-      uuid: '',
-      rol: '',
-      descripcion: '',
-    );
+  set rol(RolModel rolModel) {
     onlyUpdate(rolModel);
   }
 
@@ -34,7 +25,7 @@ class RolController extends StateNotifier<RolModel?> {
     rol = state!.copyWith(descripcion: text);
   }
 
-  Future<void> update(AppLocalizations language) async {
+  Future<void> update(context, language) async {
     Result<dynamic, dynamic> response;
     if (state!.uuid != '') {
       response = await rolRepo.updateRol(
@@ -59,10 +50,10 @@ class RolController extends StateNotifier<RolModel?> {
       isSuccess = false;
     });
 
-    showResponseResult(code, isSuccess, language);
+    showResponseResult(context, code, isSuccess, language);
   }
 
-  void showWarning(AppLocalizations language) {
+  void showWarning(context, language) {
     final response = FirebaseResponse(
       context: context,
       language: language,
@@ -72,7 +63,7 @@ class RolController extends StateNotifier<RolModel?> {
     response.showWarning();
   }
 
-  void showResponseResult(String code, bool isSuccess, language) {
+  void showResponseResult(context, code, isSuccess, language) {
     final fbResponse = FirebaseResponse(
       context: context,
       language: language,

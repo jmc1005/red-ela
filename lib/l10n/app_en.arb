@@ -133,5 +133,17 @@
   "cuidadores": "Caregivers",
   "buscar": "Search",
   "olvido_password": "Forgot password?",
-  "rol": "Role"
+  "rol": "Role",
+  "gestion_roles": "Roles management",
+  "descripcion": "Descripion",
+  "datos_de": "Data {item}",
+  "@datos_de": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Artículo"
+      }
+    }
+  }
 }

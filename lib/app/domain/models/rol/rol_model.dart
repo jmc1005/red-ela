@@ -9,7 +9,7 @@ part 'rol_model.g.dart';
 class RolModel with _$RolModel {
   const factory RolModel({
     required String uuid,
-    @JsonKey(name: 'rol') required String rol,
+    required String rol,
     required String descripcion,
   }) = _RolModel;
 

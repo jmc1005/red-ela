@@ -18,13 +18,11 @@ import '../../paciente/controllers/paciente_controller.dart';
 
 class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   UsuarioController({
-    required this.context,
     required this.sessionService,
     required this.usuarioRepo,
     required this.pacienteController,
   }) : super(null);
 
-  final BuildContext context;
   final SessionService sessionService;
   final UsuarioRepo usuarioRepo;
   final PacienteController pacienteController;
@@ -149,7 +147,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     } else {}
   }
 
-  Future<void> update(language) async {
+  Future<void> update(context, language) async {
     final result = await usuarioRepo.updateUsuario(
       uid: state!.usuario.uid,
       nombre: state!.usuario.nombre!,
@@ -183,7 +181,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     }
   }
 
-  void showWarning(language) {
+  void showWarning(context, language) {
     final response = FirebaseResponse(
       context: context,
       language: language,

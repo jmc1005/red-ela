@@ -133,5 +133,17 @@
   "cuidadores": "Cuidadores",
   "buscar": "Buscar",
   "olvido_password": "¿Has olvidado la contraseña?",
-  "rol": "Rol"
+  "rol": "Rol",
+  "gestion_roles": "Gestión Roles",
+  "descripcion": "Descripción",
+  "datos_de": "Datos {item}",
+  "@datos_de": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Artículo"
+      }
+    }
+  }
 }

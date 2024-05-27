@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
+import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
+import '../../../../utils/enums/usuario_tipo.dart';
+import '../../../global/dialogs/invitar_usuario_dialog.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
@@ -26,6 +29,7 @@ class _UsuariosViewState extends State<UsuariosView> {
   List<UsuarioModel> _usuarios = [];
   final _usuariosStream = StreamController<List<UsuarioModel>>();
   final _textSearchController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -42,7 +46,7 @@ class _UsuariosViewState extends State<UsuariosView> {
       (error) => error,
     );
     if (result is List<UsuarioModel>) {
-      final search = _textSearchController.text;
+      final search = _textSearchController.text.toLowerCase();
 
       _usuarios = result.where((r) => r.rol == widget.rol).toList();
 
@@ -50,7 +54,7 @@ class _UsuariosViewState extends State<UsuariosView> {
         _usuarios = _usuarios
             .where((u) =>
                 u.nombreCompleto != null &&
-                u.nombreCompleto!.contains(search.trim()))
+                u.nombreCompleto!.toLowerCase().contains(search.trim()))
             .toList();
       }
 
@@ -62,6 +66,8 @@ class _UsuariosViewState extends State<UsuariosView> {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
+    final invitacionRepo = Provider.of<InvitacionRepo>(context, listen: false);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBarWidget(
@@ -76,27 +82,24 @@ class _UsuariosViewState extends State<UsuariosView> {
           ),
         ),
         backgroundColor: Colors.blueGrey[100],
-        width: 90,
+        width: 80,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => UsuarioAddView(
-          //       rol: widget.rol,
-          //     ),
-          //   ),
-          // );
-        },
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
+      floatingActionButton: widget.rol == UsuarioTipo.gestorCasos.value
+          ? FloatingActionButton(
+              onPressed: () => showInvitarUsuarioDialog(
+                context,
+                invitacionRepo: invitacionRepo,
+                rol: widget.rol,
+                formKey: _formKey,
+              ),
+              child: const Icon(Icons.add),
+            )
+          : null,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextFormWidget(
               label: language.buscar,
@@ -108,24 +111,27 @@ class _UsuariosViewState extends State<UsuariosView> {
               suffixIcon: const Icon(Icons.search),
             ),
             Expanded(
-              child: StreamBuilder(
-                stream: _usuariosStream.stream,
-                builder: (_, snapshot) {
-                  return snapshot.hasData
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ScrollPhysics(),
-                          itemBuilder: (_, index) {
-                            final usuarioModel = snapshot.data![index];
+              child: SizedBox(
+                height: size.height,
+                child: StreamBuilder(
+                  stream: _usuariosStream.stream,
+                  builder: (_, snapshot) {
+                    return snapshot.hasData
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            itemBuilder: (_, index) {
+                              final usuarioModel = snapshot.data![index];
 
-                            return UsuarioRowWidget(
-                              usuarioModel: usuarioModel,
-                            );
-                          },
-                          itemCount: snapshot.data!.length,
-                        )
-                      : const Center(child: CircularProgressIndicator());
-                },
+                              return UsuarioRowWidget(
+                                usuarioModel: usuarioModel,
+                              );
+                            },
+                            itemCount: snapshot.data!.length,
+                          )
+                        : const Center(child: CircularProgressIndicator());
+                  },
+                ),
               ),
             ),
             const SizedBox(

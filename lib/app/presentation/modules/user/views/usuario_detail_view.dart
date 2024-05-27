@@ -32,6 +32,11 @@ class UsuarioDetailView extends StatefulWidget {
 class _UsuarioDetailViewState extends State<UsuarioDetailView> {
   final _formKey = GlobalKey<FormState>();
   var openDatosPersonales = true;
+  var headerStyle = const TextStyle(
+    color: Color(0xffffffff),
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   void initState() {
@@ -45,7 +50,6 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
 
     return ChangeNotifierProvider<UsuarioController>(
       create: (_) => UsuarioController(
-        context: context,
         sessionService: context.read(),
         usuarioRepo: context.read(),
         pacienteController: context.read(),
@@ -120,11 +124,15 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                 children: [
                                   AccordionWidget(children: [
                                     AccordionSection(
-                                      header: Text(language.datos_personales),
+                                      header: Text(
+                                        language.datos_personales,
+                                        style: headerStyle,
+                                      ),
                                       headerBackgroundColor:
                                           ColorConfig.primary,
                                       headerBackgroundColorOpened:
                                           ColorConfig.primary,
+                                      contentBackgroundColor: Colors.white,
                                       contentVerticalPadding: 20,
                                       content: UsuarioDataWidget(
                                         usuarioController: usuarioController,
@@ -132,11 +140,15 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                       isOpen: openDatosPersonales,
                                     ),
                                     AccordionSection(
-                                      header: Text(language.tipo_usuario),
+                                      header: Text(
+                                        language.tipo_usuario,
+                                        style: headerStyle,
+                                      ),
                                       headerBackgroundColor:
                                           ColorConfig.primary,
                                       headerBackgroundColorOpened:
                                           ColorConfig.primary,
+                                      contentBackgroundColor: Colors.white,
                                       contentVerticalPadding: 20,
                                       content: Column(
                                         children: [
@@ -160,9 +172,11 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
-                                        usuarioController.update(language);
+                                        usuarioController.update(
+                                            context, language);
                                       } else {
-                                        usuarioController.showWarning(language);
+                                        usuarioController.showWarning(
+                                            context, language);
                                       }
                                     },
                                     label: language.guardar,

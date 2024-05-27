@@ -29,6 +29,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const AdminView());
     } else if (routeName == Routes.sendOTP) {
       return MaterialPageRoute(builder: (_) => OTPMovilView());
+    } else if (routeName == Routes.rolList) {
+      return MaterialPageRoute(builder: (_) => RolesView());
     }
   }
 

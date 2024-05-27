@@ -104,7 +104,7 @@ class UsuarioItemWidget extends StatelessWidget {
                       showConfirmDialog(
                         context,
                         title: language.seguro_borrar(
-                          language.articulo,
+                          nombreCompleto,
                         ),
                         actions: actions,
                       );

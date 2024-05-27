@@ -29,6 +29,7 @@ class RolRepoImpl implements RolRepo {
     final uuidDoc = uuid.v1();
 
     final data = {
+      'uuid': uuidDoc,
       'rol': await EncryptData.encryptData(rol),
       'descripcion': await EncryptData.encryptData(descripcion),
     };
@@ -99,8 +100,8 @@ class RolRepoImpl implements RolRepo {
       );
 
       final usuarios = await FirebaseFirestore.instance
-          .collection('users')
-          .where('rol', isEqualTo: rol)
+          .collection('usuarios')
+          .where('rol', isEqualTo: await EncryptData.encryptData(rol))
           .get();
 
       if (usuarios.docs.isNotEmpty) {

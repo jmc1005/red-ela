@@ -28,6 +28,11 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
   final _formKey = GlobalKey<FormState>();
   var textRolController = TextEditingController();
   var textDescripcionController = TextEditingController();
+  var headerStyle = const TextStyle(
+    color: Color(0xffffffff),
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,6 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
 
     return ChangeNotifierProvider<RolController>(
       create: (_) => RolController(
-        context: context,
         rolRepo: context.read(),
       ),
       child: Builder(builder: (_) {
@@ -52,9 +56,7 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
             width: 90,
             leading: IconButton(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  navigateTo(Routes.rolList, context);
-                }
+                navigateTo(Routes.rolList, context);
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
@@ -81,49 +83,64 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
                                 listen: false,
                               );
 
+                              if (rolController.state == null) {
+                                rolController.rol = const RolModel(
+                                  uuid: '',
+                                  rol: '',
+                                  descripcion: '',
+                                );
+                              }
+
                               return Column(
                                 children: [
                                   AccordionWidget(children: [
                                     AccordionSection(
-                                        header: Text(language.datos_personales),
-                                        headerBackgroundColor:
-                                            ColorConfig.primary,
-                                        headerBackgroundColorOpened:
-                                            ColorConfig.primary,
-                                        contentVerticalPadding: 20,
-                                        content: Column(
-                                          children: [
-                                            TextFormWidget(
-                                              label: language.rol,
-                                              controller: textRolController,
-                                              keyboardType: TextInputType.text,
-                                              validator: (value) =>
-                                                  textValidator(
-                                                      value, language),
-                                              onChanged: (text) => rolController
-                                                  .onChangeRol(text),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            TextFormWidget(
-                                              label: language.apellido,
-                                              controller:
-                                                  textDescripcionController,
-                                              keyboardType: TextInputType.text,
-                                              validator: (value) =>
-                                                  textValidator(
-                                                      value, language),
-                                              onChanged: (text) => rolController
-                                                  .onChangeDescripcion(text),
-                                            ),
-                                          ],
-                                        )),
+                                      header: Text(
+                                        language.datos_de(language.rol),
+                                        style: headerStyle,
+                                      ),
+                                      headerBackgroundColor:
+                                          ColorConfig.primary,
+                                      headerBackgroundColorOpened:
+                                          ColorConfig.primary,
+                                      contentVerticalPadding: 20,
+                                      contentBackgroundColor:
+                                          ColorConfig.primaryBackground,
+                                      content: Column(
+                                        children: [
+                                          TextFormWidget(
+                                            label: language.rol,
+                                            controller: textRolController,
+                                            keyboardType: TextInputType.text,
+                                            validator: (value) =>
+                                                textValidator(value, language),
+                                            onChanged: (text) =>
+                                                rolController.onChangeRol(text),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          TextFormWidget(
+                                            label: language.descripcion,
+                                            controller:
+                                                textDescripcionController,
+                                            keyboardType: TextInputType.text,
+                                            validator: (value) =>
+                                                textValidator(value, language),
+                                            onChanged: (text) => rolController
+                                                .onChangeDescripcion(text),
+                                          ),
+                                        ],
+                                      ),
+                                      isOpen: true,
+                                    ),
                                   ]),
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
-                                        rolController.update(language);
+                                        rolController.update(context, language);
+                                        navigateTo(Routes.rolList, context);
                                       } else {
-                                        rolController.showWarning(language);
+                                        rolController.showWarning(
+                                            context, language);
                                       }
                                     },
                                     label: language.guardar,

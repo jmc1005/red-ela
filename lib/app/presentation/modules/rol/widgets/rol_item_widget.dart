@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/rol/rol_model.dart';
 import '../../../global/dialogs/confirm_dialog.dart';
+import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
+import '../controllers/rol_controller.dart';
 
 class RolItemWidget extends StatelessWidget {
   const RolItemWidget({super.key, required this.rolModel, this.onTap});
@@ -14,6 +18,7 @@ class RolItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
+    final rolController = Provider.of<RolController>(context);
 
     final List<Widget> actions = [
       OutlinedButton(
@@ -34,8 +39,22 @@ class RolItemWidget extends StatelessWidget {
         ),
       ),
       OutlinedButton(
-        onPressed: () {
-          Navigator.pop(context, true);
+        onPressed: () async {
+          final response = await rolController.rolRepo.deleteRol(
+            uuid: rolModel.uuid,
+          );
+          response.when(
+            (success) {
+              Navigator.pop(context, true);
+              navigateTo(Routes.rolList, context);
+            },
+            (error) => rolController.showResponseResult(
+              context,
+              error,
+              false,
+              language,
+            ),
+          );
         },
         style: OutlinedButton.styleFrom(
           backgroundColor: ColorConfig.primary,
@@ -56,27 +75,6 @@ class RolItemWidget extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: const Color(0x4D9489F5),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFF6F61EF),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: const Icon(
-                  Icons.no_photography_outlined,
-                  size: 48,
-                ),
-              ),
-            ),
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsetsDirectional.only(start: 12),
@@ -96,7 +94,7 @@ class RolItemWidget extends StatelessWidget {
                       showConfirmDialog(
                         context,
                         title: language.seguro_borrar(
-                          language.rol,
+                          rolModel.descripcion,
                         ),
                         actions: actions,
                       );
