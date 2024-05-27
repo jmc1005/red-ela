@@ -9,7 +9,7 @@ import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
-import '../../../global/dialogs/invitar_usuario_dialog.dart';
+import '../../invitacion/views/invitar_usuario_dialog.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';

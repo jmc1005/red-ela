@@ -146,5 +146,6 @@
       }
     }
   },
-  "administradores": "Administrators"
+  "administradores": "Administrators",
+  "info_envio_email": "An invitation email will be sent so that the invited person can register in the application. Please contact the person invited to inform them."
 }

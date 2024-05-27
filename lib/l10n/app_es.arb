@@ -146,5 +146,6 @@
       }
     }
   },
-  "administradores": "Administradores"
+  "administradores": "Administradores",
+  "info_envio_email": "Se va a proceder a enviar un email de invitación para que la persona invitada pueda registrarse en la aplicación. Por favor, póngase en contacto con la persona invitada para informarle."
 }

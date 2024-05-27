@@ -37,7 +37,7 @@ class InvitacionRepoImpl extends InvitacionRepo {
       return firebaseService
           .setDataOnDocument(
             collectionPath: collection,
-            documentPath: encrypRol,
+            documentPath: telefono,
             data: data,
           )
           .then((value) => const Success('data-added'));

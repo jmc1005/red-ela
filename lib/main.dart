@@ -24,6 +24,8 @@ import 'app/domain/repository/invitacion_repo.dart';
 import 'app/domain/repository/paciente_repo.dart';
 import 'app/domain/repository/rol_repo.dart';
 import 'app/domain/repository/usuario_repo.dart';
+import 'app/presentation/modules/invitacion/controllers/invitacion_controller.dart';
+import 'app/presentation/modules/invitacion/controllers/state/invitacion_state.dart';
 import 'app/presentation/modules/otp/controllers/otp_controller.dart';
 import 'app/presentation/modules/otp/controllers/state/otp_state.dart';
 import 'app/presentation/modules/paciente/controllers/paciente_controller.dart';
@@ -154,11 +156,19 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<RolController>(
           create: (context) => RolController(
-              rolRepo: RolRepoImpl(
-            firebaseService: FirebaseService(
-              firestore: firestore,
+            rolRepo: RolRepoImpl(
+              firebaseService: FirebaseService(firestore: firestore),
             ),
-          )),
+          ),
+        ),
+        ChangeNotifierProvider<InvitacionController>(
+          create: (context) => InvitacionController(
+            const InvitacionState(),
+            invitacionRepo: InvitacionRepoImpl(
+              firebaseService: FirebaseService(firestore: firestore),
+              fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+            ),
+          ),
         ),
       ],
       child: const Redela(),
