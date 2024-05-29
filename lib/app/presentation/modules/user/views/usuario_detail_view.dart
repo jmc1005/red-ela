@@ -11,7 +11,10 @@ import '../../../global/widgets/accordion_widget.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../global/widgets/submit_button_widget.dart';
 import '../../cuidador/widgets/cuidador_data_widget.dart';
-import '../../paciente/widgets/paciente_data_widget.dart';
+import '../../gestor_casos/widgets/gestor_casos_data_widget.dart';
+import '../../paciente/widgets/paciente_cuidador_widget.dart';
+import '../../paciente/widgets/paciente_gestor_casos_widget.dart';
+import '../../paciente/widgets/paciente_patologia_widget.dart';
 import '../controllers/usuario_controller.dart';
 import '../widgets/usuario_data_widget.dart';
 import 'usuarios_view.dart';
@@ -124,27 +127,11 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
 
                               return Column(
                                 children: [
-                                  AccordionWidget(children: [
-                                    AccordionSection(
-                                      header: Text(
-                                        language.datos_personales,
-                                        style: headerStyle,
-                                      ),
-                                      headerBackgroundColor:
-                                          ColorConfig.primary,
-                                      headerBackgroundColorOpened:
-                                          ColorConfig.primary,
-                                      contentBackgroundColor: Colors.white,
-                                      contentVerticalPadding: 20,
-                                      content: UsuarioDataWidget(
-                                        usuarioController: usuarioController,
-                                      ),
-                                      isOpen: openDatosPersonales,
-                                    ),
-                                    if (tipo != UsuarioTipo.admin.value)
+                                  AccordionWidget(
+                                    children: [
                                       AccordionSection(
                                         header: Text(
-                                          language.tipo_usuario,
+                                          language.datos_personales,
                                           style: headerStyle,
                                         ),
                                         headerBackgroundColor:
@@ -153,25 +140,101 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                             ColorConfig.primary,
                                         contentBackgroundColor: Colors.white,
                                         contentVerticalPadding: 20,
-                                        content: Column(
-                                          children: [
-                                            if (tipo ==
-                                                UsuarioTipo.paciente.value)
-                                              PacienteDataWidget(
-                                                usuarioController:
-                                                    usuarioController,
-                                              ),
-                                            if (tipo ==
-                                                UsuarioTipo.cuidador.value)
-                                              CuidadorDataWidget(
-                                                usuarioController:
-                                                    usuarioController,
-                                              ),
-                                          ],
+                                        content: UsuarioDataWidget(
+                                          usuarioController: usuarioController,
                                         ),
-                                        isOpen: !openDatosPersonales,
+                                        isOpen: openDatosPersonales,
                                       ),
-                                  ]),
+                                      if (tipo == UsuarioTipo.paciente.value)
+                                        AccordionSection(
+                                          header: Text(
+                                            language.patologia,
+                                            style: headerStyle,
+                                          ),
+                                          headerBackgroundColor:
+                                              ColorConfig.primary,
+                                          headerBackgroundColorOpened:
+                                              ColorConfig.primary,
+                                          contentBackgroundColor: Colors.white,
+                                          contentVerticalPadding: 20,
+                                          content: PacientePatologiaWidget(
+                                            usuarioController:
+                                                usuarioController,
+                                          ),
+                                          isOpen: openDatosPersonales,
+                                        ),
+                                      if (tipo == UsuarioTipo.paciente.value)
+                                        AccordionSection(
+                                          header: Text(
+                                            language.cuidador,
+                                            style: headerStyle,
+                                          ),
+                                          headerBackgroundColor:
+                                              ColorConfig.primary,
+                                          headerBackgroundColorOpened:
+                                              ColorConfig.primary,
+                                          contentBackgroundColor: Colors.white,
+                                          contentVerticalPadding: 20,
+                                          content: PacienteCuidadorWidget(
+                                            usuarioController:
+                                                usuarioController,
+                                          ),
+                                          isOpen: openDatosPersonales,
+                                        ),
+                                      if (tipo == UsuarioTipo.paciente.value)
+                                        AccordionSection(
+                                          header: Text(
+                                            language.gestor_casos,
+                                            style: headerStyle,
+                                          ),
+                                          headerBackgroundColor:
+                                              ColorConfig.primary,
+                                          headerBackgroundColorOpened:
+                                              ColorConfig.primary,
+                                          contentBackgroundColor: Colors.white,
+                                          contentVerticalPadding: 20,
+                                          content: PacienteGestorCasosWidget(
+                                            usuarioController:
+                                                usuarioController,
+                                          ),
+                                          isOpen: openDatosPersonales,
+                                        ),
+                                      if (tipo == UsuarioTipo.cuidador.value)
+                                        AccordionSection(
+                                          header: Text(
+                                            language.relacion,
+                                            style: headerStyle,
+                                          ),
+                                          headerBackgroundColor:
+                                              ColorConfig.primary,
+                                          headerBackgroundColorOpened:
+                                              ColorConfig.primary,
+                                          contentBackgroundColor: Colors.white,
+                                          contentVerticalPadding: 20,
+                                          content: CuidadorDataWidget(
+                                            usuarioController:
+                                                usuarioController,
+                                          ),
+                                          isOpen: openDatosPersonales,
+                                        ),
+                                      if (tipo == UsuarioTipo.gestorCasos.value)
+                                        AccordionSection(
+                                          header: Text(
+                                            language.datos_hospital,
+                                            style: headerStyle,
+                                          ),
+                                          headerBackgroundColor:
+                                              ColorConfig.primary,
+                                          headerBackgroundColorOpened:
+                                              ColorConfig.primary,
+                                          contentBackgroundColor: Colors.white,
+                                          contentVerticalPadding: 20,
+                                          content:
+                                              const GestorCasosDataWidget(),
+                                          isOpen: openDatosPersonales,
+                                        ),
+                                    ],
+                                  ),
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {

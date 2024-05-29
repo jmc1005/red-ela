@@ -116,7 +116,6 @@ Future<void> main() async {
         Provider<PacienteController>(
           create: (context) => PacienteController(
             context: context,
-            cuidadorRepo: cuidadorRepo,
             pacienteRepo: pacienteRepo,
           ),
         ),
@@ -164,10 +163,9 @@ Future<void> main() async {
         ChangeNotifierProvider<InvitacionController>(
           create: (context) => InvitacionController(
             const InvitacionState(),
-            invitacionRepo: InvitacionRepoImpl(
-              firebaseService: FirebaseService(firestore: firestore),
-              fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
-            ),
+            invitacionRepo: context.read(),
+            usuarioRepo: context.read(),
+            sessionService: sessionService,
           ),
         ),
       ],

@@ -29,27 +29,22 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
   var obscurePassword = true;
   var obscureConfirmPassword = true;
   var validConfirmPassword = true;
-  var showPassword = false;
+  bool showPassword = false;
 
   @override
   void initState() {
-    final usuarioController = widget.usuarioController;
-    final usuario = usuarioController!.state!.usuario;
-
-    isEmailEmpty = usuario.email != null && usuario.email!.isEmpty;
-    visiblePassword(isEmailEmpty);
-
     super.initState();
   }
 
-  Future<void> visiblePassword(isEmailEmpty) async {
+  Future<bool> visiblePassword() async {
     final usuarioController = widget.usuarioController;
     final usuario = usuarioController!.state!.usuario;
+    isEmailEmpty = usuario.email != null && usuario.email!.isEmpty;
 
     final isMismo =
         usuario.uid == await usuarioController.sessionService.currentUid;
 
-    showPassword = isEmailEmpty && isMismo;
+    return isEmailEmpty && isMismo;
   }
 
   @override
@@ -58,147 +53,160 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
     final usuarioController = widget.usuarioController;
     final usuario = usuarioController!.state!.usuario;
     phoneController.text = usuario.telefono ?? '';
-    final readOnlyEmail = usuario.email != null && usuario.email!.isEmpty;
+    final readOnlyEmail = usuario.email != null && usuario.email!.isNotEmpty;
 
     if (usuario.fechaNacimiento != null &&
         usuario.fechaNacimiento!.isNotEmpty) {
       dateInput.text = usuario.fechaNacimiento!;
     }
 
-    return Column(
-      children: [
-        TextFormWidget(
-          initialValue: usuario.nombre ?? '',
-          label: language.nombre,
-          keyboardType: TextInputType.text,
-          validator: (value) => widget.textValidator(value, language),
-          onChanged: (text) => usuarioController.onChangeValueNombre(
-            text,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextFormWidget(
-          initialValue: usuario.apellido1 ?? '',
-          label: language.apellido,
-          keyboardType: TextInputType.text,
-          validator: (value) => widget.textValidator(value, language),
-          onChanged: (text) => usuarioController.onChangeValueApellido1(
-            text,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextFormWidget(
-          initialValue: usuario.apellido2 ?? '',
-          label: language.apellido2,
-          keyboardType: TextInputType.text,
-          validator: (value) => widget.textValidator(value, language),
-          onChanged: (text) => usuarioController.onChangeValueApellido2(
-            text,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextFormWidget(
-          label: language.telefono,
-          keyboardType: TextInputType.phone,
-          controller: phoneController,
-          prefixText: '+34 ',
-          validator: (value) => widget.phoneValidator(
-            value,
-            language,
-          ),
-          onChanged: (value) => usuarioController.onChangeValueTelefono(
-            value,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextFormWidget(
-          initialValue: usuario.email,
-          label: language.email,
-          keyboardType: TextInputType.emailAddress,
-          readOnly: readOnlyEmail,
-          validator: (value) => !readOnlyEmail
-              ? widget.emailValidator(
-                  value,
-                  language,
-                )
-              : null,
-          onChanged: (value) => !readOnlyEmail
-              ? usuarioController.onChangeValueEmail(
-                  value,
-                )
-              : null,
-        ),
-        if (showPassword)
-          Column(
+    return FutureBuilder(
+      future: visiblePassword(),
+      builder: (_, snapshot) {
+        if (snapshot.hasData) {
+          showPassword = snapshot.data!;
+
+          return Column(
             children: [
-              const SizedBox(height: 8),
               TextFormWidget(
-                controller: passController,
-                focusNode: passFocusNode,
-                label: language.password,
+                initialValue: usuario.nombre ?? '',
+                label: language.nombre,
                 keyboardType: TextInputType.text,
-                validator: (text) => widget.passwordValidator(
+                validator: (value) => widget.textValidator(value, language),
+                onChanged: (text) => usuarioController.onChangeValueNombre(
                   text,
-                  language,
-                ),
-                obscureText: obscurePassword,
-                onChanged: (text) => usuarioController.onPasswordChanged(
-                  text,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(!obscurePassword
-                      ? Icons.visibility
-                      : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      obscurePassword = !obscurePassword;
-                    });
-                  },
                 ),
               ),
               const SizedBox(height: 8),
               TextFormWidget(
-                controller: confirmPassController,
-                focusNode: confirmPassFocusNode,
-                label: language.confirmar_password,
+                initialValue: usuario.apellido1 ?? '',
+                label: language.apellido,
                 keyboardType: TextInputType.text,
-                validator: (value) => widget.passwordConfirmValidator(
+                validator: (value) => widget.textValidator(value, language),
+                onChanged: (text) => usuarioController.onChangeValueApellido1(
+                  text,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormWidget(
+                initialValue: usuario.apellido2 ?? '',
+                label: language.apellido2,
+                keyboardType: TextInputType.text,
+                validator: (value) => widget.textValidator(value, language),
+                onChanged: (text) => usuarioController.onChangeValueApellido2(
+                  text,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormWidget(
+                label: language.telefono,
+                keyboardType: TextInputType.phone,
+                controller: phoneController,
+                prefixText: '+34 ',
+                validator: (value) => widget.phoneValidator(
                   value,
-                  passController.text,
                   language,
                 ),
-                obscureText: obscureConfirmPassword,
-                suffixIcon: IconButton(
-                  icon: Icon(!obscureConfirmPassword
-                      ? Icons.visibility
-                      : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      obscureConfirmPassword = !obscureConfirmPassword;
-                    });
-                  },
+                onChanged: (value) => usuarioController.onChangeValueTelefono(
+                  value,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormWidget(
+                initialValue: usuario.email,
+                label: language.email,
+                keyboardType: TextInputType.emailAddress,
+                readOnly: readOnlyEmail,
+                validator: (value) => !readOnlyEmail
+                    ? widget.emailValidator(
+                        value,
+                        language,
+                      )
+                    : null,
+                onChanged: (value) => !readOnlyEmail
+                    ? usuarioController.onChangeValueEmail(
+                        value,
+                      )
+                    : null,
+              ),
+              if (showPassword)
+                Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    TextFormWidget(
+                      controller: passController,
+                      focusNode: passFocusNode,
+                      label: language.password,
+                      keyboardType: TextInputType.text,
+                      validator: (text) => widget.passwordValidator(
+                        text,
+                        language,
+                      ),
+                      obscureText: obscurePassword,
+                      onChanged: (text) => usuarioController.onPasswordChanged(
+                        text,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(!obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormWidget(
+                      controller: confirmPassController,
+                      focusNode: confirmPassFocusNode,
+                      label: language.confirmar_password,
+                      keyboardType: TextInputType.text,
+                      validator: (value) => widget.passwordConfirmValidator(
+                        value,
+                        passController.text,
+                        language,
+                      ),
+                      obscureText: obscureConfirmPassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(!obscureConfirmPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            obscureConfirmPassword = !obscureConfirmPassword;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              TextFormWidget(
+                key: const Key('kFechaNacimiento'),
+                controller: dateInput,
+                label: language.fecha_nacimiento,
+                keyboardType: TextInputType.datetime,
+                suffixIcon: const Align(
+                  widthFactor: 1.0,
+                  heightFactor: 1.0,
+                  child: Icon(
+                    Icons.calendar_today,
+                  ),
+                ),
+                onTap: () => usuarioController.openDatePicker(
+                  context,
+                  dateInput,
                 ),
               ),
             ],
-          ),
-        TextFormWidget(
-          key: const Key('kFechaNacimiento'),
-          controller: dateInput,
-          label: language.fecha_nacimiento,
-          keyboardType: TextInputType.datetime,
-          suffixIcon: const Align(
-            widthFactor: 1.0,
-            heightFactor: 1.0,
-            child: Icon(
-              Icons.calendar_today,
-            ),
-          ),
-          onTap: () => usuarioController.openDatePicker(
-            context,
-            dateInput,
-          ),
-        ),
-      ],
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }

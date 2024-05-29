@@ -147,5 +147,26 @@
     }
   },
   "administradores": "Administradores",
-  "info_envio_email": "Se va a proceder a enviar un email de invitación para que la persona invitada pueda registrarse en la aplicación. Por favor, póngase en contacto con la persona invitada para informarle."
+  "info_envio_email": "Se va a proceder a enviar un email de invitación para que la persona invitada pueda registrarse en la aplicación. Por favor, póngase en contacto con la persona invitada para informarle.",
+  "body_invitacion": "<p>Estimado/a usuario,</p><p>Ha sido invitado por {usuario} para poder registrarse en RedELA como {rol}</p><p>Saludos,</p><p>El Equipo de RedELA</p>",
+  "@body_invitacion": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "usuario": {
+        "type": "String",
+        "example": "Artículo"
+      },
+      "rol": {
+        "type": "String",
+        "example": "Artículo"
+      }
+    }
+  },
+  "subject_invitacion": "RedELA Invitation",
+  "email_enviado": "Email enviado",
+  "email_error_envio": "Error al enviar el email",
+  "invitacion_ya_existe": "Ya existe invitación",
+  "enviar_invitacion": "Enviar invitación",
+  "datos_hospital": "Datos Hospital",
+  "hospital": "Hospital"
 }

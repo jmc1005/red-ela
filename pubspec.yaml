@@ -40,6 +40,7 @@ dependencies:
   phone_numbers_parser: ^8.2.1
   encrypt: ^5.0.3
   flutter_dotenv: ^5.1.0
+  flutter_email_sender: ^6.0.3
 
 dev_dependencies:
   flutter_test:

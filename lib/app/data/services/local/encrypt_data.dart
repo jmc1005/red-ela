@@ -17,7 +17,7 @@ class EncryptData {
     'telefono',
     'pacientes',
     'cuidador',
-    'gestor_caso'
+    'gestor_caso',
   ];
 
   EncryptData._() {
@@ -60,7 +60,8 @@ class EncryptData {
     return decrypted;
   }
 
-  static Future<Json> decryptDataJson(Json json) {
+  static Future<Json> decryptDataJson(Json json) async {
+    await getSecureKey();
     final Json result = json;
 
     json.forEach((key, value) async {

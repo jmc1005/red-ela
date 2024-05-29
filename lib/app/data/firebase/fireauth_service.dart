@@ -199,8 +199,7 @@ class FireAuthService {
       final userEmailCredential = await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      await firebaseAuth.currentUser!
-          .linkWithCredential(userEmailCredential.credential!);
+      await firebaseAuth.signInWithCredential(userEmailCredential.credential!);
     } on FirebaseAuthException catch (e) {
       debugPrint(e.code);
     }

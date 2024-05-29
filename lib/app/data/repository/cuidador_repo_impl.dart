@@ -104,24 +104,6 @@ class CuidadorRepoImpl implements CuidadorRepo {
   }
 
   @override
-  Future<Result<CuidadorModel, dynamic>> findCuidadorByEmail(
-    String email,
-  ) async {
-    try {
-      return firebaseService
-          .findDocumentByFieldIsEqualToValue(
-            collectionPath: collection,
-            field: 'email',
-            value: email,
-          )
-          .then((json) => successFromJson(json));
-    } catch (e) {
-      debugPrint(e.toString());
-      return Future.value(const Error('data-get-failed'));
-    }
-  }
-
-  @override
   Future<Result<CuidadorModel, dynamic>> findCuidadorByUid(String uidCuidador) {
     return _getCuidadorFirebase(uidCuidador);
   }
@@ -163,7 +145,7 @@ class CuidadorRepoImpl implements CuidadorRepo {
           uidCuidador: currentUser.uid,
         );
       },
-      (error) => null,
+      (error) => debugPrint(error),
     );
 
     response.when(
@@ -174,7 +156,7 @@ class CuidadorRepoImpl implements CuidadorRepo {
           pacientes = cuidador.pacientes!;
         }
       },
-      (error) => null,
+      (error) => debugPrint(error),
     );
 
     pacientes.add(solicitado);

@@ -56,4 +56,9 @@ abstract class UsuarioRepo {
   });
 
   Future<void> resetPassword({required String email});
+
+  Future<Result<UsuarioModel, dynamic>> findUsuarioByTelefonoOrEmail({
+    required String telefono,
+    String? email,
+  });
 }

@@ -171,25 +171,8 @@ class PacienteRepoImpl implements PacienteRepo {
   Future<void> updatePacienteRelacion({required String solicitado}) async {
     final currentUser = fireAuthService.currentUser()!;
 
-    final response = await gestorCasosRepo.getGestorCasosByUid(solicitado);
-
-    response.when(
-      (success) async {
-        if (success.pacientes != null && success.pacientes!.isNotEmpty) {
-          var pacientes = success.pacientes!;
-          pacientes.add(currentUser.uid);
-
-          await gestorCasosRepo.updateGestorCasos(
-            hospital: success.hospital!,
-            pacientes: pacientes,
-          );
-        }
-      },
-      (error) => null,
-    );
-
     try {
-      await firebaseService.updateFieldsOnDocument(
+      await firebaseService.setDataOnDocument(
         collectionPath: collection,
         documentPath: currentUser.uid,
         data: {

@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:intl/intl.dart';
 
-import '../../../utils/constants/app_constants.dart';
 import '../typedefs.dart';
 
 part 'usuario_model.freezed.dart';
@@ -15,7 +12,7 @@ class UsuarioModel with _$UsuarioModel {
     String? nombre,
     String? apellido1,
     String? apellido2,
-    @JsonKey(name: 'nombre_completo') String? nombreCompleto,
+    @JsonKey(name: 'nombre_completo') required String nombreCompleto,
     String? email,
     String? telefono,
     String? password,

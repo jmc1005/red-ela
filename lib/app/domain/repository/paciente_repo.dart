@@ -10,7 +10,7 @@ abstract class PacienteRepo {
     required String tratamiento,
     required String fechaDiagnostico,
     required String inicio,
-    CuidadorModel cuidador,
+    CuidadorModel? cuidador,
   });
 
   Future<Result<dynamic, dynamic>> updatePaciente({
@@ -31,6 +31,8 @@ abstract class PacienteRepo {
 
   Future<Result<PacienteModel, dynamic>> getPacienteByUid(String uid);
 
-  Future<void> addCuidador(
-      {required String uidPaciente, required String uidCuidador});
+  Future<void> addCuidador({
+    required String uidPaciente,
+    required String uidCuidador,
+  });
 }

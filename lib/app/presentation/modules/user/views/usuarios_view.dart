@@ -9,11 +9,11 @@ import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
-import '../../invitacion/views/invitar_usuario_dialog.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
+import '../../invitacion/views/invitar_usuario_dialog.dart';
 import '../widgets/usuario_row_widget.dart';
 
 class UsuariosView extends StatefulWidget {
@@ -52,8 +52,7 @@ class _UsuariosViewState extends State<UsuariosView> {
       if (search.isNotEmpty) {
         _usuarios = _usuarios
             .where((u) =>
-                u.nombreCompleto != null &&
-                u.nombreCompleto!.toLowerCase().contains(search.trim()))
+                u.nombreCompleto.trim().toLowerCase().contains(search.trim()))
             .toList();
       }
 
@@ -89,7 +88,6 @@ class _UsuariosViewState extends State<UsuariosView> {
           ? FloatingActionButton(
               onPressed: () => showInvitarUsuarioDialog(
                 context,
-                invitacionRepo: invitacionRepo,
                 rol: widget.rol,
               ),
               child: const Icon(Icons.add),

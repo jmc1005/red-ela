@@ -1,30 +1,37 @@
+import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
-import '../../../../domain/models/cuidador/cuidador_model.dart';
+import '../../../../config/color_config.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
-import '../../../global/widgets/submit_button_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
 
-class PacienteDataWidget extends StatefulWidget with ValidatorMixin {
-  PacienteDataWidget({super.key, required this.usuarioController});
+class PacientePatologiaWidget extends StatefulWidget with ValidatorMixin {
+  PacientePatologiaWidget({super.key, required this.usuarioController});
 
   final UsuarioController usuarioController;
 
   @override
-  State<PacienteDataWidget> createState() => _PacienteDataWidgetState();
+  State<PacientePatologiaWidget> createState() =>
+      _PacientePatologiaWidgetState();
 }
 
-class _PacienteDataWidgetState extends State<PacienteDataWidget> {
+class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
   late final UsuarioModel? usuarioCuidador;
 
   final dateInput = TextEditingController();
+
+  var headerStyle = const TextStyle(
+    color: Color(0xffffffff),
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   void _showError(error, language) {
     final response = FirebaseResponse(
@@ -52,34 +59,10 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
         .getPaciente();
   }
 
-  Future<void> _getCuidadorPaciente(
-    UsuarioController controller,
-    language,
-  ) async {
-    final paciente = controller.state!.paciente;
-    final cuidadorRepo = controller.pacienteController.cuidadorRepo;
-
-    if (paciente!.cuidador != null) {
-      final cuidadorUid = paciente.cuidador!.usuarioUid;
-      final futureCuidador =
-          await cuidadorRepo.getUsuarioCuidadorByUid(cuidadorUid);
-
-      futureCuidador.when(
-        (success) {
-          usuarioCuidador = success;
-        },
-        (error) {},
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final controller = widget.usuarioController;
     final language = AppLocalizations.of(context)!;
-
-    PacienteModel? paciente = controller.state?.paciente;
-    CuidadorModel? cuidador = controller.state?.cuidador;
 
     return FutureBuilder(
       future: _getFuturePaciente(),
@@ -94,13 +77,10 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
 
           if (result is PacienteModel) {
             controller.paciente = result;
-            _getCuidadorPaciente(controller, language);
-            paciente = controller.state!.paciente;
-            cuidador = paciente?.cuidador;
 
-            if (paciente!.fechaDiagnostico != null &&
-                paciente!.fechaDiagnostico!.isNotEmpty) {
-              dateInput.text = paciente!.fechaDiagnostico!;
+            if (result.fechaDiagnostico != null &&
+                result.fechaDiagnostico!.isNotEmpty) {
+              dateInput.text = result.fechaDiagnostico!;
             }
             if (usuarioCuidador != null) {
               debugPrint(usuarioCuidador!.toString());
@@ -121,6 +101,7 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
         }
 
         return Container(
+          width: MediaQuery.of(context).size.width / 1.8,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -131,7 +112,8 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
                   Flexible(
                     child: TextFormWidget(
                       label: language.tratamiento,
-                      initialValue: paciente?.tratamiento,
+                      initialValue:
+                          controller.state!.paciente!.tratamiento ?? '',
                       keyboardType: TextInputType.text,
                       onChanged: (text) => controller.onChangeTratamiento(text),
                       validator: (value) => widget.textValidator(
@@ -144,7 +126,7 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
                   Flexible(
                     child: TextFormWidget(
                       label: language.inicio,
-                      initialValue: paciente?.inicio,
+                      initialValue: controller.state!.paciente!.inicio,
                       keyboardType: TextInputType.text,
                       onChanged: (text) => controller.onChangeValueInicio(text),
                       validator: (value) => widget.textValidator(
@@ -173,70 +155,6 @@ class _PacienteDataWidgetState extends State<PacienteDataWidget> {
                   dateInput,
                 ),
               ),
-              if (cuidador != null)
-                Column(
-                  children: [
-                    const Divider(),
-                    TextFormWidget(
-                      label: '${language.nombre} ${language.cuidador}',
-                      initialValue: usuarioCuidador?.nombre != null
-                          ? usuarioCuidador!.nombre
-                          : '',
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: '${language.apellido} ${language.cuidador}',
-                      initialValue: usuarioCuidador?.apellido1 != null
-                          ? usuarioCuidador!.apellido1
-                          : '',
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: '${language.apellido2} ${language.cuidador}',
-                      initialValue: usuarioCuidador?.apellido2 != null
-                          ? usuarioCuidador!.apellido2
-                          : '',
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: '${language.relacion} ${language.cuidador}',
-                      initialValue:
-                          cuidador?.relacion != null ? cuidador!.relacion : '',
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
-              if (cuidador == null)
-                Column(
-                  children: [
-                    const Divider(),
-                    const Text(
-                      'Introduzca el teléfono de contacto de su cuidador',
-                    ),
-                    TextFormWidget(
-                      label: '${language.telefono} ${language.cuidador}',
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    SubmitButtonWidget(
-                      label: 'Enviar',
-                      onPressed: () {
-                        // usuario existe por teléfono => asignar usuario
-
-                        // usuario no existe por teléfono => enviar invitación
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
             ],
           ),
         );

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -29,11 +30,9 @@ class UsuarioRepoImpl extends UsuarioRepo {
     try {
       final currentUid = await sessionService.currentUid;
 
-      return await firebaseService
+      return firebaseService
           .getFromDocument(
-        collectionPath: collection,
-        documentPath: currentUid!,
-      )
+              collectionPath: collection, documentPath: currentUid!)
           .then(
         (json) async {
           final rol = json['rol'];
@@ -134,15 +133,14 @@ class UsuarioRepoImpl extends UsuarioRepo {
       final nombreEncrypt = await EncryptData.encryptData(nombre);
       final apellido1Encrypt = await EncryptData.encryptData(apellido1);
       final apellido2Encrypt = await EncryptData.encryptData(apellido2);
-      final nombreCompletoEncrypt =
-          '$nombreEncrypt $apellido1Encrypt $apellido2Encrypt';
+      final nombreCompleto = '$nombre $apellido1 $apellido2';
 
       final data = {
         'uid': uid,
         'nombre': nombreEncrypt,
         'apellido1': apellido1Encrypt,
         'apellido2': apellido2Encrypt,
-        'nombre_completo': nombreCompletoEncrypt,
+        'nombre_completo': await EncryptData.encryptData(nombreCompleto),
         'email': email,
         'fecha_nacimiento': await EncryptData.encryptData(fechaNacimiento),
         'telefono': telefono,
@@ -151,7 +149,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
       if (currentUser.uid == uid &&
           currentUser.email == null &&
           password != null) {
-        await fireAuthService.signInWithEmailAndPassword(email, password);
+        await fireAuthService.linkWithCredential(email, password);
       }
 
       return await firebaseService
@@ -177,6 +175,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
     final data = {
       'uid': currentUser.uid,
+      'nombre_completo': '',
       'email': email ?? '',
       'rol': await EncryptData.encryptData(rol),
       'telefono': phoneNumber != null ? phoneNumber.replaceAll('+34', '') : '',
@@ -296,5 +295,40 @@ class UsuarioRepoImpl extends UsuarioRepo {
   @override
   Future<void> resetPassword({required String email}) async {
     fireAuthService.resetPassword(email: email);
+  }
+
+  @override
+  Future<Result<UsuarioModel, dynamic>> findUsuarioByTelefonoOrEmail({
+    required String telefono,
+    String? email,
+  }) async {
+    try {
+      if (email == null) {
+        return firebaseService
+            .findDocumentByFieldIsEqualToValue(
+              collectionPath: collection,
+              field: 'telefono',
+              value: telefono,
+            )
+            .then((json) => successFromJson(json));
+      } else {
+        final filterTelefono = Filter('telefono', isEqualTo: telefono);
+        final filterEmail = Filter('email', isEqualTo: email);
+
+        final query = await firebaseService
+            .getCollection(
+              collectionPath: collection,
+            )
+            .where(Filter.or(filterTelefono, filterEmail))
+            .get();
+
+        final json = query.docs.first.data();
+
+        return successFromJson(json);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-get-failed'));
+    }
   }
 }

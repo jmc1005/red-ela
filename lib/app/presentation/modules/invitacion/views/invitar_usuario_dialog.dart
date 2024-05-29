@@ -3,7 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
+import '../../../../domain/models/invitacion/invitacion_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
+import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../controllers/invitacion_controller.dart';
@@ -11,7 +13,6 @@ import '../controllers/state/invitacion_state.dart';
 
 Future<bool> showInvitarUsuarioDialog(
   BuildContext context, {
-  required InvitacionRepo invitacionRepo,
   required String rol,
 }) async {
   final result = await showDialog<bool>(
@@ -45,17 +46,28 @@ class _DialogContentState extends State<_DialogContent> {
 
   final phoneNumberController = TextEditingController();
   final phoneNumberFocusNode = FocusNode();
+  late final InvitacionRepo invitacionRepo;
+  late InvitacionModel? invitacionModel;
 
   @override
   void initState() {
     super.initState();
   }
 
+  Future<void> getInvitacion(telefono) async {
+    final response = await invitacionRepo.getInvitacion(telefono);
+
+    response.when(
+      (success) => invitacionModel = success,
+      (error) => debugPrint(error),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
     final InvitacionController invitacionController = context.read();
-    final invitacionRepo = invitacionController.invitacionRepo;
+    invitacionRepo = invitacionController.invitacionRepo;
     final invitacion = invitacionController.state;
     final size = MediaQuery.of(context).size;
 
@@ -81,13 +93,26 @@ class _DialogContentState extends State<_DialogContent> {
         ),
       ),
       OutlinedButton(
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            invitacionRepo.addInvitacion(
-              telefono: invitacionController.state.telefono,
-              rol: invitacionController.state.rol,
-            );
-            Navigator.pop(context, true);
+            getInvitacion(invitacionController.state.telefono);
+
+            if (invitacionModel == null) {
+              invitacionController.send(context, language);
+
+              invitacionRepo.addInvitacion(
+                telefono: invitacionController.state.telefono,
+                rol: invitacionController.state.rol,
+              );
+              Navigator.pop(context, true);
+            } else {
+              debugPrint('Ya existe invitación enviada');
+              invitacionController.showError(
+                context,
+                language.invitacion_ya_existe,
+              );
+              // buscar usuario por email y asignarlo
+            }
           }
         },
         style: OutlinedButton.styleFrom(
@@ -109,6 +134,8 @@ class _DialogContentState extends State<_DialogContent> {
       create: (_) => InvitacionController(
         const InvitacionState(),
         invitacionRepo: context.read(),
+        usuarioRepo: context.read(),
+        sessionService: context.read(),
       ),
       child: PopScope(
         child: AlertDialog(

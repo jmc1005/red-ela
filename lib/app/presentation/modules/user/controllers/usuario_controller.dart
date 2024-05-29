@@ -30,7 +30,13 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   final PacienteController pacienteController;
 
   set usuario(UsuarioModel usuarioModel) {
-    final usuarioTipoModel = UsuarioTipoModel(usuario: usuarioModel);
+    UsuarioTipoModel usuarioTipoModel;
+    if (state == null) {
+      usuarioTipoModel = UsuarioTipoModel(usuario: usuarioModel);
+    } else {
+      usuarioTipoModel = state!.copyWith(usuario: usuarioModel);
+    }
+
     state = usuarioTipoModel;
     onlyUpdate(state);
   }
@@ -158,6 +164,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
       email: state!.usuario.email!,
       fechaNacimiento: state!.usuario.fechaNacimiento!,
       telefono: state!.usuario.telefono!,
+      password: state!.usuario.password,
     );
 
     late String code;
@@ -206,24 +213,24 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
         cuidador: state!.paciente?.cuidador,
       );
     } else if (rol == UsuarioTipo.cuidador.value) {
-      final pacientesResult =
-          await pacienteController.pacienteRepo.getAllPacientesByUidCuidador(
-        uidCuidador: state!.usuario.uid,
-        email: state!.usuario.email!,
-      );
+      // final pacientesResult =
+      //     await pacienteController.pacienteRepo.getAllPacientesByUidCuidador(
+      //   uidCuidador: state!.usuario.uid,
+      //   email: state!.usuario.email!,
+      // );
 
-      List<String> pacientes = [];
-      pacientesResult.when(
-        (success) {
-          pacientes = success;
-        },
-        (error) => null,
-      );
+      // List<String> pacientes = [];
+      // pacientesResult.when(
+      //   (success) {
+      //     pacientes = success;
+      //   },
+      //   (error) => null,
+      // );
 
-      await pacienteController.cuidadorRepo.updateCuidador(
-        relacion: state!.cuidador?.relacion ?? '',
-        pacientes: pacientes,
-      );
+      // await pacienteController.cuidadorRepo.updateCuidador(
+      //   relacion: state!.cuidador?.relacion ?? '',
+      //   pacientes: pacientes,
+      // );
     } else if (rol == UsuarioTipo.gestorCasos.value) {}
   }
 }
