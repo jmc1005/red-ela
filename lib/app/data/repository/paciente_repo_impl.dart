@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
 
-import '../../domain/models/cuidador/cuidador_model.dart';
 import '../../domain/models/paciente/paciente_model.dart';
 import '../../domain/models/typedefs.dart';
 import '../../domain/repository/gestor_casos_repo.dart';
@@ -31,7 +28,8 @@ class PacienteRepoImpl implements PacienteRepo {
     required String tratamiento,
     required String fechaDiagnostico,
     required String inicio,
-    CuidadorModel? cuidador,
+    String? cuidador,
+    String? gestorCasos,
   }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
@@ -41,6 +39,7 @@ class PacienteRepoImpl implements PacienteRepo {
       fechaDiagnostico,
       inicio,
       cuidador,
+      gestorCasos,
     );
 
     try {
@@ -62,7 +61,8 @@ class PacienteRepoImpl implements PacienteRepo {
     String? tratamiento,
     String? fechaDiagnostico,
     String? inicio,
-    CuidadorModel? cuidador,
+    String? cuidador,
+    String? gestorCasos,
   }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
@@ -72,13 +72,14 @@ class PacienteRepoImpl implements PacienteRepo {
       fechaDiagnostico,
       inicio,
       cuidador,
+      gestorCasos,
     );
 
     try {
       return firebaseService
           .updateDataOnDocument(
             collectionPath: collection,
-            uuid: usuarioUid,
+            documentPath: usuarioUid,
             data: data,
           )
           .then((value) => const Success('data-updated'));
@@ -121,23 +122,26 @@ class PacienteRepoImpl implements PacienteRepo {
     String? tratamiento,
     String? fechaDiagnostico,
     String? inicio,
-    CuidadorModel? cuidador,
+    String? cuidador,
+    String? gestorCasos,
   ) async {
     final data = {
-      'usuario_uid': await EncryptData.encryptData(usuarioUid),
+      'usuario_uid': usuarioUid,
       'tratamiento': tratamiento != null
           ? await EncryptData.encryptData(tratamiento)
           : null,
-      'fecha_diagnostico': fechaDiagnostico,
-      'inicio': inicio,
+      'fecha_diagnostico': fechaDiagnostico != null
+          ? await EncryptData.encryptData(fechaDiagnostico)
+          : null,
+      'inicio': inicio != null ? await EncryptData.encryptData(inicio) : null,
     };
 
     if (cuidador != null) {
-      if (cuidador.usuarioUid.isNotEmpty) {
-        data['cuidador'] = jsonEncode(
-          {'usuario_uid': cuidador.usuarioUid},
-        );
-      }
+      data['cuidador'] = cuidador;
+    }
+
+    if (gestorCasos != null) {
+      data['gestor_casos'] = gestorCasos;
     }
 
     return data;
@@ -149,7 +153,7 @@ class PacienteRepoImpl implements PacienteRepo {
     required String email,
   }) async {
     final filterCuidadorUid = Filter(
-      'cuidador.usuario_uid',
+      'cuidador',
       isEqualTo: uidCuidador,
     );
 
@@ -168,33 +172,19 @@ class PacienteRepoImpl implements PacienteRepo {
   }
 
   @override
-  Future<void> updatePacienteRelacion({required String solicitado}) async {
-    final currentUser = fireAuthService.currentUser()!;
-
+  Future<void> relacionaPacienteCuidador({
+    required String uidPaciente,
+  }) async {
     try {
-      await firebaseService.setDataOnDocument(
-        collectionPath: collection,
-        documentPath: currentUser.uid,
-        data: {
-          'gestor_caso': solicitado,
-        },
-      ).then((value) => const Success('data-added'));
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
+      final uidCuidador = fireAuthService.currentUser()!.uid;
 
-  @override
-  Future<void> addCuidador(
-      {required String uidPaciente, required String uidCuidador}) async {
-    try {
-      await firebaseService.updateFieldsOnDocument(
+      await firebaseService.updateDataOnDocument(
         collectionPath: collection,
         documentPath: uidPaciente,
         data: {
           'cuidador': uidCuidador,
         },
-      ).then((value) => const Success('data-added'));
+      ).then((value) => const Success('data-updated'));
     } catch (e) {
       debugPrint(e.toString());
     }

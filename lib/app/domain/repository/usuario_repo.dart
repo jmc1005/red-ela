@@ -36,6 +36,7 @@ abstract class UsuarioRepo {
     String? password,
     required String telefono,
     required String fechaNacimiento,
+    required String rol,
   });
 
   Future<Result<dynamic, dynamic>> deleteUsuario();
@@ -49,7 +50,7 @@ abstract class UsuarioRepo {
     required BuildContext context,
   });
 
-  Future<Result<User, dynamic>> signUpPhoneNumber({
+  Future<Result<dynamic, dynamic>> signUpPhoneNumber({
     required String rol,
     required String verificationId,
     required String smsCode,

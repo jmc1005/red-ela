@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/color_config.dart';
-import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/cabecera_widget.dart';
 import '../../../global/widgets/item_widget.dart';
 import '../../rol/views/roles_view.dart';
-import '../../user/views/usuarios_view.dart';
 import 'gestion_widget.dart';
 
 class GestionRolWidget extends StatelessWidget {

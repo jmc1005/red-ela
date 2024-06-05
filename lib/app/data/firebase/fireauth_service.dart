@@ -191,20 +191,6 @@ class FireAuthService {
     return credential.user ?? 'user-not-found';
   }
 
-  Future<void> linkWithCredential(
-    String email,
-    String password,
-  ) async {
-    try {
-      final userEmailCredential = await firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-
-      await firebaseAuth.signInWithCredential(userEmailCredential.credential!);
-    } on FirebaseAuthException catch (e) {
-      debugPrint(e.code);
-    }
-  }
-
   Future<void> resetPassword({required String email}) async {
     firebaseAuth.sendPasswordResetEmail(email: email);
   }

@@ -15,11 +15,11 @@ class PacienteController {
 
   Future<void> update(context, language, PacienteModel paciente) async {
     final result = await pacienteRepo.addPaciente(
-      tratamiento: paciente.tratamiento!,
-      fechaDiagnostico: paciente.fechaDiagnostico!,
-      inicio: paciente.inicio!,
-      cuidador: paciente.cuidador,
-    );
+        tratamiento: paciente.tratamiento!,
+        fechaDiagnostico: paciente.fechaDiagnostico!,
+        inicio: paciente.inicio!,
+        cuidador: paciente.cuidador,
+        gestorCasos: paciente.gestorCasos);
 
     late String code;
     late bool isSuccess = true;

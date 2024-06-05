@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
+import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/invitacion/invitacion_model.dart';
+import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/cuidador_repo.dart';
 import '../../../../domain/repository/gestor_casos_repo.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
@@ -20,6 +22,7 @@ class OTPController extends StateNotifier<OTPState> {
   final PacienteRepo pacienteRepo;
   final CuidadorRepo cuidadorRepo;
   final GestorCasosRepo gestorCasosRepo;
+  final SessionService sessionService;
 
   OTPController(
     super.state, {
@@ -28,6 +31,7 @@ class OTPController extends StateNotifier<OTPState> {
     required this.pacienteRepo,
     required this.cuidadorRepo,
     required this.gestorCasosRepo,
+    required this.sessionService,
   });
 
   Future<Result<InvitacionModel, dynamic>> obtenerInvitacion(
@@ -67,25 +71,27 @@ class OTPController extends StateNotifier<OTPState> {
       verificationId: verificationId,
     );
 
+    sessionService.saveSolicitado(solicitado);
+
     result.when(
-      (success) async {
-        final usuario = await usuarioRepo.getUsuario();
+      (success) {
+        updateInvitacion(phoneNumber);
 
-        usuario.when(
-          (success) {
-            updateInvitacion(phoneNumber);
-            updateUsuarioBySolicitado(solicitado, rol);
+        final usuarioModel = UsuarioModel(
+          uid: '',
+          nombreCompleto: '',
+          rol: rol,
+          telefono: phoneNumber,
+          email: '',
+        );
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => UsuarioDetailView(
-                  usuarioModel: success,
-                ),
-              ),
-            );
-          },
-          (error) => showError(error, language, context),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UsuarioDetailView(
+              usuarioModel: usuarioModel,
+            ),
+          ),
         );
       },
       (error) => showError(error, language, context),
@@ -124,14 +130,5 @@ class OTPController extends StateNotifier<OTPState> {
     );
 
     response.showWarning();
-  }
-
-  Future<void> updateUsuarioBySolicitado(String solicitado, String rol) async {
-    if (rol == UsuarioTipo.paciente.value) {
-      await pacienteRepo.updatePacienteRelacion(solicitado: solicitado);
-    }
-    if (rol == UsuarioTipo.cuidador.value) {
-      await cuidadorRepo.updateCuidadorRelacion(solicitado: solicitado);
-    }
   }
 }

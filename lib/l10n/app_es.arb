@@ -168,5 +168,12 @@
   "invitacion_ya_existe": "Ya existe invitación",
   "enviar_invitacion": "Enviar invitación",
   "datos_hospital": "Datos Hospital",
-  "hospital": "Hospital"
+  "hospital": "Hospital",
+  "asunto": "Asunto",
+  "fecha_inicio": "Fecha inicio",
+  "hora_inicio": "Hora inicio",
+  "fecha_fin": "Fecha fin",
+  "hora_fin": "Hora fin",
+  "lugar": "Lugar",
+  "notas": "Notas"
 }

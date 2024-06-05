@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/color_config.dart';
-
 Future<bool> showConfirmDialog(
   BuildContext context, {
   String title = '',
@@ -33,7 +31,7 @@ class _DialogContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       child: AlertDialog(
-        backgroundColor: ColorConfig.dialogBackground,
+        backgroundColor: Colors.white,
         title: Text(
           title,
           textAlign: TextAlign.center,

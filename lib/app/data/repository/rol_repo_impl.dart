@@ -76,7 +76,7 @@ class RolRepoImpl implements RolRepo {
     try {
       return firebaseService.updateDataOnDocument(
         collectionPath: collection,
-        uuid: uuid,
+        documentPath: uuid,
         data: {
           'rol': await EncryptData.encryptData(rol),
           'descripcion': await EncryptData.encryptData(descripcion),

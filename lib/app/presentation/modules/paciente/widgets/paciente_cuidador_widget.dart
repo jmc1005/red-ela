@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
+import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
@@ -9,7 +10,7 @@ import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/submit_button_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
-import '../../invitacion/views/invitar_usuario_dialog.dart';
+import '../../invitacion/dialogs/invitar_usuario_dialog.dart';
 import '../../user/controllers/usuario_controller.dart';
 
 class PacienteCuidadorWidget extends StatefulWidget with ValidatorMixin {
@@ -24,6 +25,7 @@ class PacienteCuidadorWidget extends StatefulWidget with ValidatorMixin {
 class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
   late final UsuarioModel? usuarioCuidador;
+  late final CuidadorModel? cuidadorModel;
 
   final dateInput = TextEditingController();
 
@@ -54,14 +56,15 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
   }
 
   Future<Result<UsuarioModel, dynamic>> _getCuidadorPaciente(
-    UsuarioController controller,
+    UsuarioController usuarioController,
   ) async {
-    final paciente = controller.state!.paciente;
-    final cuidadorRepo = null; // controller.pacienteController.cuidadorRepo;
+    final paciente = usuarioController.state!.paciente;
+    final usuarioRepo = usuarioController.usuarioRepo;
 
     if (paciente!.cuidador != null) {
-      final cuidadorUid = paciente.cuidador!.usuarioUid;
-      return cuidadorRepo.getUsuarioCuidadorByUid(cuidadorUid);
+      final cuidadorUid = paciente.cuidador!;
+
+      return usuarioRepo.getUsuarioByUid(uid: cuidadorUid);
     }
 
     return Future.value(const Error(null));
@@ -82,34 +85,49 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
             future: _getCuidadorPaciente(controller),
             builder: (_, snapshot) {
               if (snapshot.hasData) {
+                final response = snapshot.data!;
+
+                response.when(
+                  (success) async {
+                    usuarioCuidador = success;
+                    final responseCuidador = await controller
+                        .cuidadorController.cuidadorRepo
+                        .getCuidadorByUid(success.uid);
+
+                    responseCuidador.when(
+                      (success) => cuidadorModel = success,
+                      (error) => debugPrint(error),
+                    );
+                  },
+                  (error) => debugPrint(error),
+                );
+
                 return Column(
                   children: [
                     TextFormWidget(
                       label: language.nombre,
-                      initialValue: usuarioCuidador?.nombre != null
-                          ? usuarioCuidador!.nombre
-                          : '',
+                      initialValue: usuarioCuidador?.nombre ?? '',
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),
                     const SizedBox(height: 8),
                     TextFormWidget(
                       label: language.apellido,
-                      initialValue: usuarioCuidador?.apellido1 != null
-                          ? usuarioCuidador!.apellido1
-                          : '',
+                      initialValue: usuarioCuidador?.apellido1 ?? '',
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),
                     const SizedBox(height: 8),
                     TextFormWidget(
                       label: language.apellido2,
+                      initialValue: usuarioCuidador?.apellido2 ?? '',
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),
                     const SizedBox(height: 8),
                     TextFormWidget(
                       label: language.relacion,
+                      initialValue: cuidadorModel?.relacion ?? '',
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../config/color_config.dart';
 import '../../../utils/validators/validator_mixin.dart';
 import '../../modules/sign/controllers/sign_controller.dart';
 import '../widgets/text_form_widget.dart';
@@ -51,7 +50,7 @@ class _DialogContentState extends State<_DialogContent> {
 
     return PopScope(
       child: AlertDialog(
-        backgroundColor: ColorConfig.dialogBackground,
+        backgroundColor: Colors.white,
         content: Form(
           key: widget.formKey,
           child: TextFormWidget(

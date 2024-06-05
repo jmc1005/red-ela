@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'app/data/firebase/fireauth_service.dart';
 import 'app/data/firebase/firebase_service.dart';
+
 import 'app/data/repository/connection_repo_impl.dart';
 import 'app/data/repository/cuidador_repo_impl.dart';
 import 'app/data/repository/gestor_caso_repo_impl.dart';
@@ -24,6 +25,9 @@ import 'app/domain/repository/invitacion_repo.dart';
 import 'app/domain/repository/paciente_repo.dart';
 import 'app/domain/repository/rol_repo.dart';
 import 'app/domain/repository/usuario_repo.dart';
+import 'app/presentation/modules/citas/controllers/cita_controller.dart';
+import 'app/presentation/modules/cuidador/controllers/cuidador_controller.dart';
+import 'app/presentation/modules/gestor_casos/controllers/gestor_casos_controller.dart';
 import 'app/presentation/modules/invitacion/controllers/invitacion_controller.dart';
 import 'app/presentation/modules/invitacion/controllers/state/invitacion_state.dart';
 import 'app/presentation/modules/otp/controllers/otp_controller.dart';
@@ -100,13 +104,6 @@ Future<void> main() async {
         Provider<GestorCasosRepo>(
           create: (_) => gestorCasosRepo,
         ),
-        Provider<RolController>(
-          create: (_) => RolController(
-            rolRepo: RolRepoImpl(
-              firebaseService: FirebaseService(firestore: firestore),
-            ),
-          ),
-        ),
         Provider<InvitacionRepo>(
           create: (_) => InvitacionRepoImpl(
             firebaseService: FirebaseService(firestore: firestore),
@@ -119,6 +116,18 @@ Future<void> main() async {
             pacienteRepo: pacienteRepo,
           ),
         ),
+        Provider<CuidadorController>(
+          create: (context) => CuidadorController(
+            context: context,
+            cuidadorRepo: cuidadorRepo,
+          ),
+        ),
+        Provider<GestorCasosController>(
+          create: (context) => GestorCasosController(
+            context: context,
+            gestorCasosRepo: gestorCasosRepo,
+          ),
+        ),
         Provider<OTPController>(
           create: (context) => OTPController(
             const OTPState(),
@@ -127,7 +136,18 @@ Future<void> main() async {
             pacienteRepo: context.read(),
             cuidadorRepo: context.read(),
             gestorCasosRepo: context.read(),
+            sessionService: sessionService,
           ),
+        ),
+        Provider<RolController>(
+          create: (_) => RolController(
+            rolRepo: RolRepoImpl(
+              firebaseService: FirebaseService(firestore: firestore),
+            ),
+          ),
+        ),
+        Provider<CitaController>(
+          create: (_) => CitaController(),
         ),
         ChangeNotifierProvider<SignController>(
           create: (context) => SignController(
@@ -140,7 +160,14 @@ Future<void> main() async {
           create: (context) => UsuarioController(
             usuarioRepo: context.read(),
             pacienteController: context.read(),
+            cuidadorController: context.read(),
+            gestorCasosController: context.read(),
             sessionService: sessionService,
+            signController: SignController(
+              const SignState(),
+              usuarioRepo: context.read(),
+              context: context,
+            ),
           ),
         ),
         ChangeNotifierProvider<OTPController>(
@@ -151,6 +178,7 @@ Future<void> main() async {
             pacienteRepo: context.read(),
             cuidadorRepo: context.read(),
             gestorCasosRepo: context.read(),
+            sessionService: sessionService,
           ),
         ),
         ChangeNotifierProvider<RolController>(
@@ -167,6 +195,9 @@ Future<void> main() async {
             usuarioRepo: context.read(),
             sessionService: sessionService,
           ),
+        ),
+        ChangeNotifierProvider<CitaController>(
+          create: (context) => CitaController(),
         ),
       ],
       child: const Redela(),

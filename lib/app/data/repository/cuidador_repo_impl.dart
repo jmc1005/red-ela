@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
 
@@ -28,21 +29,35 @@ class CuidadorRepoImpl implements CuidadorRepo {
   final String collectionPacientes = 'pacientes';
 
   @override
-  Future<Result> addCuidador({required String relacion}) async {
+  Future<Result> addCuidador({
+    required String relacion,
+    String? paciente,
+  }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
     final data = {
       'usuario_uid': usuarioUid,
       'relacion': await EncryptData.encryptData(relacion),
     };
+
     try {
       return firebaseService
           .setDataOnDocument(
-            collectionPath: collection,
-            documentPath: usuarioUid,
-            data: data,
-          )
-          .then((value) => const Success('data-added'));
+              collectionPath: collection, documentPath: usuarioUid, data: data)
+          .then(
+        (value) async {
+          final docRef = firebaseService.getDocumentFromCollection(
+              collection: collection, document: usuarioUid);
+
+          if (paciente != null) {
+            await docRef.update({
+              'pacientes': FieldValue.arrayUnion([paciente])
+            });
+          }
+
+          return const Success('data-added');
+        },
+      );
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-add-failed'));
@@ -79,24 +94,34 @@ class CuidadorRepoImpl implements CuidadorRepo {
   @override
   Future<Result> updateCuidador({
     required String relacion,
-    List<String>? pacientes,
+    String? paciente,
   }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
 
     final data = {
       'usuario_uid': usuarioUid,
-      'pacientes': jsonEncode(pacientes),
       'relacion': await EncryptData.encryptData(relacion),
     };
 
     try {
       return firebaseService
           .updateDataOnDocument(
-            collectionPath: collection,
-            uuid: usuarioUid,
-            data: data,
-          )
-          .then((value) => const Success('data-updated'));
+        collectionPath: collection,
+        documentPath: usuarioUid,
+        data: data,
+      )
+          .then((value) async {
+        final docRef = firebaseService.getDocumentFromCollection(
+            collection: collection, document: usuarioUid);
+
+        if (paciente != null) {
+          await docRef.update({
+            'pacientes': FieldValue.arrayUnion([paciente])
+          });
+        }
+
+        return const Success('data-updated');
+      });
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-update-failed'));
@@ -104,7 +129,7 @@ class CuidadorRepoImpl implements CuidadorRepo {
   }
 
   @override
-  Future<Result<CuidadorModel, dynamic>> findCuidadorByUid(String uidCuidador) {
+  Future<Result<CuidadorModel, dynamic>> getCuidadorByUid(String uidCuidador) {
     return _getCuidadorFirebase(uidCuidador);
   }
 
@@ -129,51 +154,6 @@ class CuidadorRepoImpl implements CuidadorRepo {
     return Success(UsuarioModel.fromJson(json));
   }
 
-  @override
-  Future<void> updateCuidadorRelacion({required String solicitado}) async {
-    final currentUser = fireAuthService.currentUser()!;
-    final response = await getCuidador();
-    final responsePaciente = await pacienteRepo.getPacienteByUid(solicitado);
-
-    CuidadorModel cuidador;
-    List<String> pacientes = [];
-
-    responsePaciente.when(
-      (success) async {
-        await pacienteRepo.addCuidador(
-          uidPaciente: success.usuarioUid,
-          uidCuidador: currentUser.uid,
-        );
-      },
-      (error) => debugPrint(error),
-    );
-
-    response.when(
-      (success) {
-        cuidador = success;
-
-        if (cuidador.pacientes != null && cuidador.pacientes!.isNotEmpty) {
-          pacientes = cuidador.pacientes!;
-        }
-      },
-      (error) => debugPrint(error),
-    );
-
-    pacientes.add(solicitado);
-
-    try {
-      await firebaseService.updateFieldsOnDocument(
-        collectionPath: collection,
-        documentPath: currentUser.uid,
-        data: {
-          'pacientes': jsonEncode(pacientes),
-        },
-      ).then((value) => const Success('data-added'));
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
   Future<Result<CuidadorModel, dynamic>> _getCuidadorFirebase(String uid) {
     try {
       return firebaseService
@@ -181,7 +161,7 @@ class CuidadorRepoImpl implements CuidadorRepo {
             collectionPath: collection,
             documentPath: uid,
           )
-          .then((json) async => successFromJson(json));
+          .then((json) => successFromJson(json));
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-get-failed'));

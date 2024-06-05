@@ -10,6 +10,8 @@ import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/accordion_widget.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../global/widgets/submit_button_widget.dart';
+import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
 import '../../cuidador/widgets/cuidador_data_widget.dart';
 import '../../gestor_casos/widgets/gestor_casos_data_widget.dart';
 import '../../paciente/widgets/paciente_cuidador_widget.dart';
@@ -40,6 +42,7 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
+  String? currentRol;
 
   @override
   void initState() {
@@ -56,10 +59,15 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
         sessionService: context.read(),
         usuarioRepo: context.read(),
         pacienteController: context.read(),
+        cuidadorController: context.read(),
+        gestorCasosController: context.read(),
+        signController: context.read(),
       ),
       child: Builder(builder: (_) {
-        final sessionService =
-            Provider.of<SessionService>(context, listen: false);
+        final sessionService = Provider.of<SessionService>(
+          context,
+          listen: false,
+        );
 
         return Scaffold(
           appBar: AppBarWidget(
@@ -67,14 +75,17 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
             backgroundColor: ColorConfig.primary,
             width: 90,
             leading: IconButton(
-              onPressed: () async {
+              onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   ctx = context;
-                  final currentRol = await sessionService.rol;
+                  _getCurrentRol(sessionService);
+
                   if (currentRol != null &&
                       currentRol == UsuarioTipo.admin.value) {
                     _navegateToUsuarios(usuario);
-                  } else {}
+                  } else {
+                    navigateTo(Routes.home, context);
+                  }
                 }
               },
               icon: const Icon(
@@ -181,7 +192,8 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                           ),
                                           isOpen: openDatosPersonales,
                                         ),
-                                      if (tipo == UsuarioTipo.paciente.value)
+                                      if (tipo == UsuarioTipo.paciente.value &&
+                                          usuario.uid != '')
                                         AccordionSection(
                                           header: Text(
                                             language.gestor_casos,
@@ -229,8 +241,10 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                               ColorConfig.primary,
                                           contentBackgroundColor: Colors.white,
                                           contentVerticalPadding: 20,
-                                          content:
-                                              const GestorCasosDataWidget(),
+                                          content: GestorCasosDataWidget(
+                                            usuarioController:
+                                                usuarioController,
+                                          ),
                                           isOpen: openDatosPersonales,
                                         ),
                                     ],
@@ -239,7 +253,9 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         usuarioController.update(
-                                            context, language);
+                                          context,
+                                          language,
+                                        );
                                       } else {
                                         usuarioController.showWarning(
                                             context, language);
@@ -273,5 +289,9 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
         ),
       ),
     );
+  }
+
+  Future<void> _getCurrentRol(SessionService sessionService) async {
+    currentRol = await sessionService.rol;
   }
 }

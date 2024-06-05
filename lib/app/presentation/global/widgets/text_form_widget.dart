@@ -41,7 +41,10 @@ class TextFormWidget extends StatelessWidget {
         onChanged: onChanged,
         keyboardType: keyboardType,
         decoration: InputDecoration(
-          label: Text(label),
+          label: Text(
+            label,
+            overflow: TextOverflow.ellipsis,
+          ),
           suffixIcon: suffixIcon,
           prefixText: prefixText,
         ),

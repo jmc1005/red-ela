@@ -11,7 +11,6 @@ abstract class GestorCasosRepo {
 
   Future<Result<dynamic, dynamic>> updateGestorCasos({
     required String hospital,
-    required List<String> pacientes,
   });
 
   Future<Result<dynamic, dynamic>> deleteGestorCasos();
@@ -19,4 +18,8 @@ abstract class GestorCasosRepo {
   Future<Result<GestorCasosModel, dynamic>> getGestorCasosByUid(
     String uid,
   );
+
+  Future<void> relacionaGestorCasosPaciente({
+    required String uidGestorCasos,
+  });
 }

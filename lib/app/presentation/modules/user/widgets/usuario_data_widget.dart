@@ -26,8 +26,6 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
   final phoneController = TextEditingController();
 
   var isEmailEmpty = false;
-  var obscurePassword = true;
-  var obscureConfirmPassword = true;
   var validConfirmPassword = true;
   bool showPassword = false;
 
@@ -41,10 +39,7 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
     final usuario = usuarioController!.state!.usuario;
     isEmailEmpty = usuario.email != null && usuario.email!.isEmpty;
 
-    final isMismo =
-        usuario.uid == await usuarioController.sessionService.currentUid;
-
-    return isEmailEmpty && isMismo;
+    return isEmailEmpty || usuario.uid == '';
   }
 
   @override
@@ -54,11 +49,18 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
     final usuario = usuarioController!.state!.usuario;
     phoneController.text = usuario.telefono ?? '';
     final readOnlyEmail = usuario.email != null && usuario.email!.isNotEmpty;
+    final readOnlyPhone =
+        usuario.telefono != null && usuario.telefono!.isNotEmpty;
 
     if (usuario.fechaNacimiento != null &&
         usuario.fechaNacimiento!.isNotEmpty) {
       dateInput.text = usuario.fechaNacimiento!;
     }
+
+    var obscurePassword =
+        usuarioController.signController.state.obscurePassword;
+    var obscureConfirmPassword =
+        usuarioController.signController.state.obscureConfirmPassword;
 
     return FutureBuilder(
       future: visiblePassword(),
@@ -103,13 +105,18 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
                 keyboardType: TextInputType.phone,
                 controller: phoneController,
                 prefixText: '+34 ',
-                validator: (value) => widget.phoneValidator(
-                  value,
-                  language,
-                ),
-                onChanged: (value) => usuarioController.onChangeValueTelefono(
-                  value,
-                ),
+                readOnly: readOnlyPhone,
+                validator: (value) => !readOnlyPhone
+                    ? widget.phoneValidator(
+                        value,
+                        language,
+                      )
+                    : null,
+                onChanged: (value) => !readOnlyPhone
+                    ? usuarioController.onChangeValueTelefono(
+                        value,
+                      )
+                    : null,
               ),
               const SizedBox(height: 8),
               TextFormWidget(
@@ -153,6 +160,8 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
                         onPressed: () {
                           setState(() {
                             obscurePassword = !obscurePassword;
+                            usuarioController
+                                .onVisibilityPasswordChanged(obscurePassword);
                           });
                         },
                       ),
@@ -176,12 +185,16 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
                         onPressed: () {
                           setState(() {
                             obscureConfirmPassword = !obscureConfirmPassword;
+                            usuarioController
+                                .onVisibilityConfirmPasswordChanged(
+                                    obscurePassword);
                           });
                         },
                       ),
                     ),
                   ],
                 ),
+              const SizedBox(height: 8),
               TextFormWidget(
                 key: const Key('kFechaNacimiento'),
                 controller: dateInput,

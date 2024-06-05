@@ -24,15 +24,15 @@ class UsuarioRepoImpl extends UsuarioRepo {
   });
 
   final String collection = 'usuarios';
+  final String urlLinkSingUp = '/accounts:signUp';
 
   @override
   Future<Result<UsuarioModel, dynamic>> getUsuario() async {
     try {
-      final currentUid = await sessionService.currentUid;
+      final usuarioUid = fireAuthService.currentUser()!.uid;
 
       return firebaseService
-          .getFromDocument(
-              collectionPath: collection, documentPath: currentUid!)
+          .getFromDocument(collectionPath: collection, documentPath: usuarioUid)
           .then(
         (json) async {
           final rol = json['rol'];
@@ -59,7 +59,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
             collectionPath: collection,
             documentPath: uid,
           )
-          .then((json) async => successFromJson(json));
+          .then((json) => successFromJson(json));
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-get-failed'));
@@ -127,13 +127,14 @@ class UsuarioRepoImpl extends UsuarioRepo {
     String? password,
     required String telefono,
     required String fechaNacimiento,
+    required String rol,
   }) async {
     try {
-      final currentUser = fireAuthService.currentUser()!;
       final nombreEncrypt = await EncryptData.encryptData(nombre);
       final apellido1Encrypt = await EncryptData.encryptData(apellido1);
       final apellido2Encrypt = await EncryptData.encryptData(apellido2);
       final nombreCompleto = '$nombre $apellido1 $apellido2';
+      final currentUser = fireAuthService.currentUser()!;
 
       final data = {
         'uid': uid,
@@ -144,21 +145,32 @@ class UsuarioRepoImpl extends UsuarioRepo {
         'email': email,
         'fecha_nacimiento': await EncryptData.encryptData(fechaNacimiento),
         'telefono': telefono,
+        'rol': await EncryptData.encryptData(rol),
       };
 
-      if (currentUser.uid == uid &&
-          currentUser.email == null &&
-          password != null) {
-        await fireAuthService.linkWithCredential(email, password);
-      }
+      if (uid == '' && currentUser.email == null && password != null) {
+        await linkSignUp(email, password);
+        final nuevoUid = fireAuthService.currentUser()!.uid;
 
-      return await firebaseService
-          .updateDataOnDocument(
-            collectionPath: collection,
-            uuid: uid,
-            data: data,
-          )
-          .then((value) => const Success('data-updated'));
+        data['uid'] = nuevoUid;
+        return firebaseService
+            .setDataOnDocument(
+              collectionPath: collection,
+              documentPath: nuevoUid,
+              data: data,
+            )
+            .then((value) => const Success('data-updated'));
+      } else {
+        data['uid'] = currentUser.uid;
+
+        return firebaseService
+            .updateDataOnDocument(
+              collectionPath: collection,
+              documentPath: currentUser.uid,
+              data: data,
+            )
+            .then((value) => const Success('data-updated'));
+      }
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-update-failed'));
@@ -244,31 +256,23 @@ class UsuarioRepoImpl extends UsuarioRepo {
   }
 
   @override
-  Future<Result<User, dynamic>> signUpPhoneNumber({
+  Future<Result<dynamic, dynamic>> signUpPhoneNumber({
     required String rol,
     required String verificationId,
     required String smsCode,
   }) async {
     try {
+      sessionService.saveVerificationId(verificationId);
+      sessionService.saveSmsCode(smsCode);
+      sessionService.saveRol(smsCode);
+
       final result = await fireAuthService.phoneCredential(
         verificationId: verificationId,
         smsCode: smsCode,
       );
 
-      final currentUser = fireAuthService.currentUser()!;
-
       if (result is User) {
-        sessionService.saveCurrentUid(result.uid);
-
-        final resultAdd = await addUsuario(
-          rol: rol,
-          phoneNumber: currentUser.phoneNumber,
-        );
-
-        return resultAdd.when(
-          (success) => Success(result),
-          (error) => Error(error),
-        );
+        return const Success('data-added');
       }
     } on FirebaseAuthException catch (e) {
       return Error(e.code);
@@ -330,5 +334,29 @@ class UsuarioRepoImpl extends UsuarioRepo {
       debugPrint(e.toString());
       return Future.value(const Error('data-get-failed'));
     }
+  }
+
+  Future<void> linkSignUp(
+    String email,
+    String password,
+  ) async {
+    final currentUser = fireAuthService.currentUser()!;
+    currentUser.delete();
+
+    final verificationId = await sessionService.verificationId;
+    final smsCode = await sessionService.smsCode;
+
+    final credential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final phoneCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId!,
+      smsCode: smsCode!,
+    );
+
+    await credential.user!.updatePhoneNumber(phoneCredential);
   }
 }

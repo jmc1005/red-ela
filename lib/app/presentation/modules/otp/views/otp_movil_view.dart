@@ -49,6 +49,7 @@ class _OTPMovilViewState extends State<OTPMovilView> {
         pacienteRepo: context.read(),
         cuidadorRepo: context.read(),
         gestorCasosRepo: context.read(),
+        sessionService: context.read(),
       ),
       child: Scaffold(
         body: SafeArea(

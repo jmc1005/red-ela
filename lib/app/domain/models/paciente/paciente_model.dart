@@ -21,8 +21,8 @@ class PacienteModel with _$PacienteModel {
     )
     String? fechaDiagnostico,
     String? inicio,
-    @JsonKey(name: 'gestor_casos') GestorCasosModel? gestorCasos,
-    @JsonKey(name: 'cuidador') CuidadorModel? cuidador,
+    @JsonKey(name: 'gestor_casos') String? gestorCasos,
+    @JsonKey(name: 'cuidador') String? cuidador,
   }) = _PacienteModel;
 
   factory PacienteModel.fromJson(Json json) => _$PacienteModelFromJson(json);

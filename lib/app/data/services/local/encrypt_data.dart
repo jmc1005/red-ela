@@ -33,14 +33,17 @@ class EncryptData {
   static Future<String> encryptData(String plainText) async {
     await getSecureKey();
 
-    final key = Key.fromUtf8(_encryptKey);
-    final iv = IV.fromUtf8(_encryptIV);
+    if (plainText.isNotEmpty) {
+      final key = Key.fromUtf8(_encryptKey);
+      final iv = IV.fromUtf8(_encryptIV);
 
-    final encrypter = Encrypter(AES(key));
-    final encrypted = encrypter.encrypt(plainText, iv: iv);
-    final encoded = base64.encode(encrypted.bytes);
+      final encrypter = Encrypter(AES(key));
+      final encrypted = encrypter.encrypt(plainText, iv: iv);
+      final encoded = base64.encode(encrypted.bytes);
 
-    return encoded;
+      return encoded;
+    }
+    return '';
   }
 
   static Future<String?> decryptData(String? encryptedText) async {

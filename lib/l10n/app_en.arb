@@ -168,5 +168,12 @@
   "invitacion_ya_existe": "The invitation already exist",
   "enviar_invitacion": "Send a invitation",
   "datos_hospital": "Hospital Data",
-  "hospital": "Hospital"
+  "hospital": "Hospital",
+  "asunto": "Subject",
+  "fecha_inicio": "Start date",
+  "hora_inicio": "Start hour",
+  "fecha_fin": "End date",
+  "hora_fin": "End hour",
+  "lugar": "Location",
+  "notas": "Notes"
 }

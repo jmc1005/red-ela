@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/rol/rol_model.dart';
-import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/rol_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
@@ -121,42 +120,39 @@ class InvitacionController extends StateNotifier<InvitacionState> {
 
   Future<void> send(context, AppLocalizations language) async {
     final rol = getStringByRol(state.rol, language);
-    final currentUid = await sessionService.currentUid;
 
-    if (currentUid != null) {
-      final response = await usuarioRepo.getUsuarioByUid(uid: currentUid);
+    final response = await usuarioRepo.getUsuario();
 
-      response.when(
-        (success) async {
-          final Email email = Email(
-            body: language.body_invitacion(success.nombreCompleto, rol),
-            subject: language.subject_invitacion,
-            recipients: [state.email],
-            isHTML: true,
-          );
+    response.when(
+      (success) async {
+        final Email email = Email(
+          body: language.body_invitacion(success.nombreCompleto, rol),
+          subject: language.subject_invitacion,
+          recipients: [state.email],
+          isHTML: true,
+        );
 
-          bool isSuccess = false;
+        bool isSuccess = false;
 
-          try {
-            await FlutterEmailSender.send(email);
-            isSuccess = true;
-          } catch (error) {
-            debugPrint(error.toString());
-          }
+        try {
+          await FlutterEmailSender.send(email);
+          isSuccess = true;
+        } catch (error) {
+          debugPrint(error.toString());
+        }
 
-          if (!mounted) {
-            return;
-          }
+        if (!mounted) {
+          return;
+        }
 
-          if (isSuccess) {
-            showSuccess(context, language.email_enviado);
-          } else {
-            showError(context, language.email_error_envio);
-          }
-        },
-        (error) => debugPrint(error),
-      );
-    }
+        if (isSuccess) {
+          showSuccess(context, language.email_enviado);
+        } else {
+          showError(context, language.email_error_envio);
+        }
+      },
+      (error) => debugPrint(error),
+    );
   }
 
   void showSuccess(context, mensaje) {

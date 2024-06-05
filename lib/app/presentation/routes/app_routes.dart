@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../modules/admin/views/admin_view.dart';
+import '../modules/home/views/home_view.dart';
 import '../modules/otp/views/otp_movil_view.dart';
 import '../modules/rol/views/roles_view.dart';
 import '../modules/sign/views/sign_in_view.dart';
 import '../modules/sign/views/sign_up_view.dart';
 
-import '../modules/user/views/usuarios_view.dart';
 import 'routes.dart';
 
 Map<String, Widget Function(BuildContext)> get appRoutes {
@@ -16,6 +16,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.admin: (_) => const AdminView(),
     Routes.sendOTP: (_) => OTPMovilView(),
     Routes.rolList: (_) => const RolesView(),
+    Routes.home: (_) => const HomeView(),
   };
 }
 
@@ -32,6 +33,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => OTPMovilView());
     } else if (routeName == Routes.rolList) {
       return MaterialPageRoute(builder: (_) => const RolesView());
+    } else if (routeName == Routes.home) {
+      return MaterialPageRoute(builder: (_) => const HomeView());
     }
   }
 

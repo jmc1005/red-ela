@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/invitacion/invitacion_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
-import '../../../../utils/firebase/firebase_response.dart';
+
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../controllers/invitacion_controller.dart';
@@ -139,7 +139,7 @@ class _DialogContentState extends State<_DialogContent> {
       ),
       child: PopScope(
         child: AlertDialog(
-          backgroundColor: ColorConfig.dialogBackground,
+          backgroundColor: Colors.white,
           content: SizedBox(
             width: size.width / 1.4,
             child: Column(

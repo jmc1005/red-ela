@@ -16,18 +16,27 @@ import '../../../../utils/firebase/firebase_response.dart';
 import '../../../global/controllers/state/state_notifier.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
+import '../../cuidador/controllers/cuidador_controller.dart';
+import '../../gestor_casos/controllers/gestor_casos_controller.dart';
 import '../../paciente/controllers/paciente_controller.dart';
+import '../../sign/controllers/sign_controller.dart';
 
 class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   UsuarioController({
     required this.sessionService,
     required this.usuarioRepo,
     required this.pacienteController,
+    required this.cuidadorController,
+    required this.gestorCasosController,
+    required this.signController,
   }) : super(null);
 
   final SessionService sessionService;
   final UsuarioRepo usuarioRepo;
   final PacienteController pacienteController;
+  final CuidadorController cuidadorController;
+  final GestorCasosController gestorCasosController;
+  final SignController signController;
 
   set usuario(UsuarioModel usuarioModel) {
     UsuarioTipoModel usuarioTipoModel;
@@ -99,8 +108,24 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     paciente = state!.paciente!.copyWith(fechaDiagnostico: text);
   }
 
+  void onChangeCuidadorPaciente(String text) {
+    paciente = state!.paciente!.copyWith(gestorCasos: text);
+  }
+
   void onChangeRelacion(String text) {
     cuidador = state!.cuidador!.copyWith(relacion: text);
+  }
+
+  void onChangeHospital(String text) {
+    gestorCasos = state!.gestorCasos!.copyWith(hospital: text);
+  }
+
+  void onVisibilityPasswordChanged(bool visible) {
+    signController.onVisibilityPasswordChanged(visible);
+  }
+
+  void onVisibilityConfirmPasswordChanged(bool visible) {
+    signController.onVisibilityConfirmPasswordChanged(visible);
   }
 
   Future<void> openDatePicker(
@@ -165,7 +190,10 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
       fechaNacimiento: state!.usuario.fechaNacimiento!,
       telefono: state!.usuario.telefono!,
       password: state!.usuario.password,
+      rol: state!.usuario.rol,
     );
+
+    await updateUsuarioPorTipo(state!.usuario.rol);
 
     late String code;
     late bool isSuccess = true;
@@ -175,6 +203,8 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
 
       if (state!.usuario.rol == UsuarioTipo.admin.value) {
         navigateTo(Routes.admin, context);
+      } else {
+        navigateTo(Routes.home, context);
       }
     }, (error) {
       code = error;
@@ -205,32 +235,65 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   }
 
   Future<void> updateUsuarioPorTipo(rol) async {
+    final solicitado = await sessionService.solicitado;
+
     if (rol == UsuarioTipo.paciente.value) {
-      await pacienteController.pacienteRepo.updatePaciente(
-        tratamiento: state!.paciente?.tratamiento ?? '',
-        fechaDiagnostico: state!.paciente?.fechaDiagnostico ?? '',
-        inicio: state!.paciente?.inicio ?? '',
-        cuidador: state!.paciente?.cuidador,
-      );
+      String? gestorCasos;
+
+      if (solicitado != null) {
+        gestorCasos = solicitado;
+        onChangeCuidadorPaciente(gestorCasos);
+        await gestorCasosController.gestorCasosRepo
+            .relacionaGestorCasosPaciente(uidGestorCasos: solicitado);
+      }
+
+      if (state!.usuario.uid == '') {
+        await pacienteController.pacienteRepo.addPaciente(
+          tratamiento: state!.paciente?.tratamiento ?? '',
+          fechaDiagnostico: state!.paciente?.fechaDiagnostico ?? '',
+          inicio: state!.paciente?.inicio ?? '',
+          gestorCasos: gestorCasos,
+        );
+      } else {
+        await pacienteController.pacienteRepo.updatePaciente(
+          tratamiento: state!.paciente?.tratamiento ?? '',
+          fechaDiagnostico: state!.paciente?.fechaDiagnostico ?? '',
+          inicio: state!.paciente?.inicio ?? '',
+          gestorCasos: state!.paciente?.gestorCasos,
+        );
+      }
     } else if (rol == UsuarioTipo.cuidador.value) {
-      // final pacientesResult =
-      //     await pacienteController.pacienteRepo.getAllPacientesByUidCuidador(
-      //   uidCuidador: state!.usuario.uid,
-      //   email: state!.usuario.email!,
-      // );
+      String? paciente;
 
-      // List<String> pacientes = [];
-      // pacientesResult.when(
-      //   (success) {
-      //     pacientes = success;
-      //   },
-      //   (error) => null,
-      // );
+      if (solicitado != null) {
+        paciente = solicitado;
 
-      // await pacienteController.cuidadorRepo.updateCuidador(
-      //   relacion: state!.cuidador?.relacion ?? '',
-      //   pacientes: pacientes,
-      // );
-    } else if (rol == UsuarioTipo.gestorCasos.value) {}
+        await pacienteController.pacienteRepo.relacionaPacienteCuidador(
+          uidPaciente: paciente,
+        );
+      }
+
+      if (state!.usuario.uid == '') {
+        await cuidadorController.cuidadorRepo.addCuidador(
+          relacion: state!.cuidador!.relacion,
+          paciente: paciente,
+        );
+      } else {
+        await cuidadorController.cuidadorRepo.updateCuidador(
+          relacion: state!.cuidador!.relacion,
+          paciente: paciente,
+        );
+      }
+    } else if (rol == UsuarioTipo.gestorCasos.value) {
+      if (state!.usuario.uid == '') {
+        await gestorCasosController.gestorCasosRepo.addGestorCasos(
+          hospital: state!.gestorCasos!.hospital!,
+        );
+      } else {
+        await gestorCasosController.gestorCasosRepo.updateGestorCasos(
+          hospital: state!.gestorCasos!.hospital!,
+        );
+      }
+    }
   }
 }

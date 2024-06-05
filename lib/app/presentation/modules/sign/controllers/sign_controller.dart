@@ -70,14 +70,7 @@ class SignController extends StateNotifier<SignState> {
             if (success.rol == UsuarioTipo.admin.value) {
               navigateTo(Routes.admin, context);
             } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UsuarioDetailView(
-                    usuarioModel: success,
-                  ),
-                ),
-              );
+              navigateTo(Routes.home, context);
             }
           }, (error) => showError(error, language));
         },

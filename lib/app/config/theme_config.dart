@@ -29,7 +29,7 @@ class ThemeConfig {
       colorScheme: ColorScheme.fromSwatch(
         primarySwatch: ColorConfig.from(ColorConfig.secondary),
         accentColor: const Color.fromARGB(255, 205, 62, 22),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey,
       ),
       inputDecorationTheme: InputDecorationTheme(
         labelStyle: const TextStyle(
@@ -39,21 +39,21 @@ class ThemeConfig {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: ColorConfig.primaryBackground,
+            color: Colors.grey,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: ColorConfig.primaryBackground,
+            color: Colors.grey,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: ColorConfig.alternate,
+            color: Colors.redAccent,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),

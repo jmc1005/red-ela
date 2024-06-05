@@ -1,9 +1,7 @@
-import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
-import '../../../../config/color_config.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../utils/firebase/firebase_response.dart';
@@ -32,16 +30,6 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
-
-  void _showError(error, language) {
-    final response = FirebaseResponse(
-      context: context,
-      language: language,
-      code: error,
-    );
-
-    response.showError();
-  }
 
   void _setPacienteVacio() {
     const paciente = PacienteModel(usuarioUid: '');

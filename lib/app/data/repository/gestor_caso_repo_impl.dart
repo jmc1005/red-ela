@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../domain/models/gestor_casos/gestor_casos_model.dart';
@@ -27,6 +29,7 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
   }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
     final data = {
+      'usuario_uid': usuarioUid,
       'hospital': await EncryptData.encryptData(hospital),
       'pacientes': jsonEncode([]),
     };
@@ -75,19 +78,18 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
   @override
   Future<Result> updateGestorCasos({
     required String hospital,
-    required List<String> pacientes,
   }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
     final data = {
+      'usuario_uid': usuarioUid,
       'hospital': await EncryptData.encryptData(hospital),
-      'pacientes': jsonEncode(pacientes)
     };
 
     try {
       return firebaseService
           .updateDataOnDocument(
             collectionPath: collection,
-            uuid: usuarioUid,
+            documentPath: usuarioUid,
             data: data,
           )
           .then((value) => const Success('data-updated'));
@@ -103,7 +105,7 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
   }
 
   Future<Result<GestorCasosModel, dynamic>> _getGestorCasosFirebase(
-      String uid) {
+      String uid) async {
     try {
       return firebaseService
           .getFromDocument(
@@ -115,5 +117,20 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
       debugPrint(e.toString());
       return Future.value(const Error('data-get-failed'));
     }
+  }
+
+  @override
+  Future<void> relacionaGestorCasosPaciente(
+      {required String uidGestorCasos}) async {
+    final uidPaciente = fireAuthService.currentUser()!.uid;
+
+    final json = {
+      'pacientes': FieldValue.arrayUnion([uidPaciente]),
+    };
+
+    final docRef = firebaseService.getDocumentFromCollection(
+        collection: collection, document: uidGestorCasos);
+
+    await docRef.update(json);
   }
 }
