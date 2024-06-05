@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/gestor_casos/gestor_casos_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
@@ -13,21 +14,38 @@ import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../global/controllers/state/state_notifier.dart';
+import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
+import '../../cuidador/controllers/cuidador_controller.dart';
+import '../../gestor_casos/controllers/gestor_casos_controller.dart';
 import '../../paciente/controllers/paciente_controller.dart';
+import '../../sign/controllers/sign_controller.dart';
 
 class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   UsuarioController({
-    required this.context,
+    required this.sessionService,
     required this.usuarioRepo,
     required this.pacienteController,
+    required this.cuidadorController,
+    required this.gestorCasosController,
+    required this.signController,
   }) : super(null);
 
-  final BuildContext context;
+  final SessionService sessionService;
   final UsuarioRepo usuarioRepo;
   final PacienteController pacienteController;
+  final CuidadorController cuidadorController;
+  final GestorCasosController gestorCasosController;
+  final SignController signController;
 
   set usuario(UsuarioModel usuarioModel) {
-    final usuarioTipoModel = UsuarioTipoModel(usuario: usuarioModel);
+    UsuarioTipoModel usuarioTipoModel;
+    if (state == null) {
+      usuarioTipoModel = UsuarioTipoModel(usuario: usuarioModel);
+    } else {
+      usuarioTipoModel = state!.copyWith(usuario: usuarioModel);
+    }
+
     state = usuarioTipoModel;
     onlyUpdate(state);
   }
@@ -90,8 +108,24 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     paciente = state!.paciente!.copyWith(fechaDiagnostico: text);
   }
 
+  void onChangeCuidadorPaciente(String text) {
+    paciente = state!.paciente!.copyWith(gestorCasos: text);
+  }
+
   void onChangeRelacion(String text) {
     cuidador = state!.cuidador!.copyWith(relacion: text);
+  }
+
+  void onChangeHospital(String text) {
+    gestorCasos = state!.gestorCasos!.copyWith(hospital: text);
+  }
+
+  void onVisibilityPasswordChanged(bool visible) {
+    signController.onVisibilityPasswordChanged(visible);
+  }
+
+  void onVisibilityConfirmPasswordChanged(bool visible) {
+    signController.onVisibilityConfirmPasswordChanged(visible);
   }
 
   Future<void> openDatePicker(
@@ -148,19 +182,30 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
 
   Future<void> update(context, language) async {
     final result = await usuarioRepo.updateUsuario(
-      state!.usuario.nombre!,
-      state!.usuario.apellido1!,
-      state!.usuario.apellido2!,
-      state!.usuario.email!,
-      state!.usuario.fechaNacimiento!,
-      state!.usuario.rol!,
+      uid: state!.usuario.uid,
+      nombre: state!.usuario.nombre!,
+      apellido1: state!.usuario.apellido1!,
+      apellido2: state!.usuario.apellido2!,
+      email: state!.usuario.email!,
+      fechaNacimiento: state!.usuario.fechaNacimiento!,
+      telefono: state!.usuario.telefono!,
+      password: state!.usuario.password,
+      rol: state!.usuario.rol,
     );
+
+    await updateUsuarioPorTipo(state!.usuario.rol);
 
     late String code;
     late bool isSuccess = true;
 
     result.when((success) {
       code = success;
+
+      if (state!.usuario.rol == UsuarioTipo.admin.value) {
+        navigateTo(Routes.admin, context);
+      } else {
+        navigateTo(Routes.home, context);
+      }
     }, (error) {
       code = error;
       isSuccess = false;
@@ -190,21 +235,65 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   }
 
   Future<void> updateUsuarioPorTipo(rol) async {
-    if (rol == UsuarioTipo.paciente.value) {
-      await pacienteController.pacienteRepo.updatePaciente(
-        tratamiento: state!.paciente?.tratamiento ?? '',
-        fechaDiagnostico: state!.paciente?.fechaDiagnostico ?? '',
-        inicio: state!.paciente?.inicio ?? '',
-        cuidador: state!.paciente?.cuidador,
-      );
-    } else if (rol == UsuarioTipo.cuidador.value) {
-      await pacienteController.pacienteRepo.getAllPacientesByUidOrEmailCuidador(
-          uidCuidador: state!.cuidador!.usuarioUid,
-          email: state!.usuario.email!);
+    final solicitado = await sessionService.solicitado;
 
-      await pacienteController.cuidadorRepo.updateCuidador(
-        relacion: state!.cuidador?.relacion ?? '',
-      );
-    } else if (rol == UsuarioTipo.gestorCasos.value) {}
+    if (rol == UsuarioTipo.paciente.value) {
+      String? gestorCasos;
+
+      if (solicitado != null) {
+        gestorCasos = solicitado;
+        onChangeCuidadorPaciente(gestorCasos);
+        await gestorCasosController.gestorCasosRepo
+            .relacionaGestorCasosPaciente(uidGestorCasos: solicitado);
+      }
+
+      if (state!.usuario.uid == '') {
+        await pacienteController.pacienteRepo.addPaciente(
+          tratamiento: state!.paciente?.tratamiento ?? '',
+          fechaDiagnostico: state!.paciente?.fechaDiagnostico ?? '',
+          inicio: state!.paciente?.inicio ?? '',
+          gestorCasos: gestorCasos,
+        );
+      } else {
+        await pacienteController.pacienteRepo.updatePaciente(
+          tratamiento: state!.paciente?.tratamiento ?? '',
+          fechaDiagnostico: state!.paciente?.fechaDiagnostico ?? '',
+          inicio: state!.paciente?.inicio ?? '',
+          gestorCasos: state!.paciente?.gestorCasos,
+        );
+      }
+    } else if (rol == UsuarioTipo.cuidador.value) {
+      String? paciente;
+
+      if (solicitado != null) {
+        paciente = solicitado;
+
+        await pacienteController.pacienteRepo.relacionaPacienteCuidador(
+          uidPaciente: paciente,
+        );
+      }
+
+      if (state!.usuario.uid == '') {
+        await cuidadorController.cuidadorRepo.addCuidador(
+          relacion: state!.cuidador!.relacion,
+          paciente: paciente,
+        );
+      } else {
+        await cuidadorController.cuidadorRepo.updateCuidador(
+          relacion: state!.cuidador!.relacion,
+          paciente: paciente,
+        );
+      }
+    } else if (rol == UsuarioTipo.gestorCasos.value) {
+      if (state!.usuario.uid == '') {
+        await gestorCasosController.gestorCasosRepo.addGestorCasos(
+          hospital: state!.gestorCasos!.hospital!,
+        );
+      } else {
+        await gestorCasosController.gestorCasosRepo.updateGestorCasos(
+          hospital: state!.gestorCasos!.hospital!,
+        );
+      }
+    }
   }
 }

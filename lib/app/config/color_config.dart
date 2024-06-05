@@ -5,10 +5,11 @@ class ColorConfig {
 
   static const Color primary = Color(0xFF00416a);
   static const Color primaryBackground = Color.fromARGB(255, 254, 252, 252);
+  static const Color dialogBackground = Color.fromARGB(255, 162, 171, 177);
   static const Color alternate = Color.fromARGB(255, 23, 131, 177);
   static const Color secondary = Color(0xFF022653);
   static const Color cabeceraAdmin = Color(0xFF022653);
-  static const Color cabeceraUser = Color.fromARGB(255, 205, 62, 22);
+  static const Color cancelar = Color.fromARGB(255, 205, 62, 22);
   static const Color secondaryText = Color.fromARGB(255, 24, 170, 153);
 
   static MaterialColor from(Color color) {

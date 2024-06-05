@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
 
@@ -20,11 +21,10 @@ class InvitacionRepoImpl extends InvitacionRepo {
   final String collection = 'invitaciones';
 
   @override
-  Future<Result> addInvitacion(
-    String telefono,
-    String rol,
-    String solicitado,
-  ) async {
+  Future<Result> addInvitacion({
+    required String telefono,
+    required String rol,
+  }) async {
     final currentUser = fireAuthService.currentUser();
     final encrypRol = await EncryptData.encryptData(rol);
 
@@ -38,7 +38,7 @@ class InvitacionRepoImpl extends InvitacionRepo {
       return firebaseService
           .setDataOnDocument(
             collectionPath: collection,
-            documentPath: encrypRol,
+            documentPath: telefono,
             data: data,
           )
           .then((value) => const Success('data-added'));

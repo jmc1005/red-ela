@@ -12,6 +12,7 @@ import '../../../global/widgets/text_form_widget.dart';
 import '../../../global/widgets/text_gesture_detector_widget.dart';
 import '../controllers/sign_controller.dart';
 import '../controllers/state/sign_state.dart';
+import '../widgets/reset_password_widget.dart';
 
 class SignView extends StatefulWidget with ValidatorMixin {
   SignView({
@@ -147,6 +148,7 @@ class _SignViewState extends State<SignView> {
                       pregunta: language.acceder_otp,
                       tapString: language.registrarse,
                     ),
+                    ResetPasswordWidget(signController: controller),
                   ],
                 );
               },

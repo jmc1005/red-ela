@@ -110,21 +110,15 @@ class FireAuthService {
     String password,
   ) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       return credential.user ?? 'user-not-found';
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        return e.code;
-      } else if (e.code == 'wrong-password') {
-        return e.code;
-      }
+      return e.code;
     }
-
-    return 'user-not-found';
   }
 
   Future<UserCredential> signInWithGoogle() async {
@@ -156,6 +150,7 @@ class FireAuthService {
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
     required String rol,
+    required String solicitado,
     required BuildContext context,
   }) async {
     await firebaseAuth.verifyPhoneNumber(
@@ -169,6 +164,7 @@ class FireAuthService {
               verificationId: verificationId,
               phoneNumber: phoneNumber,
               rol: rol,
+              solicitado: solicitado,
             ),
           ),
         );
@@ -193,5 +189,9 @@ class FireAuthService {
     final credential = await signInWithCredential(phoneAuthCredential);
 
     return credential.user ?? 'user-not-found';
+  }
+
+  Future<void> resetPassword({required String email}) async {
+    firebaseAuth.sendPasswordResetEmail(email: email);
   }
 }

@@ -10,6 +10,16 @@ class EncryptData {
   static String _encryptKey = '';
   static String _encryptIV = ''; // 128-bit IV
 
+  static const List<String> notDecryptList = [
+    'uid',
+    'uuid',
+    'email',
+    'telefono',
+    'pacientes',
+    'cuidador',
+    'gestor_caso',
+  ];
+
   EncryptData._() {
     getSecureKey();
   }
@@ -23,14 +33,17 @@ class EncryptData {
   static Future<String> encryptData(String plainText) async {
     await getSecureKey();
 
-    final key = Key.fromUtf8(_encryptKey);
-    final iv = IV.fromUtf8(_encryptIV);
+    if (plainText.isNotEmpty) {
+      final key = Key.fromUtf8(_encryptKey);
+      final iv = IV.fromUtf8(_encryptIV);
 
-    final encrypter = Encrypter(AES(key));
-    final encrypted = encrypter.encrypt(plainText, iv: iv);
-    final encoded = base64.encode(encrypted.bytes);
+      final encrypter = Encrypter(AES(key));
+      final encrypted = encrypter.encrypt(plainText, iv: iv);
+      final encoded = base64.encode(encrypted.bytes);
 
-    return encoded;
+      return encoded;
+    }
+    return '';
   }
 
   static Future<String?> decryptData(String? encryptedText) async {
@@ -50,12 +63,15 @@ class EncryptData {
     return decrypted;
   }
 
-  static Future<Json> decryptDataJson(Json json) {
+  static Future<Json> decryptDataJson(Json json) async {
+    await getSecureKey();
     final Json result = json;
 
     json.forEach((key, value) async {
-      final decrypt = await decryptData(value);
-      result[key] = decrypt;
+      if (!notDecryptList.contains(key) && value.toString().isNotEmpty) {
+        final decrypt = await decryptData(value);
+        result[key] = decrypt;
+      }
     });
 
     material.debugPrint(jsonEncode(result));

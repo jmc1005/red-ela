@@ -23,6 +23,13 @@ class FirebaseService {
     return firestore.collection(collectionPath);
   }
 
+  DocumentReference<Json> getDocumentFromCollection({
+    required String collection,
+    required String document,
+  }) {
+    return firestore.collection(collection).doc(document);
+  }
+
   Future<List<Json>> getFromCollection({
     required String collectionPath,
   }) async {
@@ -49,7 +56,7 @@ class FirebaseService {
     required String collectionPath,
     required String documentPath,
     required Json data,
-  }) async {
+  }) {
     return getCollection(collectionPath: collectionPath)
         .doc(documentPath)
         .set(data);
@@ -68,16 +75,18 @@ class FirebaseService {
 
   Future<void> updateDataOnDocument({
     required String collectionPath,
-    required String uuid,
+    required String documentPath,
     required Json data,
-  }) async {
-    return getCollection(collectionPath: collectionPath).doc(uuid).update(data);
+  }) {
+    return getCollection(collectionPath: collectionPath)
+        .doc(documentPath)
+        .update(data);
   }
 
   Future<void> deleteDocumentFromCollection({
     required String collectionPath,
     required String uid,
-  }) async {
+  }) {
     return getCollection(collectionPath: collectionPath).doc(uid).delete();
   }
 
@@ -97,7 +106,9 @@ class FirebaseService {
     required String documentPath,
     required Json data,
   }) async {
-    return getCollection(collectionPath: collectionPath).doc(documentPath).set(
+    return getCollection(
+      collectionPath: collectionPath,
+    ).doc(documentPath).set(
           data,
           SetOptions(merge: true),
         );

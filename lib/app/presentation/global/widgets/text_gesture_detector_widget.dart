@@ -5,13 +5,13 @@ class TextGestureDetectorWidget extends StatelessWidget {
   const TextGestureDetectorWidget({
     super.key,
     this.recognizer,
-    required this.pregunta,
+    this.pregunta,
     required this.tapString,
     required this.onTap,
   });
 
   final GestureRecognizer? recognizer;
-  final String pregunta;
+  final String? pregunta;
   final String tapString;
   final Function()? onTap;
 
@@ -22,10 +22,15 @@ class TextGestureDetectorWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(pregunta, textAlign: TextAlign.center),
-          const SizedBox(
-            width: 5,
-          ),
+          if (pregunta != null)
+            Row(
+              children: [
+                Text(pregunta!, textAlign: TextAlign.center),
+                const SizedBox(
+                  width: 5,
+                ),
+              ],
+            ),
           GestureDetector(
             onTap: onTap,
             child: Text(

@@ -41,7 +41,7 @@ class _DialogContent extends StatelessWidget {
           ),
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(8),
         ), // cambiar el borde radius
         actionsAlignment: MainAxisAlignment.center,
         actions: actions,

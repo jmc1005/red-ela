@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../domain/models/gestor_casos/gestor_casos_model.dart';
@@ -20,10 +24,14 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
   final String collection = 'gestores_casos';
 
   @override
-  Future<Result> addGestorCasos(String hospital) async {
+  Future<Result> addGestorCasos({
+    required String hospital,
+  }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
     final data = {
+      'usuario_uid': usuarioUid,
       'hospital': await EncryptData.encryptData(hospital),
+      'pacientes': jsonEncode([]),
     };
 
     try {
@@ -58,19 +66,8 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
 
   @override
   Future<Result<GestorCasosModel, dynamic>> getGestorCasos() {
-    final currentUser = fireAuthService.currentUser();
-
-    try {
-      return firebaseService
-          .getFromDocument(
-            collectionPath: collection,
-            documentPath: currentUser!.uid,
-          )
-          .then((json) async => successFromJson(json));
-    } catch (e) {
-      debugPrint(e.toString());
-      return Future.value(const Error('data-get-failed'));
-    }
+    final currentUser = fireAuthService.currentUser()!;
+    return _getGestorCasosFirebase(currentUser.uid);
   }
 
   Future<Success<GestorCasosModel, dynamic>> successFromJson(Json json) async {
@@ -79,9 +76,12 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
   }
 
   @override
-  Future<Result> updateGestorCasos(String hospital) async {
+  Future<Result> updateGestorCasos({
+    required String hospital,
+  }) async {
     final usuarioUid = fireAuthService.currentUser()!.uid;
     final data = {
+      'usuario_uid': usuarioUid,
       'hospital': await EncryptData.encryptData(hospital),
     };
 
@@ -89,7 +89,7 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
       return firebaseService
           .updateDataOnDocument(
             collectionPath: collection,
-            uuid: usuarioUid,
+            documentPath: usuarioUid,
             data: data,
           )
           .then((value) => const Success('data-updated'));
@@ -97,5 +97,40 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
       debugPrint(e.toString());
       return Future.value(const Error('data-update-failed'));
     }
+  }
+
+  @override
+  Future<Result<GestorCasosModel, dynamic>> getGestorCasosByUid(String uid) {
+    return _getGestorCasosFirebase(uid);
+  }
+
+  Future<Result<GestorCasosModel, dynamic>> _getGestorCasosFirebase(
+      String uid) async {
+    try {
+      return firebaseService
+          .getFromDocument(
+            collectionPath: collection,
+            documentPath: uid,
+          )
+          .then((json) async => successFromJson(json));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-get-failed'));
+    }
+  }
+
+  @override
+  Future<void> relacionaGestorCasosPaciente(
+      {required String uidGestorCasos}) async {
+    final uidPaciente = fireAuthService.currentUser()!.uid;
+
+    final json = {
+      'pacientes': FieldValue.arrayUnion([uidPaciente]),
+    };
+
+    final docRef = firebaseService.getDocumentFromCollection(
+        collection: collection, document: uidGestorCasos);
+
+    await docRef.update(json);
   }
 }

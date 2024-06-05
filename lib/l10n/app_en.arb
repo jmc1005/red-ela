@@ -127,5 +127,53 @@
   "registrado": "User registered",
   "codigoVerificacionInvalido": "Invalid verification code",
   "reviseDatosFormulario": "Review the form data",
-  "infoInvitacion": "To be able to access with code you have received an invitation email."
+  "infoInvitacion": "To be able to access with code you have received an invitation email.",
+  "gestores_casos": "Managements cases",
+  "pacientes": "Patients",
+  "cuidadores": "Caregivers",
+  "buscar": "Search",
+  "olvido_password": "Forgot password?",
+  "rol": "Role",
+  "gestion_roles": "Roles management",
+  "descripcion": "Descripion",
+  "datos_de": "Data {item}",
+  "@datos_de": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Artículo"
+      }
+    }
+  },
+  "administradores": "Administrators",
+  "info_envio_email": "An invitation email will be sent so that the invited person can register in the application. Please contact the person invited to inform them.",
+  "body_invitacion": "<p>Dear user,</p><p>You have been invited by {usuario} to register in RedELA as {rol}</p><p>Greetings,</p><p>The RedELA Team</p>",
+  "@body_invitacion": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "usuario": {
+        "type": "String",
+        "example": "Artículo"
+      },
+      "rol": {
+        "type": "String",
+        "example": "Artículo"
+      }
+    }
+  },
+  "subject_invitacion": "Invitación RedELA",
+  "email_enviado": "Email sent",
+  "email_error_envio": "Error to send email",
+  "invitacion_ya_existe": "The invitation already exist",
+  "enviar_invitacion": "Send a invitation",
+  "datos_hospital": "Hospital Data",
+  "hospital": "Hospital",
+  "asunto": "Subject",
+  "fecha_inicio": "Start date",
+  "hora_inicio": "Start hour",
+  "fecha_fin": "End date",
+  "hora_fin": "End hour",
+  "lugar": "Location",
+  "notas": "Notes"
 }

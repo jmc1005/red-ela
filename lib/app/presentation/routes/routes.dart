@@ -6,4 +6,6 @@ class Routes {
   static const admin = '/admin';
   static const userList = '/user-list';
   static const sendOTP = '/send-otp';
+  static const rolList = '/role-list';
+  static const home = '/home';
 }

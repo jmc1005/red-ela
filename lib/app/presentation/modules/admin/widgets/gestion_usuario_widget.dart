@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/color_config.dart';
+import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/cabecera_widget.dart';
 import '../../../global/widgets/item_widget.dart';
-import '../../../routes/app_routes.dart';
-import '../../../routes/routes.dart';
+import '../../user/views/usuarios_view.dart';
 import 'gestion_widget.dart';
 
 class GestionUsuarioWidget extends StatelessWidget {
@@ -21,18 +21,56 @@ class GestionUsuarioWidget extends StatelessWidget {
         color: ColorConfig.cabeceraAdmin,
       ),
       ItemWidget(
-        label: language.usuarios,
+        label: language.administradores,
         onTap: () {
-          navigateTo(Routes.userList, context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UsuariosView(
+                rol: UsuarioTipo.admin.value,
+              ),
+            ),
+          );
         },
       ),
       ItemWidget(
-        label: language.roles,
-        onTap: () {},
+        label: language.gestores_casos,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UsuariosView(
+                rol: UsuarioTipo.gestorCasos.value,
+              ),
+            ),
+          );
+        },
       ),
       ItemWidget(
-        label: language.tipos,
-        onTap: () {},
+        label: language.pacientes,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UsuariosView(
+                rol: UsuarioTipo.paciente.value,
+              ),
+            ),
+          );
+        },
+      ),
+      ItemWidget(
+        label: language.cuidadores,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UsuariosView(
+                rol: UsuarioTipo.cuidador.value,
+              ),
+            ),
+          );
+        },
       ),
     ];
 

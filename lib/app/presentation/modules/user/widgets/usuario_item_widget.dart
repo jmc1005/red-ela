@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
-import '../../../global/dialogs/dialog_confirm.dart';
+import '../../../global/dialogs/confirm_dialog.dart';
 
 class UsuarioItemWidget extends StatelessWidget {
   const UsuarioItemWidget({
@@ -17,8 +17,11 @@ class UsuarioItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
-    final nombreCompleto =
-        '${usuarioModel.nombre} ${usuarioModel.apellido1} ${usuarioModel.apellido2}';
+    final nombre = usuarioModel.nombre ?? '';
+    final apellido1 = usuarioModel.apellido1 ?? '';
+    final apellido2 = usuarioModel.apellido2 ?? '';
+
+    final nombreCompleto = '$nombre $apellido1 $apellido2';
 
     final List<Widget> actions = [
       OutlinedButton(
@@ -26,7 +29,7 @@ class UsuarioItemWidget extends StatelessWidget {
           Navigator.pop(context);
         },
         style: OutlinedButton.styleFrom(
-          backgroundColor: ColorConfig.primary,
+          backgroundColor: ColorConfig.cancelar,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),
@@ -43,7 +46,7 @@ class UsuarioItemWidget extends StatelessWidget {
           Navigator.pop(context, true);
         },
         style: OutlinedButton.styleFrom(
-          backgroundColor: ColorConfig.secondary,
+          backgroundColor: ColorConfig.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),
@@ -101,7 +104,7 @@ class UsuarioItemWidget extends StatelessWidget {
                       showConfirmDialog(
                         context,
                         title: language.seguro_borrar(
-                          language.articulo,
+                          nombreCompleto,
                         ),
                         actions: actions,
                       );

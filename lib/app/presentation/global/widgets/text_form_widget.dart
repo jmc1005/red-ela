@@ -33,7 +33,7 @@ class TextFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 1.5,
+      width: MediaQuery.of(context).size.width / 1.2,
       child: TextFormField(
         initialValue: initialValue,
         controller: controller,
@@ -41,7 +41,10 @@ class TextFormWidget extends StatelessWidget {
         onChanged: onChanged,
         keyboardType: keyboardType,
         decoration: InputDecoration(
-          label: Text(label),
+          label: Text(
+            label,
+            overflow: TextOverflow.ellipsis,
+          ),
           suffixIcon: suffixIcon,
           prefixText: prefixText,
         ),

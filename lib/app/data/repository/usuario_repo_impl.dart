@@ -1,12 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../domain/models/typedefs.dart';
 import '../../domain/models/usuario/usuario_model.dart';
 import '../../domain/repository/usuario_repo.dart';
-import '../../utils/constants/app_constants.dart';
+import '../../utils/firebase/firebase_code_enum.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
 import '../services/local/encrypt_data.dart';
@@ -24,18 +24,42 @@ class UsuarioRepoImpl extends UsuarioRepo {
   });
 
   final String collection = 'usuarios';
+  final String urlLinkSingUp = '/accounts:signUp';
 
   @override
   Future<Result<UsuarioModel, dynamic>> getUsuario() async {
     try {
-      final currentUid = await sessionService.currentUid;
+      final usuarioUid = fireAuthService.currentUser()!.uid;
 
+      return firebaseService
+          .getFromDocument(collectionPath: collection, documentPath: usuarioUid)
+          .then(
+        (json) async {
+          final rol = json['rol'];
+          final rolDecrypt = await EncryptData.decryptData(rol);
+
+          if (rolDecrypt != null) {
+            sessionService.saveRol(rolDecrypt);
+          }
+          return successFromJson(json);
+        },
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-get-failed'));
+    }
+  }
+
+  @override
+  Future<Result<UsuarioModel, dynamic>> getUsuarioByUid(
+      {required String uid}) async {
+    try {
       return await firebaseService
           .getFromDocument(
             collectionPath: collection,
-            documentPath: currentUid!,
+            documentPath: uid,
           )
-          .then((json) async => successFromJson(json));
+          .then((json) => successFromJson(json));
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-get-failed'));
@@ -59,11 +83,10 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
     if (result is User) {
       sessionService.saveCurrentUid(result.uid);
-
       return Success(result);
     }
 
-    return const Error('user-not-found');
+    return const Error(FirebaseCode.invalidPassword);
   }
 
   @override
@@ -95,41 +118,59 @@ class UsuarioRepoImpl extends UsuarioRepo {
   }
 
   @override
-  Future<Result<dynamic, dynamic>> updateUsuario(
-    String nombre,
-    String apellido1,
-    String apellido2,
-    String email,
-    String fechaNacimiento,
-    String rol,
-  ) async {
+  Future<Result<dynamic, dynamic>> updateUsuario({
+    required String uid,
+    required String nombre,
+    required String apellido1,
+    required String apellido2,
+    required String email,
+    String? password,
+    required String telefono,
+    required String fechaNacimiento,
+    required String rol,
+  }) async {
     try {
+      final nombreEncrypt = await EncryptData.encryptData(nombre);
+      final apellido1Encrypt = await EncryptData.encryptData(apellido1);
+      final apellido2Encrypt = await EncryptData.encryptData(apellido2);
+      final nombreCompleto = '$nombre $apellido1 $apellido2';
       final currentUser = fireAuthService.currentUser()!;
 
-      final format = DateFormat(AppConstants.formatDate);
-      final dateTime = format.parse(fechaNacimiento);
-
       final data = {
-        'uid': currentUser.uid,
-        'nombre': await EncryptData.encryptData(nombre),
-        'apellido1': await EncryptData.encryptData(apellido1),
-        'apellido2': await EncryptData.encryptData(apellido2),
+        'uid': uid,
+        'nombre': nombreEncrypt,
+        'apellido1': apellido1Encrypt,
+        'apellido2': apellido2Encrypt,
+        'nombre_completo': await EncryptData.encryptData(nombreCompleto),
         'email': email,
-        'fecha_nacimiento': dateTime,
-        'rol': await EncryptData.encryptData(rol)
+        'fecha_nacimiento': await EncryptData.encryptData(fechaNacimiento),
+        'telefono': telefono,
+        'rol': await EncryptData.encryptData(rol),
       };
 
-      if (currentUser.email != email) {
-        fireAuthService.updateEmail(email);
-      }
+      if (uid == '' && currentUser.email == null && password != null) {
+        await linkSignUp(email, password);
+        final nuevoUid = fireAuthService.currentUser()!.uid;
 
-      return await firebaseService
-          .updateDataOnDocument(
-            collectionPath: collection,
-            uuid: currentUser.uid,
-            data: data,
-          )
-          .then((value) => const Success('data-updated'));
+        data['uid'] = nuevoUid;
+        return firebaseService
+            .setDataOnDocument(
+              collectionPath: collection,
+              documentPath: nuevoUid,
+              data: data,
+            )
+            .then((value) => const Success('data-updated'));
+      } else {
+        data['uid'] = currentUser.uid;
+
+        return firebaseService
+            .updateDataOnDocument(
+              collectionPath: collection,
+              documentPath: currentUser.uid,
+              data: data,
+            )
+            .then((value) => const Success('data-updated'));
+      }
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-update-failed'));
@@ -139,18 +180,17 @@ class UsuarioRepoImpl extends UsuarioRepo {
   @override
   Future<Result<dynamic, dynamic>> addUsuario({
     String? email,
+    String? phoneNumber,
     required String rol,
-    String? phonNumber,
   }) async {
     final currentUser = fireAuthService.currentUser()!;
 
     final data = {
       'uid': currentUser.uid,
-      'email': currentUser.email ?? '',
+      'nombre_completo': '',
+      'email': email ?? '',
       'rol': await EncryptData.encryptData(rol),
-      'telefono': currentUser.phoneNumber != null
-          ? currentUser.phoneNumber!.replaceAll('+34', '')
-          : '',
+      'telefono': phoneNumber != null ? phoneNumber.replaceAll('+34', '') : '',
     };
 
     try {
@@ -204,7 +244,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
       );
 
       for (final element in usuarios) {
-        list.add(UsuarioModel.fromJson(element));
+        final json = await EncryptData.decryptDataJson(element);
+        list.add(UsuarioModel.fromJson(json));
       }
 
       return Success(list);
@@ -215,31 +256,23 @@ class UsuarioRepoImpl extends UsuarioRepo {
   }
 
   @override
-  Future<Result<User, dynamic>> signUpPhoneNumber({
+  Future<Result<dynamic, dynamic>> signUpPhoneNumber({
     required String rol,
     required String verificationId,
     required String smsCode,
   }) async {
     try {
+      sessionService.saveVerificationId(verificationId);
+      sessionService.saveSmsCode(smsCode);
+      sessionService.saveRol(smsCode);
+
       final result = await fireAuthService.phoneCredential(
         verificationId: verificationId,
         smsCode: smsCode,
       );
 
-      final currentUser = fireAuthService.currentUser()!;
-
       if (result is User) {
-        sessionService.saveCurrentUid(result.uid);
-
-        final resultAdd = await addUsuario(
-          rol: rol,
-          phonNumber: currentUser.phoneNumber,
-        );
-
-        return resultAdd.when(
-          (success) => Success(result),
-          (error) => Error(error),
-        );
+        return const Success('data-added');
       }
     } on FirebaseAuthException catch (e) {
       return Error(e.code);
@@ -252,12 +285,78 @@ class UsuarioRepoImpl extends UsuarioRepo {
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
     required String rol,
+    required String solicitado,
     required BuildContext context,
   }) async {
     await fireAuthService.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       rol: rol,
+      solicitado: solicitado,
       context: context,
     );
+  }
+
+  @override
+  Future<void> resetPassword({required String email}) async {
+    fireAuthService.resetPassword(email: email);
+  }
+
+  @override
+  Future<Result<UsuarioModel, dynamic>> findUsuarioByTelefonoOrEmail({
+    required String telefono,
+    String? email,
+  }) async {
+    try {
+      if (email == null) {
+        return firebaseService
+            .findDocumentByFieldIsEqualToValue(
+              collectionPath: collection,
+              field: 'telefono',
+              value: telefono,
+            )
+            .then((json) => successFromJson(json));
+      } else {
+        final filterTelefono = Filter('telefono', isEqualTo: telefono);
+        final filterEmail = Filter('email', isEqualTo: email);
+
+        final query = await firebaseService
+            .getCollection(
+              collectionPath: collection,
+            )
+            .where(Filter.or(filterTelefono, filterEmail))
+            .get();
+
+        final json = query.docs.first.data();
+
+        return successFromJson(json);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-get-failed'));
+    }
+  }
+
+  Future<void> linkSignUp(
+    String email,
+    String password,
+  ) async {
+    final currentUser = fireAuthService.currentUser()!;
+    currentUser.delete();
+
+    final verificationId = await sessionService.verificationId;
+    final smsCode = await sessionService.smsCode;
+
+    final credential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    final phoneCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId!,
+      smsCode: smsCode!,
+    );
+
+    await credential.user!.updatePhoneNumber(phoneCredential);
   }
 }

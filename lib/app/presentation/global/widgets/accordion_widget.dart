@@ -15,6 +15,7 @@ class AccordionWidget extends StatelessWidget {
       ),
       scaleWhenAnimating: true,
       openAndCloseAnimation: true,
+      contentBackgroundColor: Colors.white,
       children: children,
     );
   }

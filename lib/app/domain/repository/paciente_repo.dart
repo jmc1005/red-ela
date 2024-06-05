@@ -1,6 +1,5 @@
 import 'package:multiple_result/multiple_result.dart';
 
-import '../models/cuidador/cuidador_model.dart';
 import '../models/paciente/paciente_model.dart';
 
 abstract class PacienteRepo {
@@ -10,20 +9,28 @@ abstract class PacienteRepo {
     required String tratamiento,
     required String fechaDiagnostico,
     required String inicio,
-    CuidadorModel cuidador,
+    String? cuidador,
+    String? gestorCasos,
   });
 
   Future<Result<dynamic, dynamic>> updatePaciente({
     required String tratamiento,
     required String fechaDiagnostico,
     required String inicio,
-    CuidadorModel? cuidador,
+    String? cuidador,
+    String? gestorCasos,
   });
 
   Future<Result<dynamic, dynamic>> deletePaciente();
 
-  Future<Result<List<String>, dynamic>> getAllPacientesByUidOrEmailCuidador({
+  Future<Result<List<String>, dynamic>> getAllPacientesByUidCuidador({
     required String uidCuidador,
     required String email,
+  });
+
+  Future<Result<PacienteModel, dynamic>> getPacienteByUid(String uid);
+
+  Future<void> relacionaPacienteCuidador({
+    required String uidPaciente,
   });
 }

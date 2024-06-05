@@ -3,8 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../config/color_config.dart';
-import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/submit_button_widget.dart';
@@ -17,10 +15,12 @@ class OTPCodigoWidget extends StatefulWidget with ValidatorMixin {
     required this.verificationId,
     required this.phoneNumber,
     required this.rol,
+    required this.solicitado,
   });
 
   final String phoneNumber;
   final String rol;
+  final String solicitado;
   final String verificationId;
 
   @override
@@ -105,6 +105,7 @@ class _OTPCodigoWidgetState extends State<OTPCodigoWidget> {
                       otpController.confirmar(
                         phoneNumber: widget.phoneNumber,
                         rol: widget.rol,
+                        solicitado: widget.solicitado,
                         codigo: codigo,
                         verificationId: widget.verificationId,
                         language: language,
