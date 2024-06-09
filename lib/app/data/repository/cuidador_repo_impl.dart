@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -43,7 +41,7 @@ class CuidadorRepoImpl implements CuidadorRepo {
     try {
       return firebaseService
           .setDataOnDocument(
-              collectionPath: collection, documentPath: usuarioUid, data: data)
+              collection: collection, document: usuarioUid, data: data)
           .then(
         (value) async {
           final docRef = firebaseService.getDocumentFromCollection(
@@ -106,8 +104,8 @@ class CuidadorRepoImpl implements CuidadorRepo {
     try {
       return firebaseService
           .updateDataOnDocument(
-        collectionPath: collection,
-        documentPath: usuarioUid,
+        collection: collection,
+        document: usuarioUid,
         data: data,
       )
           .then((value) async {
@@ -133,21 +131,6 @@ class CuidadorRepoImpl implements CuidadorRepo {
     return _getCuidadorFirebase(uidCuidador);
   }
 
-  @override
-  Future<Result<UsuarioModel, dynamic>> getUsuarioCuidadorByUid(String uid) {
-    try {
-      return firebaseService
-          .getFromDocument(
-            collectionPath: collection,
-            documentPath: uid,
-          )
-          .then((json) async => successUsuarioFromJson(json));
-    } catch (e) {
-      debugPrint(e.toString());
-      return Future.value(const Error(''));
-    }
-  }
-
   Future<Success<UsuarioModel, dynamic>> successUsuarioFromJson(
       Json json) async {
     json = await EncryptData.decryptDataJson(json);
@@ -158,8 +141,8 @@ class CuidadorRepoImpl implements CuidadorRepo {
     try {
       return firebaseService
           .getFromDocument(
-            collectionPath: collection,
-            documentPath: uid,
+            collection: collection,
+            document: uid,
           )
           .then((json) => successFromJson(json));
     } catch (e) {

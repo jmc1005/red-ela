@@ -13,14 +13,14 @@ class FirebaseService {
     required Json data,
   }) async {
     return getCollection(
-      collectionPath: collectionPath,
+      collection: collectionPath,
     ).add(data);
   }
 
   CollectionReference<Json> getCollection({
-    required String collectionPath,
+    required String collection,
   }) {
-    return firestore.collection(collectionPath);
+    return firestore.collection(collection);
   }
 
   DocumentReference<Json> getDocumentFromCollection({
@@ -34,7 +34,7 @@ class FirebaseService {
     required String collectionPath,
   }) async {
     final collection = await getCollection(
-      collectionPath: collectionPath,
+      collection: collectionPath,
     ).get();
 
     final List<Json> dataList = collection.docs.map((e) => e.data()).toList();
@@ -43,58 +43,54 @@ class FirebaseService {
   }
 
   Stream<QuerySnapshot<Json>> getSnapshotStreamFromCollection({
-    required String collectionPath,
+    required String collection,
   }) {
     return getCollection(
-      collectionPath: collectionPath,
+      collection: collection,
     ).snapshots();
   }
 
   /// Document Operations
 
   Future<void> setDataOnDocument({
-    required String collectionPath,
-    required String documentPath,
+    required String collection,
+    required String document,
     required Json data,
   }) {
-    return getCollection(collectionPath: collectionPath)
-        .doc(documentPath)
-        .set(data);
+    return getCollection(collection: collection).doc(document).set(data);
   }
 
   Future<Json> getFromDocument({
-    required String collectionPath,
-    required String documentPath,
+    required String collection,
+    required String document,
   }) async {
-    final data = await getCollection(collectionPath: collectionPath)
-        .doc(documentPath)
-        .get();
+    final data = await getCollection(
+      collection: collection,
+    ).doc(document).get();
 
     return Future.value(data.data());
   }
 
   Future<void> updateDataOnDocument({
-    required String collectionPath,
-    required String documentPath,
+    required String collection,
+    required String document,
     required Json data,
   }) {
-    return getCollection(collectionPath: collectionPath)
-        .doc(documentPath)
-        .update(data);
+    return getCollection(collection: collection).doc(document).update(data);
   }
 
   Future<void> deleteDocumentFromCollection({
     required String collectionPath,
     required String uid,
   }) {
-    return getCollection(collectionPath: collectionPath).doc(uid).delete();
+    return getCollection(collection: collectionPath).doc(uid).delete();
   }
 
   Future<Json> findDocumentByFieldIsEqualToValue(
       {required String collectionPath,
       required String field,
       required String value}) async {
-    final data = await getCollection(collectionPath: collectionPath)
+    final data = await getCollection(collection: collectionPath)
         .where(field, isEqualTo: value)
         .get();
 
@@ -107,7 +103,7 @@ class FirebaseService {
     required Json data,
   }) async {
     return getCollection(
-      collectionPath: collectionPath,
+      collection: collectionPath,
     ).doc(documentPath).set(
           data,
           SetOptions(merge: true),

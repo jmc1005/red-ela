@@ -11,7 +11,6 @@ import '../../../../utils/snackBar/snackbar_util.dart';
 import '../../../global/controllers/state/state_notifier.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
-import '../../user/views/usuario_detail_view.dart';
 import 'state/sign_state.dart';
 
 class SignController extends StateNotifier<SignState> {

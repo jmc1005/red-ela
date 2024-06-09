@@ -37,8 +37,8 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
     try {
       return firebaseService
           .setDataOnDocument(
-            collectionPath: collection,
-            documentPath: usuarioUid,
+            collection: collection,
+            document: usuarioUid,
             data: data,
           )
           .then((value) => const Success('data-added'));
@@ -88,8 +88,8 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
     try {
       return firebaseService
           .updateDataOnDocument(
-            collectionPath: collection,
-            documentPath: usuarioUid,
+            collection: collection,
+            document: usuarioUid,
             data: data,
           )
           .then((value) => const Success('data-updated'));
@@ -109,8 +109,8 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
     try {
       return firebaseService
           .getFromDocument(
-            collectionPath: collection,
-            documentPath: uid,
+            collection: collection,
+            document: uid,
           )
           .then((json) async => successFromJson(json));
     } catch (e) {

@@ -1,4 +1,6 @@
+import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
 
@@ -6,12 +8,17 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
+import '../../../global/widgets/accordion_widget.dart';
 import '../../../global/widgets/app_bar_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import '../../citas/controllers/cita_controller.dart';
 import '../../citas/views/citas_view.dart';
 import '../../citas/widgets/recordatorio_widget.dart';
+import '../../gestor_casos/widgets/gestor_casos_pacientes_widget.dart';
+import '../../paciente/widgets/paciente_cuidador_widget.dart';
+import '../../paciente/widgets/paciente_gestor_casos_widget.dart';
+import '../../user/controllers/usuario_controller.dart';
 import '../../user/views/usuario_detail_view.dart';
 import '../controller/home_controller.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -24,8 +31,14 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  var openCuidadorAccordion = true;
   UsuarioModel? usuarioModel;
   bool showAddCita = false;
+  var headerStyle = const TextStyle(
+    color: Color(0xffffffff),
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   void initState() {
@@ -35,6 +48,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final usuarioRepo = Provider.of<UsuarioRepo>(context);
+    final language = AppLocalizations.of(context)!;
 
     final List<Widget> actions = [
       IconButton(
@@ -72,17 +86,27 @@ class _HomeViewState extends State<HomeView> {
         builder: (context, snapshot) {
           final homeController = Provider.of<HomeController>(context);
           final citaController = Provider.of<CitaController>(context);
+          final usuarioController = Provider.of<UsuarioController>(context);
 
           if (snapshot.hasData) {
             final data = snapshot.data!;
             data.when(
-              (success) => usuarioModel = success,
+              (success) {
+                usuarioModel = success;
+                usuarioController.usuario = success;
+              },
               (error) => debugPrint(error),
             );
           }
 
           final isGestorCasos = usuarioModel != null &&
               usuarioModel!.rol == UsuarioTipo.gestorCasos.value;
+
+          final isPaciente = usuarioModel != null &&
+              usuarioModel!.rol == UsuarioTipo.paciente.value;
+
+          final isCuidador = usuarioModel != null &&
+              usuarioModel!.rol == UsuarioTipo.cuidador.value;
 
           showAddCita = homeController.currentIndex == 1 && isGestorCasos;
 
@@ -131,6 +155,55 @@ class _HomeViewState extends State<HomeView> {
                         if (homeController.currentIndex == 0)
                           const RecordatorioWidget(),
                         if (homeController.currentIndex == 1)
+                          const Expanded(
+                            child: CitasView(),
+                          ),
+                        if (homeController.currentIndex == 2 && isGestorCasos)
+                          Expanded(
+                            child: GestorCasosPacientesWidget(
+                              usuarioController: usuarioController,
+                            ),
+                          ),
+                        if (homeController.currentIndex == 2 && isPaciente)
+                          Column(
+                            children: [
+                              AccordionWidget(
+                                children: [
+                                  AccordionSection(
+                                    header: Text(
+                                      language.cuidador,
+                                      style: headerStyle,
+                                    ),
+                                    headerBackgroundColor: ColorConfig.primary,
+                                    headerBackgroundColorOpened:
+                                        ColorConfig.primary,
+                                    contentBackgroundColor: Colors.white,
+                                    contentVerticalPadding: 20,
+                                    content: PacienteCuidadorWidget(
+                                      usuarioController: usuarioController,
+                                    ),
+                                    isOpen: openCuidadorAccordion,
+                                  ),
+                                  AccordionSection(
+                                    header: Text(
+                                      language.gestor_casos,
+                                      style: headerStyle,
+                                    ),
+                                    headerBackgroundColor: ColorConfig.primary,
+                                    headerBackgroundColorOpened:
+                                        ColorConfig.primary,
+                                    contentBackgroundColor: Colors.white,
+                                    contentVerticalPadding: 20,
+                                    content: PacienteGestorCasosWidget(
+                                      usuarioController: usuarioController,
+                                    ),
+                                    isOpen: openCuidadorAccordion,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        if (homeController.currentIndex == 2 && isCuidador)
                           const Expanded(
                             child: CitasView(),
                           ),

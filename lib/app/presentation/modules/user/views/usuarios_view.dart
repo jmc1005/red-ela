@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
-import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/app_bar_widget.dart';
@@ -32,8 +31,8 @@ class _UsuariosViewState extends State<UsuariosView> {
 
   @override
   void initState() {
-    super.initState();
     _loadUsuarios();
+    super.initState();
   }
 
   Future<void> _loadUsuarios() async {
@@ -64,7 +63,6 @@ class _UsuariosViewState extends State<UsuariosView> {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
-    final invitacionRepo = Provider.of<InvitacionRepo>(context, listen: false);
     final size = MediaQuery.of(context).size;
     final visibleAdd = widget.rol == UsuarioTipo.gestorCasos.value ||
         widget.rol == UsuarioTipo.admin.value;

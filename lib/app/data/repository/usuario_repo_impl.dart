@@ -32,7 +32,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
       final usuarioUid = fireAuthService.currentUser()!.uid;
 
       return firebaseService
-          .getFromDocument(collectionPath: collection, documentPath: usuarioUid)
+          .getFromDocument(collection: collection, document: usuarioUid)
           .then(
         (json) async {
           final rol = json['rol'];
@@ -56,8 +56,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
     try {
       return await firebaseService
           .getFromDocument(
-            collectionPath: collection,
-            documentPath: uid,
+            collection: collection,
+            document: uid,
           )
           .then((json) => successFromJson(json));
     } catch (e) {
@@ -155,8 +155,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
         data['uid'] = nuevoUid;
         return firebaseService
             .setDataOnDocument(
-              collectionPath: collection,
-              documentPath: nuevoUid,
+              collection: collection,
+              document: nuevoUid,
               data: data,
             )
             .then((value) => const Success('data-updated'));
@@ -165,8 +165,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
         return firebaseService
             .updateDataOnDocument(
-              collectionPath: collection,
-              documentPath: currentUser.uid,
+              collection: collection,
+              document: currentUser.uid,
               data: data,
             )
             .then((value) => const Success('data-updated'));
@@ -196,8 +196,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
     try {
       return firebaseService
           .setDataOnDocument(
-            collectionPath: collection,
-            documentPath: currentUser.uid,
+            collection: collection,
+            document: currentUser.uid,
             data: data,
           )
           .then((value) => const Success('data-added'));
@@ -321,7 +321,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
         final query = await firebaseService
             .getCollection(
-              collectionPath: collection,
+              collection: collection,
             )
             .where(Filter.or(filterTelefono, filterEmail))
             .get();

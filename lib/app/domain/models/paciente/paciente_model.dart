@@ -3,8 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_constants.dart';
-import '../cuidador/cuidador_model.dart';
-import '../gestor_casos/gestor_casos_model.dart';
+
 import '../typedefs.dart';
 
 part 'paciente_model.freezed.dart';

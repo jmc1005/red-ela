@@ -45,8 +45,8 @@ class PacienteRepoImpl implements PacienteRepo {
     try {
       return firebaseService
           .setDataOnDocument(
-            collectionPath: collection,
-            documentPath: usuarioUid,
+            collection: collection,
+            document: usuarioUid,
             data: data,
           )
           .then((value) => const Success('data-added'));
@@ -78,8 +78,8 @@ class PacienteRepoImpl implements PacienteRepo {
     try {
       return firebaseService
           .updateDataOnDocument(
-            collectionPath: collection,
-            documentPath: usuarioUid,
+            collection: collection,
+            document: usuarioUid,
             data: data,
           )
           .then((value) => const Success('data-updated'));
@@ -158,7 +158,7 @@ class PacienteRepoImpl implements PacienteRepo {
     );
 
     final data = await firebaseService
-        .getCollection(collectionPath: collection)
+        .getCollection(collection: collection)
         .where(filterCuidadorUid)
         .get();
 
@@ -179,8 +179,8 @@ class PacienteRepoImpl implements PacienteRepo {
       final uidCuidador = fireAuthService.currentUser()!.uid;
 
       await firebaseService.updateDataOnDocument(
-        collectionPath: collection,
-        documentPath: uidPaciente,
+        collection: collection,
+        document: uidPaciente,
         data: {
           'cuidador': uidCuidador,
         },
@@ -199,8 +199,8 @@ class PacienteRepoImpl implements PacienteRepo {
     try {
       return firebaseService
           .getFromDocument(
-            collectionPath: collection,
-            documentPath: uid,
+            collection: collection,
+            document: uid,
           )
           .then((json) async => successFromJson(json));
     } catch (e) {
