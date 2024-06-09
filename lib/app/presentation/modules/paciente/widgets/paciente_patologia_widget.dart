@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../../../domain/models/paciente/paciente_model.dart';
-import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
@@ -21,7 +20,6 @@ class PacientePatologiaWidget extends StatefulWidget with ValidatorMixin {
 
 class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
-  late final UsuarioModel? usuarioCuidador;
 
   final dateInput = TextEditingController();
 
@@ -43,8 +41,11 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
   }
 
   Future<Result<PacienteModel, dynamic>> _getFuturePaciente() async {
-    return widget.usuarioController.pacienteController.pacienteRepo
-        .getPaciente();
+    final usuarioController = widget.usuarioController;
+    final uid = usuarioController.state!.usuario.uid;
+    final pacienteRepo = usuarioController.pacienteController.pacienteRepo;
+
+    return pacienteRepo.getPacienteByUid(uid);
   }
 
   @override
@@ -69,9 +70,6 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
             if (result.fechaDiagnostico != null &&
                 result.fechaDiagnostico!.isNotEmpty) {
               dateInput.text = result.fechaDiagnostico!;
-            }
-            if (usuarioCuidador != null) {
-              debugPrint(usuarioCuidador!.toString());
             }
           } else {
             final response = FirebaseResponse(

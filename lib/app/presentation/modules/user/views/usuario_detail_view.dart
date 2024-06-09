@@ -14,8 +14,6 @@ import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import '../../cuidador/widgets/cuidador_data_widget.dart';
 import '../../gestor_casos/widgets/gestor_casos_data_widget.dart';
-import '../../paciente/widgets/paciente_cuidador_widget.dart';
-import '../../paciente/widgets/paciente_gestor_casos_widget.dart';
 import '../../paciente/widgets/paciente_patologia_widget.dart';
 import '../controllers/usuario_controller.dart';
 import '../widgets/usuario_data_widget.dart';
@@ -80,12 +78,13 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                   ctx = context;
                   _getCurrentRol(sessionService);
 
-                  if (currentRol != null &&
-                      currentRol == UsuarioTipo.admin.value) {
-                    _navegateToUsuarios(usuario);
-                  } else {
-                    navigateTo(Routes.home, context);
-                  }
+                  // if (currentRol != null &&
+                  //     currentRol == UsuarioTipo.admin.value) {
+                  //   _navegateToUsuarios(usuario);
+                  // } else {
+                  //   navigateTo(Routes.home, context);
+                  // }
+                  Navigator.pop(context);
                 }
               },
               icon: const Icon(
@@ -120,10 +119,7 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                             key: _formKey,
                             child: Builder(builder: (context) {
                               final usuarioController =
-                                  Provider.of<UsuarioController>(
-                                context,
-                                listen: false,
-                              );
+                                  Provider.of<UsuarioController>(context);
 
                               if (usuarioController.state == null) {
                                 usuarioController.usuario = usuario;
@@ -169,43 +165,6 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                           contentBackgroundColor: Colors.white,
                                           contentVerticalPadding: 20,
                                           content: PacientePatologiaWidget(
-                                            usuarioController:
-                                                usuarioController,
-                                          ),
-                                          isOpen: openDatosPersonales,
-                                        ),
-                                      if (tipo == UsuarioTipo.paciente.value)
-                                        AccordionSection(
-                                          header: Text(
-                                            language.cuidador,
-                                            style: headerStyle,
-                                          ),
-                                          headerBackgroundColor:
-                                              ColorConfig.primary,
-                                          headerBackgroundColorOpened:
-                                              ColorConfig.primary,
-                                          contentBackgroundColor: Colors.white,
-                                          contentVerticalPadding: 20,
-                                          content: PacienteCuidadorWidget(
-                                            usuarioController:
-                                                usuarioController,
-                                          ),
-                                          isOpen: openDatosPersonales,
-                                        ),
-                                      if (tipo == UsuarioTipo.paciente.value &&
-                                          usuario.uid != '')
-                                        AccordionSection(
-                                          header: Text(
-                                            language.gestor_casos,
-                                            style: headerStyle,
-                                          ),
-                                          headerBackgroundColor:
-                                              ColorConfig.primary,
-                                          headerBackgroundColorOpened:
-                                              ColorConfig.primary,
-                                          contentBackgroundColor: Colors.white,
-                                          contentVerticalPadding: 20,
-                                          content: PacienteGestorCasosWidget(
                                             usuarioController:
                                                 usuarioController,
                                           ),

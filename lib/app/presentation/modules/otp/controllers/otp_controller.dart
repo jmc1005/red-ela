@@ -10,7 +10,6 @@ import '../../../../domain/repository/gestor_casos_repo.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/paciente_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
-import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../global/controllers/state/state_notifier.dart';
 import '../../user/views/usuario_detail_view.dart';

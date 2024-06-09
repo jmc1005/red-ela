@@ -47,7 +47,7 @@ class _DialogContentState extends State<_DialogContent> {
   final phoneNumberController = TextEditingController();
   final phoneNumberFocusNode = FocusNode();
   late final InvitacionRepo invitacionRepo;
-  late InvitacionModel? invitacionModel;
+  InvitacionModel? invitacionModel;
 
   @override
   void initState() {
@@ -55,6 +55,7 @@ class _DialogContentState extends State<_DialogContent> {
   }
 
   Future<void> getInvitacion(telefono) async {
+    invitacionModel = null;
     final response = await invitacionRepo.getInvitacion(telefono);
 
     response.when(
@@ -98,7 +99,7 @@ class _DialogContentState extends State<_DialogContent> {
             getInvitacion(invitacionController.state.telefono);
 
             if (invitacionModel == null) {
-              invitacionController.send(context, language);
+              invitacionController.sendEmailPhone(context, language);
 
               invitacionRepo.addInvitacion(
                 telefono: invitacionController.state.telefono,

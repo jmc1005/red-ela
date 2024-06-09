@@ -36,8 +36,8 @@ class RolRepoImpl implements RolRepo {
     try {
       return firebaseService
           .setDataOnDocument(
-            collectionPath: collection,
-            documentPath: uuidDoc,
+            collection: collection,
+            document: uuidDoc,
             data: data,
           )
           .then((value) => const Success('data-added'));
@@ -52,8 +52,8 @@ class RolRepoImpl implements RolRepo {
     try {
       return firebaseService
           .getFromDocument(
-            collectionPath: collection,
-            documentPath: uuid,
+            collection: collection,
+            document: uuid,
           )
           .then((json) async => successFromJson(json));
     } catch (e) {
@@ -75,8 +75,8 @@ class RolRepoImpl implements RolRepo {
   }) async {
     try {
       return firebaseService.updateDataOnDocument(
-        collectionPath: collection,
-        documentPath: uuid,
+        collection: collection,
+        document: uuid,
         data: {
           'rol': await EncryptData.encryptData(rol),
           'descripcion': await EncryptData.encryptData(descripcion),

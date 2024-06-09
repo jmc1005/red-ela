@@ -19,6 +19,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   uuid: ^4.4.0
   firebase_core: ^2.31.0
+  firebase_crashlytics: 3.5.5
   firebase_auth: ^4.19.5
   firebase_storage: ^11.7.1
   cloud_firestore: ^4.16.1
@@ -44,6 +45,11 @@ dependencies:
   border_bottom_navigation_bar: ^0.0.4
   syncfusion_flutter_calendar: ^25.2.6+1
   dropdown_search: ^5.0.6
+  mailer: ^6.1.0
+  awesome_notifications_core: ^0.9.3
+  awesome_notifications: any
+  awesome_notifications_fcm: any
+  onesignal_flutter: ^5.2.0
 
 dev_dependencies:
   flutter_test:

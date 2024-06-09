@@ -27,7 +27,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "es.ubu.tfg2324.ela.red_ela"
-    compileSdk 33
+    compileSdk 29
     ndkVersion flutter.ndkVersion
     compileSdkVersion 34
 

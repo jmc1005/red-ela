@@ -22,10 +22,14 @@ class PacienteGestorCasosWidget extends StatefulWidget with ValidatorMixin {
 
 class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
-  late final UsuarioModel? usuarioCuidador;
+  late final UsuarioModel? usuarioGestorCaso;
   late final GestorCasosModel? gestorCasosModel;
 
-  final dateInput = TextEditingController();
+  final nombreController = TextEditingController();
+  final apellido1Controller = TextEditingController();
+  final apellido2Controller = TextEditingController();
+  final telefonoController = TextEditingController();
+  final hospitalController = TextEditingController();
 
   var headerStyle = const TextStyle(
     color: Color(0xffffffff),
@@ -41,10 +45,22 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
   Future<Result<UsuarioModel, dynamic>> _getGestorCasosPaciente(
     UsuarioController controller,
   ) async {
-    final paciente = controller.state!.paciente;
+    var paciente = controller.state!.paciente;
+
+    if (paciente == null) {
+      final response =
+          await controller.pacienteController.pacienteRepo.getPaciente();
+      response.when(
+        (success) {
+          paciente = success;
+          controller.paciente = success;
+        },
+        (error) => debugPrint(error),
+      );
+    }
 
     if (paciente!.gestorCasos != null) {
-      final gestorCasos = paciente.gestorCasos!;
+      final gestorCasos = paciente!.gestorCasos!;
       return controller.usuarioRepo.getUsuarioByUid(uid: gestorCasos);
     }
 
@@ -70,13 +86,22 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
 
                 response.when(
                   (success) async {
-                    usuarioCuidador = success;
-                    final responseCuidador = await controller
+                    usuarioGestorCaso = success;
+
+                    nombreController.text = success.nombre ?? '';
+                    apellido1Controller.text = success.apellido1 ?? '';
+                    apellido2Controller.text = success.apellido2 ?? '';
+                    telefonoController.text = success.telefono ?? '';
+
+                    final responseGestorCasos = await controller
                         .gestorCasosController.gestorCasosRepo
                         .getGestorCasosByUid(success.uid);
 
-                    responseCuidador.when(
-                      (success) => gestorCasosModel = success,
+                    responseGestorCasos.when(
+                      (success) {
+                        gestorCasosModel = success;
+                        hospitalController.text = success.hospital ?? '';
+                      },
                       (error) => debugPrint(error),
                     );
                   },
@@ -87,34 +112,35 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
                   children: [
                     TextFormWidget(
                       label: language.nombre,
-                      initialValue: usuarioCuidador?.nombre ?? '',
+                      controller: nombreController,
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),
                     const SizedBox(height: 8),
                     TextFormWidget(
                       label: language.apellido,
-                      initialValue: usuarioCuidador?.apellido1 ?? '',
+                      controller: apellido1Controller,
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),
                     const SizedBox(height: 8),
                     TextFormWidget(
                       label: language.apellido2,
-                      initialValue: usuarioCuidador?.apellido2 ?? '',
+                      controller: apellido2Controller,
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),
                     const SizedBox(height: 8),
                     TextFormWidget(
                       label: language.hospital,
-                      initialValue: gestorCasosModel?.hospital ?? '',
+                      controller: hospitalController,
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),
                     const SizedBox(height: 8),
                     TextFormWidget(
                       label: language.telefono,
+                      controller: telefonoController,
                       keyboardType: TextInputType.phone,
                       prefixText: '+34 ',
                       readOnly: true,

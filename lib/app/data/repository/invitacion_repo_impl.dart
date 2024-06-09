@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
 
@@ -37,8 +36,8 @@ class InvitacionRepoImpl extends InvitacionRepo {
     try {
       return firebaseService
           .setDataOnDocument(
-            collectionPath: collection,
-            documentPath: telefono,
+            collection: collection,
+            document: telefono,
             data: data,
           )
           .then((value) => const Success('data-added'));
@@ -52,11 +51,10 @@ class InvitacionRepoImpl extends InvitacionRepo {
   Future<Result<InvitacionModel, dynamic>> getInvitacion(
       String telefono) async {
     try {
-      // pendiente: 8CLTV7WsWStyyJtJkRfbWA==
       return firebaseService
           .getFromDocument(
-            collectionPath: collection,
-            documentPath: telefono,
+            collection: collection,
+            document: telefono,
           )
           .then((json) async => successFromJson(json));
     } catch (e) {
