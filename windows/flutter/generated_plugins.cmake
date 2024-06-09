@@ -4,6 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
+  awesome_notifications
+  awesome_notifications_core
   cloud_firestore
   connectivity_plus
   firebase_auth
