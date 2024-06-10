@@ -5,7 +5,9 @@ import '../../../../domain/repository/usuario_repo.dart';
 import '../../../global/widgets/tarjeta_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
+import '../widgets/gestion_hospital_widget.dart';
 import '../widgets/gestion_rol_widget.dart';
+import '../widgets/gestion_tratamiento_widget.dart';
 import '../widgets/gestion_usuario_widget.dart';
 
 class AdminView extends StatefulWidget {
@@ -28,6 +30,8 @@ class _AdminViewState extends State<AdminView> {
       children: const [
         GestionUsuarioWidget(),
         GestionRolWidget(),
+        GestionHospitalWidget(),
+        GestionTratamientoWidget(),
       ],
     );
   }

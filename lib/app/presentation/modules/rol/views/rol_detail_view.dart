@@ -113,6 +113,7 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
                                     ),
                                     title: language.datos_de(language.rol),
                                   ),
+                                  const SizedBox(height: 8),
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {

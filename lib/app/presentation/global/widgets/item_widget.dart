@@ -36,7 +36,7 @@ class ItemWidget extends StatelessWidget {
                       label,
                       style: TextStyle(
                         color: const Color(0xFF15161E),
-                        fontSize: 14.sp,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

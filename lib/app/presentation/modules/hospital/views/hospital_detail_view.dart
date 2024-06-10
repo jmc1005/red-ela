@@ -104,6 +104,7 @@ class _HospitalDetailViewState extends State<HospitalDetailView>
                                     ),
                                     title: language.datos_de(language.hospital),
                                   ),
+                                  const SizedBox(height: 8),
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {

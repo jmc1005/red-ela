@@ -24,7 +24,7 @@ class CabeceraWidget extends StatelessWidget {
           label,
           style: TextStyle(
             color: color,
-            fontSize: 14.sp,
+            fontSize: 20.sp,
             fontWeight: FontWeight.w500,
           ),
         ),

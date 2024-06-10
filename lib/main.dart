@@ -12,22 +12,27 @@ import 'app/data/firebase/firebase_service.dart';
 import 'app/data/repository/connection_repo_impl.dart';
 import 'app/data/repository/cuidador_repo_impl.dart';
 import 'app/data/repository/gestor_caso_repo_impl.dart';
+import 'app/data/repository/hospital_repo_impl.dart';
 import 'app/data/repository/invitacion_repo_impl.dart';
 import 'app/data/repository/paciente_repo_impl.dart';
 import 'app/data/repository/rol_repo_impl.dart';
+import 'app/data/repository/tratamiento_repo_impl.dart';
 import 'app/data/repository/usuario_repo_impl.dart';
 import 'app/data/services/local/session_service.dart';
 import 'app/data/services/remote/check_connection.dart';
 import 'app/domain/repository/connection_repo.dart';
 import 'app/domain/repository/cuidador_repo.dart';
 import 'app/domain/repository/gestor_casos_repo.dart';
+import 'app/domain/repository/hospital_repo.dart';
 import 'app/domain/repository/invitacion_repo.dart';
 import 'app/domain/repository/paciente_repo.dart';
 import 'app/domain/repository/rol_repo.dart';
+import 'app/domain/repository/tratamiento_repo.dart';
 import 'app/domain/repository/usuario_repo.dart';
 import 'app/presentation/modules/citas/controllers/cita_controller.dart';
 import 'app/presentation/modules/cuidador/controllers/cuidador_controller.dart';
 import 'app/presentation/modules/gestor_casos/controllers/gestor_casos_controller.dart';
+import 'app/presentation/modules/hospital/controllers/hospital_controller.dart';
 import 'app/presentation/modules/invitacion/controllers/invitacion_controller.dart';
 import 'app/presentation/modules/invitacion/controllers/state/invitacion_state.dart';
 import 'app/presentation/modules/otp/controllers/otp_controller.dart';
@@ -36,6 +41,7 @@ import 'app/presentation/modules/paciente/controllers/paciente_controller.dart';
 import 'app/presentation/modules/rol/controllers/rol_controller.dart';
 import 'app/presentation/modules/sign/controllers/sign_controller.dart';
 import 'app/presentation/modules/sign/controllers/state/sign_state.dart';
+import 'app/presentation/modules/tratamiento/controllers/tratamiento_controller.dart';
 import 'app/presentation/modules/user/controllers/usuario_controller.dart';
 import 'firebase_options.dart';
 import 'red_ela.dart';
@@ -88,6 +94,16 @@ Future<void> main() async {
         ),
         Provider<RolRepo>(
           create: (_) => RolRepoImpl(
+            firebaseService: FirebaseService(firestore: firestore),
+          ),
+        ),
+        Provider<HospitalRepo>(
+          create: (_) => HospitalRepoImpl(
+            firebaseService: FirebaseService(firestore: firestore),
+          ),
+        ),
+        Provider<TratamientoRepo>(
+          create: (_) => TratamientoRepoImpl(
             firebaseService: FirebaseService(firestore: firestore),
           ),
         ),
@@ -149,6 +165,20 @@ Future<void> main() async {
             ),
           ),
         ),
+        Provider<TratamientoController>(
+          create: (_) => TratamientoController(
+            tratamientoRepo: TratamientoRepoImpl(
+              firebaseService: FirebaseService(firestore: firestore),
+            ),
+          ),
+        ),
+        Provider<HospitalController>(
+          create: (_) => HospitalController(
+            hospitalRepo: HospitalRepoImpl(
+              firebaseService: FirebaseService(firestore: firestore),
+            ),
+          ),
+        ),
         Provider<CitaController>(
           create: (_) => CitaController(),
         ),
@@ -187,6 +217,20 @@ Future<void> main() async {
         ChangeNotifierProvider<RolController>(
           create: (context) => RolController(
             rolRepo: RolRepoImpl(
+              firebaseService: FirebaseService(firestore: firestore),
+            ),
+          ),
+        ),
+        ChangeNotifierProvider<TratamientoController>(
+          create: (context) => TratamientoController(
+            tratamientoRepo: TratamientoRepoImpl(
+              firebaseService: FirebaseService(firestore: firestore),
+            ),
+          ),
+        ),
+        ChangeNotifierProvider<HospitalController>(
+          create: (context) => HospitalController(
+            hospitalRepo: HospitalRepoImpl(
               firebaseService: FirebaseService(firestore: firestore),
             ),
           ),

@@ -105,6 +105,7 @@ class _TratamientoDetailViewState extends State<TratamientoDetailView>
                                     title:
                                         language.datos_de(language.tratamiento),
                                   ),
+                                  const SizedBox(height: 8),
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {

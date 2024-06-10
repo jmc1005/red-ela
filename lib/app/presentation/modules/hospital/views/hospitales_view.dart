@@ -25,13 +25,14 @@ class _HospitalesViewState extends State<HospitalesView> {
   List<HospitalModel> _hospitals = [];
   final _hospitalsStream = StreamController<List<HospitalModel>>();
   final _textSearchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    _loadHospitals();
+    _loadHospitales();
   }
 
-  Future<void> _loadHospitals() async {
+  Future<void> _loadHospitales() async {
     final HospitalRepo repo = context.read();
     final hospitals = await repo.getHospitales();
 
@@ -100,7 +101,7 @@ class _HospitalesViewState extends State<HospitalesView> {
               keyboardType: TextInputType.text,
               controller: _textSearchController,
               onChanged: (value) {
-                _loadHospitals();
+                _loadHospitales();
               },
               suffixIcon: const Icon(Icons.search),
             ),
