@@ -1,11 +1,17 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../../config/color_config.dart';
-import '../../../../domain/models/citas/cita_model.dart';
-import '../../../../domain/models/citas/citas_datasource.dart';
+import '../../../../domain/models/cita/cita_model.dart';
+import '../../../../domain/models/cita/citas_datasource.dart';
+import '../../../../domain/repository/cita_repo.dart';
+import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
 import '../../../global/controllers/state/state_notifier.dart';
 import '../../../global/controllers/util_controller.dart';
@@ -13,8 +19,17 @@ import '../dialogs/cita_dialog.dart';
 
 class CitaController extends StateNotifier<CitaModel?> {
   final List<Appointment> appointments = [];
+  List<CitaModel> citas = [];
 
-  CitaController() : super(null);
+  CitaController({
+    required this.citaRepo,
+  }) : super(null);
+
+  final CitaRepo citaRepo;
+
+  String get uuidCitaSel => _uuidCitaSel;
+
+  String _uuidCitaSel = '';
 
   CitaModel get cita => _citaModel;
 
@@ -27,75 +42,19 @@ class CitaController extends StateNotifier<CitaModel?> {
   }
 
   CitaModel _citaModel = const CitaModel(
+    uuid: '',
     uidPaciente: '',
     uidGestorCasos: '',
     asunto: '',
-    fechaInicio: '',
+    fecha: '',
     horaInicio: '',
-    fechaFin: '',
     horaFin: '',
     lugar: '',
   );
 
-  CitaDataSource getDataSource() {
-    final List<Appointment> appointments = <Appointment>[];
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(hours: 4)),
-      endTime: DateTime.now().add(const Duration(hours: 5)),
-      subject: 'Meeting',
-      color: Colors.red,
-    ));
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(days: -2, hours: 4)),
-      endTime: DateTime.now().add(const Duration(days: -2, hours: 5)),
-      subject: 'Development Meeting   New York, U.S.A',
-      color: const Color(0xfff527318),
-    ));
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(days: -2, hours: 3)),
-      endTime: DateTime.now().add(const Duration(days: -2, hours: 4)),
-      subject: 'Project Plan Meeting   Kuala Lumpur, Malaysia',
-      color: const Color(0xfffb21f66),
-    ));
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(days: -2, hours: 2)),
-      endTime: DateTime.now().add(const Duration(days: -2, hours: 3)),
-      subject: 'Support - Web Meeting   Dubai, UAE',
-      color: const Color(0xfff3282b8),
-    ));
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(days: -2, hours: 1)),
-      endTime: DateTime.now().add(const Duration(days: -2, hours: 2)),
-      subject: 'Project Release Meeting   Istanbul, Turkey',
-      color: const Color(0xfff2a7886),
-    ));
-    appointments.add(Appointment(
-        startTime: DateTime.now().add(const Duration(hours: 4, days: -1)),
-        endTime: DateTime.now().add(const Duration(hours: 5, days: -1)),
-        subject: 'Release Meeting',
-        color: Colors.lightBlueAccent,
-        isAllDay: true));
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(hours: 2, days: -4)),
-      endTime: DateTime.now().add(const Duration(hours: 4, days: -4)),
-      subject: 'Performance check',
-      color: Colors.amber,
-    ));
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(hours: 11, days: -2)),
-      endTime: DateTime.now().add(const Duration(hours: 12, days: -2)),
-      subject: 'Customer Meeting   Tokyo, Japan',
-      color: const Color(0xffffb8d62),
-    ));
-    appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(hours: 6, days: 2)),
-      endTime: DateTime.now().add(const Duration(hours: 7, days: 2)),
-      subject: 'Retrospective',
-      color: Colors.purple,
-    ));
+  final _dataSource = CitaDataSource([]);
 
-    return CitaDataSource(appointments);
-  }
+  CitaDataSource get dataSource => _dataSource;
 
   void calendarTap(
     CalendarTapDetails details,
@@ -129,22 +88,13 @@ class CitaController extends StateNotifier<CitaModel?> {
     if (details.targetElement == CalendarElement.appointment ||
         details.targetElement == CalendarElement.agenda) {
       final Appointment appointment = details.appointments![0];
-      final fechaInicio =
-          DateFormat('dd/MM/yyyy').format(appointment.startTime);
-      final horaInicio = DateFormat('HH:mm').format(appointment.startTime);
-      final fechaFin = DateFormat('dd/MM/yyyy').format(appointment.endTime);
-      final horaFin = DateFormat('HH:mm').format(appointment.endTime);
 
-      citaModel = CitaModel(
-        uidPaciente: '',
-        uidGestorCasos: '',
-        asunto: appointment.subject,
-        fechaInicio: fechaInicio,
-        horaInicio: horaInicio,
-        fechaFin: fechaFin,
-        horaFin: horaFin,
-        lugar: 'lugar',
-      );
+      _uuidCitaSel = appointment.id!.toString();
+      citaModel = citas
+          .where(
+            (c) => c.uuid == appointment.id!.toString(),
+          )
+          .first;
 
       cita = citaModel;
 
@@ -206,7 +156,7 @@ class CitaController extends StateNotifier<CitaModel?> {
               );
               snackbarUtil.showWarning();
             } else {
-              crearCita(context);
+              crearCita(context, language);
             }
           }
         },
@@ -226,14 +176,14 @@ class CitaController extends StateNotifier<CitaModel?> {
     ];
 
     const citaModel = CitaModel(
+      uuid: '',
       uidPaciente: '',
       uidGestorCasos: '',
-      asunto: 'Nueva cita',
-      fechaInicio: '',
+      asunto: '',
+      fecha: '',
       horaInicio: '',
-      fechaFin: '',
       horaFin: '',
-      lugar: 'lugar',
+      lugar: '',
     );
 
     cita = citaModel;
@@ -248,12 +198,70 @@ class CitaController extends StateNotifier<CitaModel?> {
     );
   }
 
-  void crearCita(context) {
-    debugPrint(state!.toString());
+  Future<void> crearCita(context, language) async {
+    final response = await citaRepo.addCita(
+        uidPaciente: state!.uidPaciente,
+        asunto: state!.asunto,
+        fecha: state!.fecha,
+        horaInicio: state!.horaInicio,
+        horaFin: state!.horaFin,
+        lugar: state!.lugar,
+        notas: state!.notas ?? '');
+
+    var isSuccess = false;
+    var code = '';
+
+    response.when(
+      (whenSuccess) {
+        isSuccess = true;
+        code = whenSuccess;
+      },
+      (whenError) {
+        isSuccess = false;
+        code = whenError;
+        debugPrint(whenError);
+      },
+    );
+
+    final fbResponse = FirebaseResponse(
+      context: context,
+      language: language,
+      code: code,
+    );
+
+    if (isSuccess) {
+      fbResponse.showSuccess();
+      addCitaToAppointments(cita);
+      enviarNotificacion();
+    } else {
+      fbResponse.showError();
+    }
+
     Navigator.pop(context);
   }
 
-  void cancelarCita() {}
+  void cancelarCita() {
+    final appointment = appointments
+        .where(
+          (a) => a.id.toString() == uuidCitaSel,
+        )
+        .first;
+    final cita = citas
+        .where(
+          (c) => c.uuid == uuidCitaSel,
+        )
+        .first;
+
+    dataSource.appointments!.remove(appointment);
+    dataSource.notifyListeners(
+      CalendarDataSourceAction.remove,
+      <Appointment>[appointment],
+    );
+
+    citas.remove(cita);
+
+    citaRepo.deleteCita(uuid: uuidCitaSel);
+  }
 
   Future<void> openDatePickerFechaInicio(context, dateInput) async {
     final utilController = UtilController(onChange: onChangeFechaInicio);
@@ -263,11 +271,6 @@ class CitaController extends StateNotifier<CitaModel?> {
   Future<void> openTimePickerHoraInicio(context, timeInput) async {
     final utilController = UtilController(onChange: onChangeHoraInicio);
     utilController.openTimePicker(context, timeInput);
-  }
-
-  Future<void> openDatePickerFechaFin(context, dateInput) async {
-    final utilController = UtilController(onChange: onChangeFechaFin);
-    utilController.openDatePicker(context, dateInput);
   }
 
   Future<void> openTimePickerHoraFin(context, timeInput) async {
@@ -284,7 +287,7 @@ class CitaController extends StateNotifier<CitaModel?> {
   }
 
   void onChangeFechaInicio(text) {
-    onlyUpdate(state!.copyWith(fechaInicio: text));
+    onlyUpdate(state!.copyWith(fecha: text));
   }
 
   void onChangeAsunto(text) {
@@ -293,10 +296,6 @@ class CitaController extends StateNotifier<CitaModel?> {
 
   void onChangeHoraInicio(text) {
     onlyUpdate(state!.copyWith(horaInicio: text));
-  }
-
-  void onChangeFechaFin(text) {
-    onlyUpdate(state!.copyWith(fechaFin: text));
   }
 
   void onChangeHoraFin(text) {
@@ -310,4 +309,44 @@ class CitaController extends StateNotifier<CitaModel?> {
   void onChangeNotas(text) {
     onlyUpdate(state!.copyWith(notas: text));
   }
+
+  Future<Result<List<CitaModel>, dynamic>> getCitas() async {
+    return citaRepo.getCitas();
+  }
+
+  void addCitaToAppointments(CitaModel cita) {
+    final inicioString = '${cita.fecha} ${cita.horaInicio}';
+    final finString = '${cita.fecha} ${cita.horaFin}';
+
+    final formatter = DateFormat('dd/MM/yyyy HH:mm');
+    final dtInicio = formatter.parse(inicioString);
+    final dtFin = formatter.parse(finString);
+
+    final random = Random();
+    final r = random.nextInt(256);
+    final g = random.nextInt(256);
+    final b = random.nextInt(256);
+    final color = Color.fromRGBO(r, g, b, 1);
+
+    final appointment = Appointment(
+      id: cita.uuid,
+      startTime: dtInicio,
+      endTime: dtFin,
+      subject: cita.asunto,
+      location: cita.lugar,
+      notes: cita.notas != null ? cita.notas! : '',
+      color: color,
+    );
+
+    appointments.add(appointment);
+    citas.add(cita);
+
+    dataSource.appointments!.addAll(appointments);
+    dataSource.notifyListeners(
+      CalendarDataSourceAction.add,
+      <Appointment>[appointment],
+    );
+  }
+
+  void enviarNotificacion() {}
 }

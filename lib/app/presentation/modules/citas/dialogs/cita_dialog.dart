@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../domain/models/citas/cita_model.dart';
+import '../../../../domain/models/cita/cita_model.dart';
+import '../../../../domain/repository/cita_repo.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../global/widgets/text_gesture_detector_widget.dart';
@@ -69,16 +70,17 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
+    final citaRepo = Provider.of<CitaRepo>(context);
 
     _asunto.text = widget.citaController.state!.asunto;
-    _fechaInicio.text = widget.citaController.state!.fechaInicio;
+    _fechaInicio.text = widget.citaController.state!.fecha;
     _horaInicio.text = widget.citaController.state!.horaInicio;
     _horaFin.text = widget.citaController.state!.horaFin;
     _lugar.text = widget.citaController.state!.lugar;
     _notas.text = widget.citaController.state!.notas ?? '';
 
     return ChangeNotifierProvider<CitaController>(
-      create: (_) => CitaController(),
+      create: (_) => CitaController(citaRepo: citaRepo),
       child: PopScope(
         child: AlertDialog(
           backgroundColor: Colors.white,
@@ -90,20 +92,23 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextFormWidget(
-                    controller: _asunto,
-                    label: language.asunto,
-                    keyboardType: TextInputType.text,
-                    readOnly: widget.readOnly,
-                    validator: !widget.readOnly
-                        ? (value) => textValidator(
-                              value,
-                              language,
-                            )
-                        : null,
-                    onChanged: !widget.readOnly
-                        ? (text) => widget.citaController.onChangeAsunto(text)
-                        : null,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: TextFormWidget(
+                      controller: _asunto,
+                      label: language.asunto,
+                      keyboardType: TextInputType.text,
+                      readOnly: widget.readOnly,
+                      validator: !widget.readOnly
+                          ? (value) => textValidator(
+                                value,
+                                language,
+                              )
+                          : null,
+                      onChanged: !widget.readOnly
+                          ? (text) => widget.citaController.onChangeAsunto(text)
+                          : null,
+                    ),
                   ),
                   const Divider(
                     height: 24,
@@ -111,147 +116,160 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                     color: Color(0xFFF1F4F8),
                   ),
                   if (!widget.readOnly)
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        DropdownPacientesWidget(
-                          citaController: widget.citaController,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          DropdownPacientesWidget(
+                            citaController: widget.citaController,
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          )
+                        ],
+                      ),
+                    ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: Flexible(
+                      child: TextFormWidget(
+                        key: const Key('kFechaInicio'),
+                        controller: _fechaInicio,
+                        label: language.fecha_inicio,
+                        keyboardType: TextInputType.text,
+                        readOnly: widget.readOnly,
+                        suffixIcon: const Align(
+                          widthFactor: 1.0,
+                          heightFactor: 1.0,
+                          child: Icon(
+                            Icons.calendar_today,
+                          ),
                         ),
-                        const SizedBox(
-                          height: 8,
-                        )
+                        validator: !widget.readOnly
+                            ? (value) => textValidator(
+                                  value,
+                                  language,
+                                )
+                            : null,
+                        onTap: !widget.readOnly
+                            ? () =>
+                                widget.citaController.openDatePickerFechaInicio(
+                                  context,
+                                  _fechaInicio,
+                                )
+                            : null,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: TextFormWidget(
+                            key: const Key('kHoraInicio'),
+                            controller: _horaInicio,
+                            label: language.hora_inicio,
+                            keyboardType: TextInputType.text,
+                            readOnly: widget.readOnly,
+                            suffixIcon: const Align(
+                              widthFactor: 1.0,
+                              heightFactor: 1.0,
+                              child: Icon(
+                                Icons.schedule,
+                              ),
+                            ),
+                            validator: !widget.readOnly
+                                ? (value) => textValidator(
+                                      value,
+                                      language,
+                                    )
+                                : null,
+                            onTap: !widget.readOnly
+                                ? () => widget.citaController
+                                        .openTimePickerHoraInicio(
+                                      context,
+                                      _horaInicio,
+                                    )
+                                : null,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: TextFormWidget(
+                            key: const Key('kHoraFin'),
+                            controller: _horaFin,
+                            label: language.hora_fin,
+                            keyboardType: TextInputType.text,
+                            readOnly: widget.readOnly,
+                            suffixIcon: const Align(
+                              widthFactor: 1.0,
+                              heightFactor: 1.0,
+                              child: Icon(
+                                Icons.schedule,
+                              ),
+                            ),
+                            validator: !widget.readOnly
+                                ? (value) => textValidator(
+                                      value,
+                                      language,
+                                    )
+                                : null,
+                            onTap: !widget.readOnly
+                                ? () =>
+                                    widget.citaController.openTimePickerHoraFin(
+                                      context,
+                                      _horaFin,
+                                    )
+                                : null,
+                          ),
+                        ),
                       ],
                     ),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: TextFormWidget(
-                          key: const Key('kFechaInicio'),
-                          controller: _fechaInicio,
-                          label: language.fecha_inicio,
-                          keyboardType: TextInputType.text,
-                          readOnly: widget.readOnly,
-                          suffixIcon: const Align(
-                            widthFactor: 1.0,
-                            heightFactor: 1.0,
-                            child: Icon(
-                              Icons.calendar_today,
-                            ),
-                          ),
-                          validator: !widget.readOnly
-                              ? (value) => textValidator(
-                                    value,
-                                    language,
-                                  )
-                              : null,
-                          onTap: !widget.readOnly
-                              ? () => widget.citaController
-                                      .openDatePickerFechaInicio(
-                                    context,
-                                    _fechaInicio,
-                                  )
-                              : null,
-                        ),
-                      ),
-                    ],
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: TextFormWidget(
-                          key: const Key('kHoraInicio'),
-                          controller: _horaInicio,
-                          label: language.hora_inicio,
-                          keyboardType: TextInputType.text,
-                          readOnly: widget.readOnly,
-                          suffixIcon: const Align(
-                            widthFactor: 1.0,
-                            heightFactor: 1.0,
-                            child: Icon(
-                              Icons.schedule,
-                            ),
-                          ),
-                          validator: !widget.readOnly
-                              ? (value) => textValidator(
-                                    value,
-                                    language,
-                                  )
-                              : null,
-                          onTap: !widget.readOnly
-                              ? () => widget.citaController
-                                      .openTimePickerHoraInicio(
-                                    context,
-                                    _horaInicio,
-                                  )
-                              : null,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: TextFormWidget(
-                          key: const Key('kHoraFin'),
-                          controller: _horaFin,
-                          label: language.hora_fin,
-                          keyboardType: TextInputType.text,
-                          readOnly: widget.readOnly,
-                          suffixIcon: const Align(
-                            widthFactor: 1.0,
-                            heightFactor: 1.0,
-                            child: Icon(
-                              Icons.schedule,
-                            ),
-                          ),
-                          validator: !widget.readOnly
-                              ? (value) => textValidator(
-                                    value,
-                                    language,
-                                  )
-                              : null,
-                          onTap: !widget.readOnly
-                              ? () =>
-                                  widget.citaController.openTimePickerHoraFin(
-                                    context,
-                                    _horaFin,
-                                  )
-                              : null,
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: TextFormWidget(
+                      controller: _lugar,
+                      label: language.lugar,
+                      keyboardType: TextInputType.text,
+                      readOnly: widget.readOnly,
+                      validator: !widget.readOnly
+                          ? (value) => textValidator(
+                                value,
+                                language,
+                              )
+                          : null,
+                      onChanged: !widget.readOnly
+                          ? (text) => widget.citaController.onChangeLugar(text)
+                          : null,
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  TextFormWidget(
-                    controller: _lugar,
-                    label: language.lugar,
-                    keyboardType: TextInputType.text,
-                    readOnly: widget.readOnly,
-                    validator: !widget.readOnly
-                        ? (value) => textValidator(
-                              value,
-                              language,
-                            )
-                        : null,
-                    onChanged: !widget.readOnly
-                        ? (text) => widget.citaController.onChangeLugar(text)
-                        : null,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: TextFormWidget(
+                      controller: _notas,
+                      label: language.notas,
+                      keyboardType: TextInputType.text,
+                      readOnly: widget.readOnly,
+                      onChanged: !widget.readOnly
+                          ? (text) => widget.citaController.onChangeNotas(text)
+                          : null,
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  TextFormWidget(
-                    controller: _notas,
-                    label: language.notas,
-                    keyboardType: TextInputType.text,
-                    readOnly: widget.readOnly,
-                    onChanged: !widget.readOnly
-                        ? (text) => widget.citaController.onChangeNotas(text)
-                        : null,
-                  ),
-                  const SizedBox(height: 8),
-                  TextGestureDetectorWidget(
-                    onTap: () {
-                      widget.citaController.cancelarCita();
-                    },
-                    tapString: '${language.cancelar} ${language.cita}',
-                  ),
+                  if (widget.cita.uuid != '')
+                    TextGestureDetectorWidget(
+                      onTap: () {
+                        widget.citaController.cancelarCita();
+                        Navigator.pop(context);
+                      },
+                      tapString: '${language.cancelar} ${language.cita}',
+                    ),
                 ],
               ),
             ),
@@ -271,10 +289,10 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
     final cita = widget.cita;
 
     _asunto.text = cita.asunto;
-    _fechaInicio.text = cita.fechaInicio;
+    _fechaInicio.text = cita.fecha;
     _horaInicio.text = cita.horaInicio;
     _horaFin.text = cita.horaFin;
-    _notas.text = cita.notas ?? '';
     _lugar.text = cita.lugar;
+    _notas.text = cita.notas ?? '';
   }
 }

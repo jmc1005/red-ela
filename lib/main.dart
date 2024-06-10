@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import 'app/data/firebase/fireauth_service.dart';
 import 'app/data/firebase/firebase_service.dart';
+import 'app/data/repository/cita_repo_impl.dart';
 import 'app/data/repository/connection_repo_impl.dart';
 import 'app/data/repository/cuidador_repo_impl.dart';
 import 'app/data/repository/gestor_caso_repo_impl.dart';
@@ -20,6 +21,7 @@ import 'app/data/repository/tratamiento_repo_impl.dart';
 import 'app/data/repository/usuario_repo_impl.dart';
 import 'app/data/services/local/session_service.dart';
 import 'app/data/services/remote/check_connection.dart';
+import 'app/domain/repository/cita_repo.dart';
 import 'app/domain/repository/connection_repo.dart';
 import 'app/domain/repository/cuidador_repo.dart';
 import 'app/domain/repository/gestor_casos_repo.dart';
@@ -129,6 +131,12 @@ Future<void> main() async {
             fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
           ),
         ),
+        Provider<CitaRepo>(
+          create: (_) => CitaRepoImpl(
+            firebaseService: FirebaseService(firestore: firestore),
+            fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+          ),
+        ),
         Provider<PacienteController>(
           create: (context) => PacienteController(
             context: context,
@@ -180,7 +188,11 @@ Future<void> main() async {
           ),
         ),
         Provider<CitaController>(
-          create: (_) => CitaController(),
+          create: (_) => CitaController(
+              citaRepo: CitaRepoImpl(
+            firebaseService: FirebaseService(firestore: firestore),
+            fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
+          )),
         ),
         ChangeNotifierProvider<SignController>(
           create: (context) => SignController(
@@ -244,7 +256,9 @@ Future<void> main() async {
           ),
         ),
         ChangeNotifierProvider<CitaController>(
-          create: (context) => CitaController(),
+          create: (context) => CitaController(
+            citaRepo: context.read(),
+          ),
         ),
       ],
       child: const Redela(),

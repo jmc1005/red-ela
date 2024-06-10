@@ -18,6 +18,9 @@ class EncryptData {
     'pacientes',
     'cuidador',
     'gestor_caso',
+    'uid_paciente',
+    'uid_gestor_casos',
+    'uid_cuidador'
   ];
 
   EncryptData._() {
@@ -53,7 +56,7 @@ class EncryptData {
     final iv = IV.fromUtf8(_encryptIV);
     final encrypter = Encrypter(AES(key));
 
-    if (encryptedText == null) {
+    if (encryptedText == '' || encryptedText == null) {
       return '';
     }
 
