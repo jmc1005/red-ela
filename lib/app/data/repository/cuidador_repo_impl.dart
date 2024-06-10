@@ -48,9 +48,15 @@ class CuidadorRepoImpl implements CuidadorRepo {
               collection: collection, document: usuarioUid);
 
           if (paciente != null) {
-            await docRef.update({
-              'pacientes': FieldValue.arrayUnion([paciente])
-            });
+            docRef.get().then(
+              (d) async {
+                if (d.exists) {
+                  await docRef.update({
+                    'pacientes': FieldValue.arrayUnion([paciente])
+                  });
+                }
+              },
+            );
           }
 
           return const Success('data-added');
@@ -113,9 +119,17 @@ class CuidadorRepoImpl implements CuidadorRepo {
             collection: collection, document: usuarioUid);
 
         if (paciente != null) {
-          await docRef.update({
-            'pacientes': FieldValue.arrayUnion([paciente])
-          });
+          docRef.get().then(
+            (d) async {
+              if (d.exists) {
+                await docRef.update(
+                  {
+                    'pacientes': FieldValue.arrayUnion([paciente])
+                  },
+                );
+              }
+            },
+          );
         }
 
         return const Success('data-updated');

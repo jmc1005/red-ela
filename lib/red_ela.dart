@@ -4,6 +4,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'app/config/theme_config.dart';
 import 'app/presentation/routes/app_routes.dart';
@@ -13,13 +14,13 @@ import 'provider/locale_provider.dart';
 
 class Redela extends StatefulWidget {
   const Redela({super.key});
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   State<Redela> createState() => _RedelaState();
 }
 
 class _RedelaState extends State<Redela> {
-  final _navigatorKey = GlobalKey<NavigatorState>();
   late AppLinks _appLinks;
   StreamSubscription<Uri>? _linkSubscription;
 
@@ -27,7 +28,7 @@ class _RedelaState extends State<Redela> {
   void initState() {
     super.initState();
 
-    initDeepLinks();
+    _initDeepLinks();
   }
 
   @override
@@ -37,7 +38,7 @@ class _RedelaState extends State<Redela> {
     super.dispose();
   }
 
-  Future<void> initDeepLinks() async {
+  Future<void> _initDeepLinks() async {
     _appLinks = AppLinks();
 
     // Handle links
@@ -48,7 +49,7 @@ class _RedelaState extends State<Redela> {
   }
 
   void openAppLink(Uri uri) {
-    _navigatorKey.currentState?.pushNamed(uri.fragment);
+    Redela.navigatorKey.currentState?.pushNamed(uri.fragment);
   }
 
   @override
@@ -60,28 +61,30 @@ class _RedelaState extends State<Redela> {
       builder: (context, child) {
         return Consumer<LocaleProvider>(
           builder: (context, provider, child) {
-            return GestureDetector(
-              onTap: () {
-                // verificar el contexto hijo
-                final focus = FocusScope.of(context);
-                // minimizar el teclado al pulsar fuera en el hijo
-                final focusedChild = focus.focusedChild;
-                if (focusedChild != null && !focusedChild.hasPrimaryFocus) {
-                  focusedChild.unfocus();
-                }
+            return GestureDetector(onTap: () {
+              // verificar el contexto hijo
+              final focus = FocusScope.of(context);
+              // minimizar el teclado al pulsar fuera en el hijo
+              final focusedChild = focus.focusedChild;
+              if (focusedChild != null && !focusedChild.hasPrimaryFocus) {
+                focusedChild.unfocus();
+              }
+            }, child: ResponsiveSizer(
+              builder: (context, orientation, screenType) {
+                return MaterialApp(
+                  navigatorKey: Redela.navigatorKey,
+                  initialRoute: Routes.signIn,
+                  onGenerateRoute: generateRoute,
+                  // routes: appRoutes,
+                  theme: theme.light,
+                  locale: provider.locale,
+                  supportedLocales: L10n.support,
+                  localizationsDelegates:
+                      AppLocalizations.localizationsDelegates,
+                  debugShowCheckedModeBanner: false,
+                );
               },
-              child: MaterialApp(
-                navigatorKey: _navigatorKey,
-                initialRoute: Routes.signIn,
-                onGenerateRoute: generateRoute,
-                // routes: appRoutes,
-                theme: theme.light,
-                locale: provider.locale,
-                supportedLocales: L10n.support,
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                debugShowCheckedModeBanner: false,
-              ),
-            );
+            ));
           },
         );
       },

@@ -52,7 +52,7 @@ class _GestorCasosDataWidgetState extends State<GestorCasosDataWidget> {
           }
 
           return Container(
-            width: MediaQuery.of(context).size.width / 1.8,
+            width: MediaQuery.of(context).size.width / 1.4,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: TextFormWidget(
               label: language.hospital,

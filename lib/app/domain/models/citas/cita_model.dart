@@ -8,15 +8,14 @@ part 'cita_model.g.dart';
 @freezed
 class CitaModel with _$CitaModel {
   const factory CitaModel({
-    @JsonKey(name: 'uid') required String uid,
+    @JsonKey(name: 'uid_paciente') required String uidPaciente,
+    @JsonKey(name: 'uid_gestor_casos') required String uidGestorCasos,
     required String asunto,
     required String fechaInicio,
-    required String fechaFin,
-    
     required String horaInicio,
+    required String fechaFin,
     required String horaFin,
     required String lugar,
-    @JsonKey(name: 'uid_paciente') required String uidPaciente,
     String? notas,
   }) = _CitaModel;
 

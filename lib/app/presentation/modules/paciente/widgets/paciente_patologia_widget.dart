@@ -23,12 +23,6 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
 
   final dateInput = TextEditingController();
 
-  var headerStyle = const TextStyle(
-    color: Color(0xffffffff),
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
-
   void _setPacienteVacio() {
     const paciente = PacienteModel(usuarioUid: '');
     widget.usuarioController.paciente = paciente;
@@ -65,11 +59,15 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
           );
 
           if (result is PacienteModel) {
-            controller.paciente = result;
+            if (controller.state!.paciente == null) {
+              controller.paciente = result;
+            }
 
-            if (result.fechaDiagnostico != null &&
-                result.fechaDiagnostico!.isNotEmpty) {
-              dateInput.text = result.fechaDiagnostico!;
+            if (controller.state!.paciente != null) {
+              if (controller.state!.paciente!.fechaDiagnostico != null &&
+                  controller.state!.paciente!.fechaDiagnostico!.isNotEmpty) {
+                dateInput.text = controller.state!.paciente!.fechaDiagnostico!;
+              }
             }
           } else {
             final response = FirebaseResponse(
@@ -87,7 +85,7 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
         }
 
         return Container(
-          width: MediaQuery.of(context).size.width / 1.8,
+          width: MediaQuery.of(context).size.width / 1.1,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             mainAxisSize: MainAxisSize.min,

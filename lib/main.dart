@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'app/data/firebase/fireauth_service.dart';
 import 'app/data/firebase/firebase_service.dart';
-
 import 'app/data/repository/connection_repo_impl.dart';
 import 'app/data/repository/cuidador_repo_impl.dart';
 import 'app/data/repository/gestor_caso_repo_impl.dart';
@@ -70,6 +70,9 @@ Future<void> main() async {
       firebaseService: FirebaseService(firestore: firestore),
       fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
       pacienteRepo: pacienteRepo);
+
+  OneSignal.initialize('7d3183c9-8c11-48bc-af64-51938284942a');
+  OneSignal.Notifications.requestPermission(true);
 
   runApp(
     MultiProvider(

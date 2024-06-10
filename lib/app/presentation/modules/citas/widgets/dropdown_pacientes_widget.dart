@@ -93,6 +93,8 @@ class DropdownPacientesWidget extends StatelessWidget {
   }
 
   void onChanged(UsuarioModel? value) {
-    if (value != null) {}
+    if (value != null) {
+      citaController.onChangeUidPaciente(value.uid);
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class RecordatorioWidget extends StatelessWidget {
   const RecordatorioWidget({super.key});
@@ -35,9 +36,9 @@ class RecordatorioWidget extends StatelessWidget {
                     Flexible(
                       child: Text(
                         language.recordatorio,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: 18.sp,
                         ),
                       ),
                     ),

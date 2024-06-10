@@ -120,17 +120,30 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
   }
 
   @override
-  Future<void> relacionaGestorCasosPaciente(
-      {required String uidGestorCasos}) async {
-    final uidPaciente = fireAuthService.currentUser()!.uid;
+  Future<void> relacionaGestorCasosPaciente({
+    required String uidGestorCasos,
+  }) async {
+    try {
+      final uidPaciente = fireAuthService.currentUser()!.uid;
 
-    final json = {
-      'pacientes': FieldValue.arrayUnion([uidPaciente]),
-    };
+      final json = {
+        'pacientes': FieldValue.arrayUnion([uidPaciente]),
+      };
 
-    final docRef = firebaseService.getDocumentFromCollection(
-        collection: collection, document: uidGestorCasos);
+      final docRef = firebaseService.getDocumentFromCollection(
+        collection: collection,
+        document: uidGestorCasos,
+      );
 
-    await docRef.update(json);
+      docRef.get().then(
+        (d) async {
+          if (d.exists) {
+            await docRef.update(json);
+          }
+        },
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

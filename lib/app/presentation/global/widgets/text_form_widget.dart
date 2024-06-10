@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class TextFormWidget extends StatelessWidget {
   const TextFormWidget({
@@ -44,6 +45,7 @@ class TextFormWidget extends StatelessWidget {
           label: Text(
             label,
             overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 18.sp),
           ),
           suffixIcon: suffixIcon,
           prefixText: prefixText,
@@ -53,6 +55,7 @@ class TextFormWidget extends StatelessWidget {
         focusNode: focusNode,
         onTap: onTap,
         readOnly: readOnly,
+        style: TextStyle(fontSize: 18.sp),
       ),
     );
   }

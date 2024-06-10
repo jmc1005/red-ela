@@ -27,7 +27,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace "es.ubu.tfg2324.ela.red_ela"
-    compileSdk 29
+    compileSdkVersion 33
+    
     ndkVersion flutter.ndkVersion
     compileSdkVersion 34
 
@@ -76,3 +77,5 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
 }
+
+apply plugin: 'com.google.gms.google-services'

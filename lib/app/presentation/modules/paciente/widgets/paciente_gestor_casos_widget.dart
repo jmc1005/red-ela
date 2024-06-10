@@ -25,17 +25,9 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
   late final UsuarioModel? usuarioGestorCaso;
   late final GestorCasosModel? gestorCasosModel;
 
-  final nombreController = TextEditingController();
-  final apellido1Controller = TextEditingController();
-  final apellido2Controller = TextEditingController();
+  final nombreCompletoController = TextEditingController();
   final telefonoController = TextEditingController();
   final hospitalController = TextEditingController();
-
-  var headerStyle = const TextStyle(
-    color: Color(0xffffffff),
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
 
   @override
   void initState() {
@@ -88,9 +80,7 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
                   (success) async {
                     usuarioGestorCaso = success;
 
-                    nombreController.text = success.nombre ?? '';
-                    apellido1Controller.text = success.apellido1 ?? '';
-                    apellido2Controller.text = success.apellido2 ?? '';
+                    nombreCompletoController.text = success.nombreCompleto;
                     telefonoController.text = success.telefono ?? '';
 
                     final responseGestorCasos = await controller
@@ -110,40 +100,40 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
 
                 return Column(
                   children: [
-                    TextFormWidget(
-                      label: language.nombre,
-                      controller: nombreController,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextFormWidget(
+                        label: language.nombre,
+                        controller: nombreCompletoController,
+                        keyboardType: TextInputType.text,
+                        readOnly: true,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.apellido,
-                      controller: apellido1Controller,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.apellido2,
-                      controller: apellido2Controller,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.hospital,
-                      controller: hospitalController,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.telefono,
-                      controller: telefonoController,
-                      keyboardType: TextInputType.phone,
-                      prefixText: '+34 ',
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: TextFormWidget(
+                              label: language.hospital,
+                              controller: hospitalController,
+                              keyboardType: TextInputType.text,
+                              readOnly: true,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: TextFormWidget(
+                              label: language.telefono,
+                              controller: telefonoController,
+                              keyboardType: TextInputType.phone,
+                              prefixText: '+34 ',
+                              readOnly: true,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 );
@@ -151,7 +141,7 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
                 return Column(
                   children: [
                     TextFormWidget(
-                      label: language.nombre,
+                      label: language.nombre_completo,
                       keyboardType: TextInputType.text,
                       readOnly: true,
                     ),

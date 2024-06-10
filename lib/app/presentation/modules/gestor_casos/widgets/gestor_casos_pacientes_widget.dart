@@ -101,10 +101,13 @@ class _GestorCasosPacientesWidgetState
   }
 
   Future<void> _loadPacientesByGestorCasos(
-      UsuarioRepo repo, GestorCasosModel gestorCasosModel) async {
+    UsuarioRepo repo,
+    GestorCasosModel gestorCasosModel,
+  ) async {
     if (gestorCasosModel.pacientes != null &&
         gestorCasosModel.pacientes!.isNotEmpty) {
       final search = _textSearchController.text.toLowerCase();
+
       for (final paciente in gestorCasosModel.pacientes!) {
         final pacienteResponse = await repo.getUsuarioByUid(uid: paciente);
 

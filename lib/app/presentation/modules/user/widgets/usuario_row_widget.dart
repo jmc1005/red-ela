@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
+import '../../../../utils/enums/usuario_tipo.dart';
 import '../views/usuario_detail_view.dart';
 import 'usuario_item_widget.dart';
 
@@ -43,6 +44,8 @@ class _UsuarioRowWidgetState extends State<UsuarioRowWidget> {
                 MaterialPageRoute(
                   builder: (context) => UsuarioDetailView(
                     usuarioModel: widget.usuarioModel,
+                    allowUpdate:
+                        widget.usuarioModel.rol == UsuarioTipo.admin.value,
                   ),
                 ),
               );

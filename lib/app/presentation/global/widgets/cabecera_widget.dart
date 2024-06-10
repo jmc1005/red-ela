@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class CabeceraWidget extends StatelessWidget {
   const CabeceraWidget({super.key, required this.label, required this.color});
@@ -23,7 +24,7 @@ class CabeceraWidget extends StatelessWidget {
           label,
           style: TextStyle(
             color: color,
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
           ),
         ),

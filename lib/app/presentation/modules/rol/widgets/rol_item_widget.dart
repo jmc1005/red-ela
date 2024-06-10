@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/rol/rol_model.dart';
@@ -83,8 +84,8 @@ class RolItemWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       rolModel.descripcion,
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: TextStyle(
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

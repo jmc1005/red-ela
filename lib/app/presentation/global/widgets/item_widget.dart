@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ItemWidget extends StatelessWidget {
   const ItemWidget({super.key, required this.label, this.onTap});
@@ -33,9 +34,9 @@ class ItemWidget extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: const TextStyle(
-                        color: Color(0xFF15161E),
-                        fontSize: 14,
+                      style: TextStyle(
+                        color: const Color(0xFF15161E),
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

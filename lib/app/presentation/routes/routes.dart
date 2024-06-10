@@ -7,5 +7,7 @@ class Routes {
   static const userList = '/user-list';
   static const sendOTP = '/send-otp';
   static const rolList = '/role-list';
+  static const tratamientoList = '/treatment-list';
+  static const hospitalList = '/hospital-list';
   static const home = '/home';
 }

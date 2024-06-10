@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
@@ -25,19 +26,11 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
   late final UsuarioModel? usuarioCuidador;
   late final CuidadorModel? cuidadorModel;
-  final nombreController = TextEditingController();
-  final apellido1Controller = TextEditingController();
-  final apellido2Controller = TextEditingController();
+  final nombreCompletoController = TextEditingController();
   final telefonoController = TextEditingController();
   final relacionController = TextEditingController();
 
   final dateInput = TextEditingController();
-
-  var headerStyle = const TextStyle(
-    color: Color(0xffffffff),
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
 
   @override
   void initState() {
@@ -93,9 +86,7 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
                   (success) async {
                     usuarioCuidador = success;
 
-                    nombreController.text = success.nombre ?? '';
-                    apellido1Controller.text = success.apellido1 ?? '';
-                    apellido2Controller.text = success.apellido2 ?? '';
+                    nombreCompletoController.text = success.nombreCompleto;
                     telefonoController.text = success.telefono ?? '';
 
                     final responseCuidador = await controller
@@ -115,40 +106,43 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
 
                 return Column(
                   children: [
-                    TextFormWidget(
-                      label: language.nombre,
-                      controller: nombreController,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: TextFormWidget(
+                          label: language.nombre_completo,
+                          controller: nombreCompletoController,
+                          keyboardType: TextInputType.text,
+                          readOnly: true,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.apellido,
-                      controller: apellido1Controller,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.apellido2,
-                      controller: apellido2Controller,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.telefono,
-                      keyboardType: TextInputType.phone,
-                      controller: telefonoController,
-                      prefixText: '+34 ',
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.relacion,
-                      controller: relacionController,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: TextFormWidget(
+                              label: language.telefono,
+                              keyboardType: TextInputType.phone,
+                              controller: telefonoController,
+                              prefixText: '+34 ',
+                              readOnly: true,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: TextFormWidget(
+                              label: language.relacion,
+                              controller: relacionController,
+                              keyboardType: TextInputType.text,
+                              readOnly: true,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 8),
                   ],

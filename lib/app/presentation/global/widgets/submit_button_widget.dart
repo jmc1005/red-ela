@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SubmitButtonWidget extends StatelessWidget {
   const SubmitButtonWidget({super.key, required this.label, this.onPressed});
@@ -15,9 +16,9 @@ class SubmitButtonWidget extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: 18.sp,
           ),
         ),
       ),
