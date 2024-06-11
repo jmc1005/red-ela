@@ -48,6 +48,7 @@ dependencies:
   mailer: ^6.1.0
   responsive_sizer: ^3.3.1
   onesignal_flutter: ^5.2.0
+  cloud_functions: ^4.7.6
 
 dev_dependencies:
   flutter_test:

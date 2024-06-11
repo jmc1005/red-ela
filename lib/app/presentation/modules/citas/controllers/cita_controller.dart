@@ -15,6 +15,7 @@ import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
 import '../../../global/controllers/state/state_notifier.dart';
 import '../../../global/controllers/util_controller.dart';
+import '../../../routes/app_routes.dart';
 import '../dialogs/cita_dialog.dart';
 
 class CitaController extends StateNotifier<CitaModel?> {
@@ -233,6 +234,7 @@ class CitaController extends StateNotifier<CitaModel?> {
       fbResponse.showSuccess();
       addCitaToAppointments(cita);
       enviarNotificacion();
+      Navigator.pop(context);
     } else {
       fbResponse.showError();
     }
@@ -246,6 +248,7 @@ class CitaController extends StateNotifier<CitaModel?> {
           (a) => a.id.toString() == uuidCitaSel,
         )
         .first;
+
     final cita = citas
         .where(
           (c) => c.uuid == uuidCitaSel,
