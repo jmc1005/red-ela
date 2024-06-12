@@ -1,4 +1,3 @@
-import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -78,11 +77,15 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
                               );
 
                               if (rolController.state == null) {
-                                rolController.rol = const RolModel(
-                                  uuid: '',
-                                  rol: '',
-                                  descripcion: '',
-                                );
+                                if (rol != null) {
+                                  rolController.rol = rol;
+                                } else {
+                                  rolController.rol = const RolModel(
+                                    uuid: '',
+                                    rol: '',
+                                    descripcion: '',
+                                  );
+                                }
                               }
 
                               return Column(

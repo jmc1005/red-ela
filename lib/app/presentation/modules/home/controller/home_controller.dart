@@ -7,6 +7,10 @@ class HomeController extends ChangeNotifier {
   bool _open = false;
 
   int get currentIndex => _currentIndex;
+  set currentIndex(int currentIndex) {
+    _currentIndex = currentIndex;
+  }
+
   bool get open => _open;
 
   void onCurrentIndexChange(int currentIndex) {

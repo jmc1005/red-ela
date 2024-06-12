@@ -122,8 +122,9 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           DropdownPacientesWidget(
-                            citaController: widget.citaController,
-                          ),
+                              citaController: widget.citaController,
+                              label: language.paciente,
+                              uidPaciente: widget.cita.uidPaciente),
                           const SizedBox(
                             height: 8,
                           )
@@ -287,6 +288,8 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
 
   void _initCita() {
     final cita = widget.cita;
+
+    widget.citaController.cita = cita;
 
     _asunto.text = cita.asunto;
     _fechaInicio.text = cita.fecha;

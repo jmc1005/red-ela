@@ -5,11 +5,8 @@ import 'package:multiple_result/multiple_result.dart';
 import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
-import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/validators/validator_mixin.dart';
-import '../../../global/widgets/submit_button_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
-import '../../invitacion/dialogs/invitar_usuario_dialog.dart';
 import '../../user/controllers/usuario_controller.dart';
 
 class CuidadorPacienteWidget extends StatefulWidget with ValidatorMixin {
@@ -108,19 +105,17 @@ class _CuidadorPacienteWidgetState extends State<CuidadorPacienteWidget> {
                     const SizedBox(height: 8),
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 1.1,
-                      child: Row(
-                        children: [
-                          Flexible(
-                            child: TextFormWidget(
-                              label: language.telefono,
-                              keyboardType: TextInputType.phone,
-                              controller: telefonoController,
-                              prefixText: '+34 ',
-                              readOnly: true,
-                            ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Flexible(
+                          child: TextFormWidget(
+                            label: language.telefono,
+                            keyboardType: TextInputType.phone,
+                            controller: telefonoController,
+                            prefixText: '+34 ',
+                            readOnly: true,
                           ),
-                          const SizedBox(width: 8),
-                        ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),

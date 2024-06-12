@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/tratamiento/tratamiento_model.dart';
@@ -86,8 +85,8 @@ class TratamientoItemWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       tratamientoModel.tratamiento,
-                      style: TextStyle(
-                        fontSize: 16.sp,
+                      style: const TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

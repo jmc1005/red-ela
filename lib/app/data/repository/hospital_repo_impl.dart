@@ -75,6 +75,7 @@ class HospitalRepoImpl implements HospitalRepo {
         collection: collection,
         document: uuid,
         data: {
+          'uuid': uuid,
           'hospital': await EncryptData.encryptData(hospital),
         },
       ).then((json) => const Success('data-updated'));

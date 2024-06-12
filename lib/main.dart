@@ -34,6 +34,7 @@ import 'app/domain/repository/usuario_repo.dart';
 import 'app/presentation/modules/citas/controllers/cita_controller.dart';
 import 'app/presentation/modules/cuidador/controllers/cuidador_controller.dart';
 import 'app/presentation/modules/gestor_casos/controllers/gestor_casos_controller.dart';
+import 'app/presentation/modules/home/controller/home_controller.dart';
 import 'app/presentation/modules/hospital/controllers/hospital_controller.dart';
 import 'app/presentation/modules/invitacion/controllers/invitacion_controller.dart';
 import 'app/presentation/modules/invitacion/controllers/state/invitacion_state.dart';
@@ -148,6 +149,9 @@ Future<void> main() async {
             context: context,
             cuidadorRepo: cuidadorRepo,
           ),
+        ),
+        Provider<HomeController>(
+          create: (context) => HomeController(),
         ),
         Provider<GestorCasosController>(
           create: (context) => GestorCasosController(

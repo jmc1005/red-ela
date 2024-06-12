@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-import '../../../../domain/models/cita/citas_datasource.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../user/controllers/usuario_controller.dart';
 import '../controllers/cita_controller.dart';
@@ -18,6 +15,7 @@ class CitasView extends StatefulWidget {
 
 class _CitasViewState extends State<CitasView> {
   final _calendarController = CalendarController();
+  final _keySfCalendar = GlobalKey();
 
   @override
   void initState() {
@@ -40,6 +38,8 @@ class _CitasViewState extends State<CitasView> {
 
             data.when(
               (success) async {
+                citaController.clear();
+
                 var citas = success;
                 final usuarioResponse =
                     await usuarioController.usuarioRepo.getUsuario();
@@ -47,6 +47,7 @@ class _CitasViewState extends State<CitasView> {
                 usuarioResponse.when(
                   (success) async {
                     var uid = success.uid;
+                    citaController.rol = success.rol;
 
                     if (success.rol == UsuarioTipo.cuidador.value) {
                       final cuidadorResponse = await usuarioController
@@ -67,8 +68,12 @@ class _CitasViewState extends State<CitasView> {
 
                           citaController.citas.addAll(citas);
 
-                          for (final c in citas) {
-                            citaController.addCitaToAppointments(c);
+                          if (citas.isNotEmpty) {
+                            for (final c in citas) {
+                              citaController.addCitaToAppointments(c);
+                            }
+
+                            citaController.notifyListenersAppointments();
                           }
                         },
                         (error) => debugPrint(error),
@@ -78,8 +83,13 @@ class _CitasViewState extends State<CitasView> {
                           .where((c) =>
                               c.uidPaciente == uid || c.uidGestorCasos == uid)
                           .toList();
-                      for (final c in citas) {
-                        citaController.addCitaToAppointments(c);
+
+                      if (citas.isNotEmpty) {
+                        for (final c in citas) {
+                          citaController.addCitaToAppointments(c);
+                        }
+
+                        citaController.notifyListenersAppointments();
                       }
                     }
                   },
@@ -90,6 +100,7 @@ class _CitasViewState extends State<CitasView> {
             );
 
             return SfCalendar(
+              key: _keySfCalendar,
               view: CalendarView.month,
               controller: _calendarController,
               allowedViews: const <CalendarView>[
@@ -112,12 +123,30 @@ class _CitasViewState extends State<CitasView> {
                 context,
                 citaController,
               ),
+              onSelectionChanged: (calendarSelectionDetails) {
+                debugPrint('$calendarSelectionDetails');
+              },
+              loadMoreWidgetBuilder: loadMoreWidget,
             );
           } else {
             return const Center(child: CircularProgressIndicator());
           }
         },
       ),
+    );
+  }
+
+  Widget loadMoreWidget(
+      BuildContext context, LoadMoreCallback loadMoreAppointments) {
+    return FutureBuilder<void>(
+      initialData: 'loading',
+      future: loadMoreAppointments(),
+      builder: (context, snapShot) {
+        return Container(
+          alignment: Alignment.center,
+          child: const CircularProgressIndicator(),
+        );
+      },
     );
   }
 }

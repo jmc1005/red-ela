@@ -26,6 +26,7 @@ class _TratamientoDetailViewState extends State<TratamientoDetailView>
     with ValidatorMixin {
   final _formKey = GlobalKey<FormState>();
   var textTratamientoController = TextEditingController();
+  var textDescripcionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class _TratamientoDetailViewState extends State<TratamientoDetailView>
 
     if (tratamiento != null) {
       textTratamientoController.text = tratamiento.tratamiento;
+      textDescripcionController.text = tratamiento.descripcion;
     }
 
     return ChangeNotifierProvider<TratamientoController>(
@@ -77,11 +79,17 @@ class _TratamientoDetailViewState extends State<TratamientoDetailView>
                               );
 
                               if (tratamientoController.state == null) {
-                                tratamientoController.tratamiento =
-                                    const TratamientoModel(
-                                  uuid: '',
-                                  tratamiento: '',
-                                );
+                                if (tratamiento != null) {
+                                  tratamientoController.tratamiento =
+                                      tratamiento;
+                                } else {
+                                  tratamientoController.tratamiento =
+                                      const TratamientoModel(
+                                    uuid: '',
+                                    tratamiento: '',
+                                    descripcion: '',
+                                  );
+                                }
                               }
 
                               return Column(
@@ -100,6 +108,16 @@ class _TratamientoDetailViewState extends State<TratamientoDetailView>
                                                   .onChangeTratamiento(text),
                                         ),
                                         const SizedBox(height: 8),
+                                        TextFormWidget(
+                                          label: language.descripcion,
+                                          controller: textDescripcionController,
+                                          keyboardType: TextInputType.text,
+                                          validator: (value) =>
+                                              textValidator(value, language),
+                                          onChanged: (text) =>
+                                              tratamientoController
+                                                  .onChangeDescripcion(text),
+                                        ),
                                       ],
                                     ),
                                     title:

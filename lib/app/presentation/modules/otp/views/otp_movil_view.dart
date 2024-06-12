@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../../config/color_config.dart';
 import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/validators/validator_mixin.dart';
@@ -85,7 +84,7 @@ class _OTPMovilViewState extends State<OTPMovilView> {
                             .ellipsis, // añade los tres puntos cuando no muestra
                         // overflow: TextOverflow.fade, // añade sombra
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 16,
                           color: ColorConfig.secondary,
                         ),
                         textAlign: TextAlign.center,

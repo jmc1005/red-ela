@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../../../domain/models/tratamiento/tratamiento_model.dart';
@@ -21,16 +22,23 @@ class TratamientoController extends StateNotifier<TratamientoModel?> {
     tratamiento = state!.copyWith(tratamiento: text);
   }
 
+  void onChangeDescripcion(String text) {
+    tratamiento = state!.copyWith(descripcion: text);
+  }
+
   Future<void> update(context, language) async {
     Result<dynamic, dynamic> response;
+    debugPrint('update ${state!.uuid}');
     if (state!.uuid != '') {
       response = await tratamientoRepo.updateTratamiento(
         uuid: state!.uuid,
         tratamiento: state!.tratamiento,
+        descripcion: state!.descripcion,
       );
     } else {
       response = await tratamientoRepo.addTratamiento(
         tratamiento: state!.tratamiento,
+        descripcion: state!.descripcion,
       );
     }
 

@@ -7,6 +7,7 @@ import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
+import 'dropdown_tratamientos_widget.dart';
 
 class PacientePatologiaWidget extends StatefulWidget with ValidatorMixin {
   PacientePatologiaWidget({super.key, required this.usuarioController});
@@ -94,16 +95,10 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
               Row(
                 children: [
                   Flexible(
-                    child: TextFormWidget(
+                    child: DropdownTratamientosWidget(
+                      usuarioController: controller,
                       label: language.tratamiento,
-                      initialValue:
-                          controller.state!.paciente!.tratamiento ?? '',
-                      keyboardType: TextInputType.text,
-                      onChanged: (text) => controller.onChangeTratamiento(text),
-                      validator: (value) => widget.textValidator(
-                        value,
-                        language,
-                      ),
+                      uuidTratamiento: controller.state!.paciente!.tratamiento,
                     ),
                   ),
                   const SizedBox(width: 8),

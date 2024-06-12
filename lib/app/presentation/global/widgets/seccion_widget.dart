@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../config/color_config.dart';
 
@@ -42,9 +41,9 @@ class SeccionWidget extends StatelessWidget {
                     Flexible(
                       child: Text(
                         title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16.sp,
+                          fontSize: 16,
                         ),
                       ),
                     ),

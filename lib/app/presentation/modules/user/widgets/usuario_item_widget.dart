@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
@@ -95,8 +94,8 @@ class UsuarioItemWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       nombreCompleto,
-                      style: TextStyle(
-                        fontSize: 16.sp,
+                      style: const TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

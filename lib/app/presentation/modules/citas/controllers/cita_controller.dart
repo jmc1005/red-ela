@@ -11,11 +11,14 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/cita/cita_model.dart';
 import '../../../../domain/models/cita/citas_datasource.dart';
 import '../../../../domain/repository/cita_repo.dart';
+import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
 import '../../../global/controllers/state/state_notifier.dart';
 import '../../../global/controllers/util_controller.dart';
 import '../../../routes/app_routes.dart';
+import '../../../routes/routes.dart';
+import '../../home/views/home_view.dart';
 import '../dialogs/cita_dialog.dart';
 
 class CitaController extends StateNotifier<CitaModel?> {
@@ -57,6 +60,10 @@ class CitaController extends StateNotifier<CitaModel?> {
 
   CitaDataSource get dataSource => _dataSource;
 
+  String get rol => _rol;
+  set rol(rol) => _rol = rol;
+  String _rol = UsuarioTipo.paciente.value;
+
   void calendarTap(
     CalendarTapDetails details,
     BuildContext context,
@@ -84,6 +91,50 @@ class CitaController extends StateNotifier<CitaModel?> {
           ),
         ),
       ),
+      if (rol == UsuarioTipo.gestorCasos.value)
+        OutlinedButton(
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              final partsInicio = state!.horaInicio.split(':');
+              final hourInicio = int.parse(partsInicio[0]);
+              final minuteInicio = int.parse(partsInicio[1]);
+
+              final partsFin = state!.horaFin.split(':');
+              final hourFin = int.parse(partsFin[0]);
+              final minuteFin = int.parse(partsFin[1]);
+
+              final timeInicio =
+                  TimeOfDay(hour: hourInicio, minute: minuteInicio);
+              final timeFin = TimeOfDay(hour: hourFin, minute: minuteFin);
+
+              final isFinPosterior = timeFin.hour > timeInicio.hour ||
+                  (timeFin.hour == timeInicio.hour &&
+                      timeFin.minute > timeInicio.minute);
+
+              if (!isFinPosterior) {
+                final snackbarUtil = SnackBarUtils(
+                  context: context,
+                  message: language.error_hora,
+                );
+                snackbarUtil.showWarning();
+              } else {
+                crearCita(context, language);
+              }
+            }
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: ColorConfig.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          child: Text(
+            language.aceptar,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
     ];
 
     if (details.targetElement == CalendarElement.appointment ||
@@ -91,6 +142,7 @@ class CitaController extends StateNotifier<CitaModel?> {
       final Appointment appointment = details.appointments![0];
 
       _uuidCitaSel = appointment.id!.toString();
+
       citaModel = citas
           .where(
             (c) => c.uuid == appointment.id!.toString(),
@@ -105,6 +157,7 @@ class CitaController extends StateNotifier<CitaModel?> {
         cita: citaModel,
         citaController: citaController,
         formKey: formKey,
+        readOnly: rol != UsuarioTipo.gestorCasos.value,
       );
     }
   }
@@ -200,44 +253,32 @@ class CitaController extends StateNotifier<CitaModel?> {
   }
 
   Future<void> crearCita(context, language) async {
-    final response = await citaRepo.addCita(
-        uidPaciente: state!.uidPaciente,
-        asunto: state!.asunto,
-        fecha: state!.fecha,
-        horaInicio: state!.horaInicio,
-        horaFin: state!.horaFin,
-        lugar: state!.lugar,
-        notas: state!.notas ?? '');
-
-    var isSuccess = false;
-    var code = '';
+    final Result<dynamic, dynamic> response;
+    if (cita.uuid.isNotEmpty) {
+      response = await citaRepo.updateCita(
+          uuid: state!.uuid,
+          uidPaciente: state!.uidPaciente,
+          asunto: state!.asunto,
+          fecha: state!.fecha,
+          horaInicio: state!.horaInicio,
+          horaFin: state!.horaFin,
+          lugar: state!.lugar,
+          notas: state!.notas ?? '');
+    } else {
+      response = await citaRepo.addCita(
+          uidPaciente: state!.uidPaciente,
+          asunto: state!.asunto,
+          fecha: state!.fecha,
+          horaInicio: state!.horaInicio,
+          horaFin: state!.horaFin,
+          lugar: state!.lugar,
+          notas: state!.notas ?? '');
+    }
 
     response.when(
-      (whenSuccess) {
-        isSuccess = true;
-        code = whenSuccess;
-      },
-      (whenError) {
-        isSuccess = false;
-        code = whenError;
-        debugPrint(whenError);
-      },
+      (success) => showSuccess(context, language, success),
+      (error) => showError(context, language, error),
     );
-
-    final fbResponse = FirebaseResponse(
-      context: context,
-      language: language,
-      code: code,
-    );
-
-    if (isSuccess) {
-      fbResponse.showSuccess();
-      addCitaToAppointments(cita);
-      enviarNotificacion();
-      Navigator.pop(context);
-    } else {
-      fbResponse.showError();
-    }
 
     Navigator.pop(context);
   }
@@ -318,6 +359,40 @@ class CitaController extends StateNotifier<CitaModel?> {
   }
 
   void addCitaToAppointments(CitaModel cita) {
+    final appointment = createAppointment(cita);
+
+    if (!citas.any((c) => c.uuid == cita.uuid)) {
+      citas.add(cita);
+    }
+
+    if (!appointments.any((a) => a.id != null && a.id! == cita.uuid)) {
+      appointments.add(appointment);
+    }
+  }
+
+  void updateCitaToAppointments(CitaModel cita) {
+    citas = citas.where((c) => c.uuid != cita.uuid).toList();
+    citas.add(cita);
+
+    final index = appointments.indexWhere((a) => a.id != cita.uuid);
+    if (index != -1) {
+      final updateAppointment = createAppointment(cita);
+      appointments[index] = updateAppointment;
+    }
+  }
+
+  void notifyListenersAppointments() {
+    if (dataSource.appointments != null) {
+      dataSource.appointments!.clear();
+      dataSource.appointments!.addAll(appointments);
+      dataSource.notifyListeners(
+        CalendarDataSourceAction.add,
+        appointments,
+      );
+    }
+  }
+
+  Appointment createAppointment(CitaModel cita) {
     final inicioString = '${cita.fecha} ${cita.horaInicio}';
     final finString = '${cita.fecha} ${cita.horaFin}';
 
@@ -326,10 +401,15 @@ class CitaController extends StateNotifier<CitaModel?> {
     final dtFin = formatter.parse(finString);
 
     final random = Random();
-    final r = random.nextInt(256);
-    final g = random.nextInt(256);
-    final b = random.nextInt(256);
-    final color = Color.fromRGBO(r, g, b, 1);
+    final colors = [
+      Colors.red,
+      Colors.purple,
+      Colors.green,
+      Colors.blue,
+      Colors.deepOrange,
+      Colors.indigoAccent,
+      Colors.teal
+    ];
 
     final appointment = Appointment(
       id: cita.uuid,
@@ -338,18 +418,58 @@ class CitaController extends StateNotifier<CitaModel?> {
       subject: cita.asunto,
       location: cita.lugar,
       notes: cita.notas != null ? cita.notas! : '',
-      color: color,
+      color: colors[random.nextInt(colors.length)],
     );
-
-    appointments.add(appointment);
-    citas.add(cita);
-
-    dataSource.appointments!.addAll(appointments);
-    dataSource.notifyListeners(
-      CalendarDataSourceAction.add,
-      <Appointment>[appointment],
-    );
+    return appointment;
   }
 
   void enviarNotificacion() {}
+
+  void clear() {
+    if (appointments.isNotEmpty) {
+      appointments.clear();
+    }
+    if (citas.isNotEmpty) {
+      citas.clear();
+    }
+    if (dataSource.appointments != null &&
+        dataSource.appointments!.isNotEmpty) {
+      dataSource.appointments!.clear();
+    }
+  }
+
+  void showSuccess(context, language, whenSuccess) {
+    final fbResponse = FirebaseResponse(
+      context: context,
+      language: language,
+      code: whenSuccess,
+    );
+
+    fbResponse.showSuccess();
+    if (cita.uuid.isEmpty) {
+      addCitaToAppointments(cita);
+    } else {
+      updateCitaToAppointments(cita);
+    }
+
+    enviarNotificacion();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeView(),
+      ),
+    );
+  }
+
+  void showError(context, language, error) {
+    debugPrint(error);
+
+    final fbResponse = FirebaseResponse(
+      context: context,
+      language: language,
+      code: error,
+    );
+
+    fbResponse.showError();
+  }
 }

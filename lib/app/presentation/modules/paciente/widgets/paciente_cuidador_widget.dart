@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
@@ -121,30 +120,31 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
                     const SizedBox(height: 8),
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 1.1,
-                      child: Row(
-                        children: [
-                          Flexible(
-                            child: TextFormWidget(
-                              label: language.telefono,
-                              keyboardType: TextInputType.phone,
-                              controller: telefonoController,
-                              prefixText: '+34 ',
-                              readOnly: true,
-                            ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Flexible(
+                          child: TextFormWidget(
+                            label: language.telefono,
+                            keyboardType: TextInputType.phone,
+                            controller: telefonoController,
+                            prefixText: '+34 ',
+                            readOnly: true,
                           ),
-                          const SizedBox(width: 8),
-                          Flexible(
-                            child: TextFormWidget(
-                              label: language.relacion,
-                              controller: relacionController,
-                              keyboardType: TextInputType.text,
-                              readOnly: true,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Flexible(
+                        child: TextFormWidget(
+                          label: language.relacion,
+                          controller: relacionController,
+                          keyboardType: TextInputType.text,
+                          readOnly: true,
+                        ),
+                      ),
+                    ),
                   ],
                 );
               } else {

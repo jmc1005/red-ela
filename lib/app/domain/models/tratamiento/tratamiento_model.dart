@@ -10,6 +10,7 @@ class TratamientoModel with _$TratamientoModel {
   const factory TratamientoModel({
     required String uuid,
     required String tratamiento,
+    required String descripcion,
   }) = _TratamientoModel;
 
   factory TratamientoModel.fromJson(Json json) =>

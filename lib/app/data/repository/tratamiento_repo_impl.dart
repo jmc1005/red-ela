@@ -23,6 +23,7 @@ class TratamientoRepoImpl implements TratamientoRepo {
   @override
   Future<Result> addTratamiento({
     required String tratamiento,
+    required String descripcion,
   }) async {
     const uuid = Uuid();
     final uuidDoc = uuid.v1();
@@ -30,6 +31,7 @@ class TratamientoRepoImpl implements TratamientoRepo {
     final data = {
       'uuid': uuidDoc,
       'tratamiento': await EncryptData.encryptData(tratamiento),
+      'descripcion': await EncryptData.encryptData(descripcion),
     };
     try {
       return firebaseService
@@ -70,13 +72,16 @@ class TratamientoRepoImpl implements TratamientoRepo {
   Future<Result> updateTratamiento({
     required String uuid,
     required String tratamiento,
+    required String descripcion,
   }) async {
     try {
       return firebaseService.updateDataOnDocument(
         collection: collection,
         document: uuid,
         data: {
+          'uuid': uuid,
           'tratamiento': await EncryptData.encryptData(tratamiento),
+          'descripcion': await EncryptData.encryptData(descripcion),
         },
       ).then((json) => const Success('data-updated'));
     } catch (e) {

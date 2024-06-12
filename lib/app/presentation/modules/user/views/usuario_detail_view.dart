@@ -141,13 +141,13 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
                                     ),
                                   if (tipo == UsuarioTipo.cuidador.value)
                                     SeccionWidget(
-                                      title: language.patologia,
+                                      title: language.relacion,
                                       widget: CuidadorDataWidget(
                                           usuarioController: usuarioController),
                                     ),
                                   if (tipo == UsuarioTipo.gestorCasos.value)
                                     SeccionWidget(
-                                      title: language.patologia,
+                                      title: language.hospital,
                                       widget: GestorCasosDataWidget(
                                           usuarioController: usuarioController),
                                     ),

@@ -25,7 +25,9 @@ import '../controller/home_controller.dart';
 import '../widgets/bottom_nav_bar.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  const HomeView({
+    super.key,
+  });
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -82,6 +84,7 @@ class _HomeViewState extends State<HomeView> {
         future: _getUsuario(usuarioRepo),
         builder: (context, snapshot) {
           final homeController = Provider.of<HomeController>(context);
+
           final citaController = Provider.of<CitaController>(context);
           final usuarioController = Provider.of<UsuarioController>(context);
 

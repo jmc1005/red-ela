@@ -48,7 +48,6 @@ class _GestorCasosPacientesWidgetState
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
-    final size = MediaQuery.of(context).size;
 
     return ConstrainedBox(
       constraints: BoxConstraints(

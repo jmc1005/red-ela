@@ -77,11 +77,15 @@ class _HospitalDetailViewState extends State<HospitalDetailView>
                               );
 
                               if (hospitalController.state == null) {
-                                hospitalController.hospital =
-                                    const HospitalModel(
-                                  uuid: '',
-                                  hospital: '',
-                                );
+                                if (hospital != null) {
+                                  hospitalController.hospital = hospital;
+                                } else {
+                                  hospitalController.hospital =
+                                      const HospitalModel(
+                                    uuid: '',
+                                    hospital: '',
+                                  );
+                                }
                               }
 
                               return Column(

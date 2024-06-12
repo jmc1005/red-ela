@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/cuidador/cuidador_model.dart';
@@ -9,7 +7,6 @@ import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/models/usuario_tipo/usuario_tipo_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
-import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/firebase/firebase_response.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 Future<bool> showConfirmDialog(
   BuildContext context, {
@@ -39,9 +38,9 @@ class _DialogContent extends StatelessWidget {
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 18.sp,
+              fontSize: 18,
             ),
           ),
         ),

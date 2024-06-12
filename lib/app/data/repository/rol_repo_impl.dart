@@ -78,6 +78,7 @@ class RolRepoImpl implements RolRepo {
         collection: collection,
         document: uuid,
         data: {
+          'uuid': uuid,
           'rol': await EncryptData.encryptData(rol),
           'descripcion': await EncryptData.encryptData(descripcion),
         },

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../../domain/models/typedefs.dart';
 
 class FirebaseService {
@@ -64,6 +65,7 @@ class FirebaseService {
     required String collection,
     required String document,
   }) async {
+    debugPrint('obtener colección $collection documento $document');
     final data = await getCollection(
       collection: collection,
     ).doc(document).get();
@@ -76,6 +78,9 @@ class FirebaseService {
     required String document,
     required Json data,
   }) {
+    debugPrint(
+      'actualizar colección $collection documento $document datos $data',
+    );
     return getCollection(collection: collection).doc(document).update(data);
   }
 
@@ -98,13 +103,16 @@ class FirebaseService {
   }
 
   Future<void> updateFieldsOnDocument({
-    required String collectionPath,
-    required String documentPath,
+    required String collection,
+    required String document,
     required Json data,
   }) async {
+    debugPrint(
+      'actualizar colección $collection documento $document datos $data',
+    );
     return getCollection(
-      collection: collectionPath,
-    ).doc(documentPath).set(
+      collection: collection,
+    ).doc(document).set(
           data,
           SetOptions(merge: true),
         );

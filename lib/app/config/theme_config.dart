@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'color_config.dart';
 
@@ -34,9 +33,9 @@ class ThemeConfig {
         backgroundColor: Colors.grey,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontFamily: fontFamily,
-          fontSize: 16.sp,
+          fontSize: 16,
           letterSpacing: 0,
         ),
         enabledBorder: OutlineInputBorder(
