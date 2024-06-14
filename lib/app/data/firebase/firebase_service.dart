@@ -66,11 +66,17 @@ class FirebaseService {
     required String document,
   }) async {
     debugPrint('obtener colección $collection documento $document');
-    final data = await getCollection(
-      collection: collection,
-    ).doc(document).get();
+    Json? json = {};
 
-    return Future.value(data.data());
+    await getCollection(
+      collection: collection,
+    ).doc(document).get().then((d) {
+      if (d.exists) {
+        json = d.data();
+      }
+    });
+
+    return Future.value(json);
   }
 
   Future<void> updateDataOnDocument({

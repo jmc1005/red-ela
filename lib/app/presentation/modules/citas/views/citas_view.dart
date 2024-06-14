@@ -42,22 +42,6 @@ class _CitasViewState extends State<CitasView> {
     );
   }
 
-  Widget loadMoreWidget(
-    BuildContext context,
-    LoadMoreCallback loadMoreAppointments,
-  ) {
-    return FutureBuilder<void>(
-      initialData: 'loading',
-      future: loadMoreAppointments(),
-      builder: (_, snapShot) {
-        return Container(
-          alignment: Alignment.center,
-          child: const CircularProgressIndicator(),
-        );
-      },
-    );
-  }
-
   Widget calendar(CitaController citaController, height) {
     return SfCalendar(
       key: _keySfCalendar,

@@ -165,9 +165,11 @@ class _HomeViewState extends State<HomeView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (homeController.currentIndex == 0)
-                          Column(children: [
-                            const RecordatorioWidget(),
-                          ]),
+                          Expanded(
+                            child: RecordatorioWidget(
+                              citaController: citaController,
+                            ),
+                          ),
                         if (homeController.currentIndex == 1)
                           const Expanded(
                             child: CitasView(),

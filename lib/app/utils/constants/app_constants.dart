@@ -11,6 +11,8 @@ class AppConstants {
   static const String oneSignalApiKey =
       'Yjc5MTE5ZDUtNDk5Yi00M2I3LTljNjEtODUyYzBlMGZlYmE1';
 
+  static const String weatherApiKey ='0e5d2457c9c406846ae163afd8c20141';
+
   var headerStyle = const TextStyle(
     color: Color(0xffffffff),
     fontSize: 18,

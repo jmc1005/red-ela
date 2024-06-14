@@ -183,5 +183,6 @@
   "gestion_tratamientos": "Gestión Tratamientos",
   "gestion_hospitales": "Gestión Hospitales",
   "tratamientos": "Tratamientos",
-  "hospitales": "Hospitales"
+  "hospitales": "Hospitales",
+  "sin_citas": "Sin citas"
 }

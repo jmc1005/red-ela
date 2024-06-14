@@ -183,5 +183,6 @@
   "gestion_tratamientos": "Treatments management",
   "gestion_hospitales": "Hospitals management",
   "tratamientos": "Treatments",
-  "hospitales": "Hospitals"
+  "hospitales": "Hospitals",
+  "sin_citas": "Without appointments"
 }
