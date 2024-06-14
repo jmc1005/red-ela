@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -11,6 +13,7 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/cita/cita_model.dart';
 import '../../../../domain/models/cita/citas_datasource.dart';
 import '../../../../domain/repository/cita_repo.dart';
+import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
@@ -19,6 +22,7 @@ import '../../../global/controllers/util_controller.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import '../../home/views/home_view.dart';
+import '../../user/controllers/usuario_controller.dart';
 import '../dialogs/cita_dialog.dart';
 
 class CitaController extends StateNotifier<CitaModel?> {
@@ -276,11 +280,16 @@ class CitaController extends StateNotifier<CitaModel?> {
     }
 
     response.when(
-      (success) => showSuccess(context, language, success),
+      (success) async {
+        showSuccess(context, language, success);
+        Navigator.pop(context);
+        await enviarNotificacion();
+      },
       (error) => showError(context, language, error),
     );
 
     Navigator.pop(context);
+    navigateTo(Routes.home, context);
   }
 
   void cancelarCita() {
@@ -354,8 +363,78 @@ class CitaController extends StateNotifier<CitaModel?> {
     onlyUpdate(state!.copyWith(notas: text));
   }
 
-  Future<Result<List<CitaModel>, dynamic>> getCitas() async {
-    return citaRepo.getCitas();
+  Future<List<Appointment>> getCitas(
+      UsuarioController usuarioController) async {
+    await getCitasFromRepo(usuarioController);
+
+    return Future.value(appointments);
+  }
+
+  Future<void> getCitasFromRepo(UsuarioController usuarioController) async {
+    final responseCitas = await citaRepo.getCitas();
+
+    responseCitas.when(
+      (success) async {
+        clear();
+
+        var citasSuccess = success;
+        final usuarioResponse =
+            await usuarioController.usuarioRepo.getUsuario();
+
+        usuarioResponse.when(
+          (success) async {
+            var uid = success.uid;
+            rol = success.rol;
+
+            if (success.rol == UsuarioTipo.cuidador.value) {
+              final cuidadorResponse = await usuarioController
+                  .cuidadorController.cuidadorRepo
+                  .getCuidador();
+              cuidadorResponse.when(
+                (success) {
+                  if (success.pacientes != null &&
+                      success.pacientes!.isNotEmpty) {
+                    uid = success.pacientes![0];
+                  }
+
+                  citasSuccess = citasSuccess
+                      .where(
+                        (c) => c.uidPaciente == uid,
+                      )
+                      .toList();
+
+                  citas.addAll(citasSuccess);
+
+                  if (citas.isNotEmpty) {
+                    for (final c in citas) {
+                      addCitaToAppointments(c);
+                    }
+
+                    notifyListenersAppointments();
+                  }
+                },
+                (error) => debugPrint(error),
+              );
+            } else {
+              citasSuccess = citasSuccess
+                  .where((c) => c.uidPaciente == uid || c.uidGestorCasos == uid)
+                  .toList();
+
+              citas.addAll(citasSuccess);
+              if (citas.isNotEmpty) {
+                for (final c in citas) {
+                  addCitaToAppointments(c);
+                }
+
+                notifyListenersAppointments();
+              }
+            }
+          },
+          (error) => debugPrint(error),
+        );
+      },
+      (error) => debugPrint(error),
+    );
   }
 
   void addCitaToAppointments(CitaModel cita) {
@@ -377,7 +456,11 @@ class CitaController extends StateNotifier<CitaModel?> {
     final index = appointments.indexWhere((a) => a.id != cita.uuid);
     if (index != -1) {
       final updateAppointment = createAppointment(cita);
-      appointments[index] = updateAppointment;
+
+      dataSource.appointments!.remove(appointments[index]);
+      dataSource.appointments!.add(updateAppointment);
+
+      notifyListeners();
     }
   }
 
@@ -423,7 +506,44 @@ class CitaController extends StateNotifier<CitaModel?> {
     return appointment;
   }
 
-  void enviarNotificacion() {}
+  Future<void> enviarNotificacion() async {
+    final url = Uri.parse(AppConstants.oneSignalUri);
+
+    final headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization': 'Basic ${AppConstants.oneSignalApiKey}',
+    };
+
+    final body = jsonEncode({
+      'app_id': AppConstants.oneSignalId,
+      'include_aliases': {
+        'external_id': [state!.uidPaciente]
+      },
+      'target_channel': 'push',
+      'headings': {'en': 'English Title', 'es': 'Spanish Title'},
+      'contents': {
+        'en': 'This is a test',
+        'es': 'Esto es una prueba !',
+      },
+      'filters': [
+        {
+          'field': 'tag',
+          'key': 'userId',
+          'relation': '=',
+          'value': state!.uidPaciente
+        }
+      ],
+      'content_available': true
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      debugPrint('Notificación enviada');
+    } else {
+      debugPrint('Fallo al enviar notificación: ${response.body}');
+    }
+  }
 
   void clear() {
     if (appointments.isNotEmpty) {
@@ -451,14 +571,6 @@ class CitaController extends StateNotifier<CitaModel?> {
     } else {
       updateCitaToAppointments(cita);
     }
-
-    enviarNotificacion();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeView(),
-      ),
-    );
   }
 
   void showError(context, language, error) {

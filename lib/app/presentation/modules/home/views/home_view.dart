@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:provider/provider.dart';
 
@@ -94,6 +95,17 @@ class _HomeViewState extends State<HomeView> {
               (success) {
                 usuarioModel = success;
                 usuarioController.usuario = success;
+
+                OneSignal.Notifications.addForegroundWillDisplayListener(
+                  (event) {
+                    if (event.notification.additionalData?['userId'] !=
+                        success.uid) {
+                      event.preventDefault();
+                    } else {
+                      event.notification.display();
+                    }
+                  },
+                );
               },
               (error) => debugPrint(error),
             );
@@ -153,7 +165,9 @@ class _HomeViewState extends State<HomeView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (homeController.currentIndex == 0)
-                          const RecordatorioWidget(),
+                          Column(children: [
+                            const RecordatorioWidget(),
+                          ]),
                         if (homeController.currentIndex == 1)
                           const Expanded(
                             child: CitasView(),

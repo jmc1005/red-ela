@@ -70,24 +70,13 @@ class SignController extends StateNotifier<SignState> {
             if (success.rol == UsuarioTipo.admin.value) {
               navigateTo(Routes.admin, context);
             } else {
-              OneSignal.login(success.uid);
+              try {
+                await OneSignal.login(success.uid); // external id one signal
+                await OneSignal.User.addTagWithKey('userId', success.uid);
+              } catch (e) {
+                debugPrint(e.toString());
+              }
 
-              /*
-              {
-    "app_id":"7d3183c9-8c11-48bc-af64-51938284942a",
-    "include_aliases":{
-        "external_id":["<YOUR USER ID >"]
-    },
-    "target_channel":"push",
-    "headings":{
-     "en":"Test Notification"
-    }
-    "contents": {
-    "en": "Hey !",
-  }
-}
-              
-               */
               navigateTo(Routes.home, context);
             }
           }, (error) => showError(error, language));

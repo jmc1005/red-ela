@@ -46,6 +46,7 @@ import 'app/presentation/modules/sign/controllers/sign_controller.dart';
 import 'app/presentation/modules/sign/controllers/state/sign_state.dart';
 import 'app/presentation/modules/tratamiento/controllers/tratamiento_controller.dart';
 import 'app/presentation/modules/user/controllers/usuario_controller.dart';
+import 'app/utils/constants/app_constants.dart';
 import 'firebase_options.dart';
 import 'red_ela.dart';
 
@@ -80,8 +81,11 @@ Future<void> main() async {
       fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
       pacienteRepo: pacienteRepo);
 
-  OneSignal.initialize('7d3183c9-8c11-48bc-af64-51938284942a');
+  OneSignal.initialize(AppConstants.oneSignalId);
   OneSignal.Notifications.requestPermission(true);
+  OneSignal.Notifications.addPermissionObserver((state) {
+    debugPrint('Has permission $state');
+  });
 
   runApp(
     MultiProvider(

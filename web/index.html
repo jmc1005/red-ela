@@ -24,6 +24,19 @@
       src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"
       defer
     ></script>
+    <script
+      src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+      defer
+    ></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function (OneSignal) {
+        await OneSignal.init({
+          appId: "7d3183c9-8c11-48bc-af64-51938284942a",
+          allowLocalhostAsSecureOrigin: true,
+        });
+      });
+    </script>
   </head>
 
   <body>
