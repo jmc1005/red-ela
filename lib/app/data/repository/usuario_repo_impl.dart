@@ -6,7 +6,6 @@ import 'package:multiple_result/multiple_result.dart';
 import '../../domain/models/typedefs.dart';
 import '../../domain/models/usuario/usuario_model.dart';
 import '../../domain/repository/usuario_repo.dart';
-import '../../utils/firebase/firebase_code_enum.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
 import '../services/local/encrypt_data.dart';
@@ -83,10 +82,11 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
     if (result is User) {
       sessionService.saveCurrentUid(result.uid);
+
       return Success(result);
     }
 
-    return const Error(FirebaseCode.invalidPassword);
+    return Error(result);
   }
 
   @override
@@ -161,12 +161,10 @@ class UsuarioRepoImpl extends UsuarioRepo {
             )
             .then((value) => const Success('data-updated'));
       } else {
-        data['uid'] = currentUser.uid;
-
         return firebaseService
             .updateDataOnDocument(
               collection: collection,
-              document: currentUser.uid,
+              document: uid,
               data: data,
             )
             .then((value) => const Success('data-updated'));

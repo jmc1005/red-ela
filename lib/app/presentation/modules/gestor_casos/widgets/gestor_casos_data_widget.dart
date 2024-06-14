@@ -4,8 +4,8 @@ import 'package:multiple_result/multiple_result.dart';
 
 import '../../../../domain/models/gestor_casos/gestor_casos_model.dart';
 import '../../../../utils/validators/validator_mixin.dart';
-import '../../../global/widgets/text_form_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
+import 'dropdown_hospitales_widget.dart';
 
 class GestorCasosDataWidget extends StatefulWidget with ValidatorMixin {
   GestorCasosDataWidget({super.key, required this.usuarioController});
@@ -17,7 +17,7 @@ class GestorCasosDataWidget extends StatefulWidget with ValidatorMixin {
 }
 
 class _GestorCasosDataWidgetState extends State<GestorCasosDataWidget> {
-  final textHospitalController = TextEditingController();
+  String? hospital;
 
   GestorCasosModel gestorCasosModel = const GestorCasosModel(
     usuarioUid: '',
@@ -39,27 +39,30 @@ class _GestorCasosDataWidgetState extends State<GestorCasosDataWidget> {
     return FutureBuilder(
         future: _getFutureGestorCasos(),
         builder: (_, snapshot) {
+          String? uuidHospital;
+
           if (snapshot.hasData) {
             final data = snapshot.data!;
 
             data.when(
               (success) {
                 gestorCasosModel = success;
-                textHospitalController.text = success.hospital ?? '';
+                controller.onChangeHospital(success.hospital ?? '');
+                if (success.hospital != null) {
+                  uuidHospital = success.hospital;
+                }
               },
               (error) => debugPrint(error),
             );
           }
 
           return Container(
-            width: MediaQuery.of(context).size.width / 1.8,
+            width: MediaQuery.of(context).size.width / 1.1,
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: TextFormWidget(
+            child: DropdownHospitalesWidget(
+              usuarioController: controller,
               label: language.hospital,
-              controller: textHospitalController,
-              keyboardType: TextInputType.text,
-              onChanged: (text) => controller.onChangeHospital(text),
-              validator: (value) => widget.textValidator(value, language),
+              uuidHospital: uuidHospital,
             ),
           );
         });

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/cuidador/cuidador_model.dart';
@@ -9,11 +7,11 @@ import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/models/usuario_tipo/usuario_tipo_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
-import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../global/controllers/state/state_notifier.dart';
+import '../../../global/controllers/util_controller.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
 import '../../cuidador/controllers/cuidador_controller.dart';
@@ -132,52 +130,20 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     BuildContext context,
     TextEditingController dateInput,
   ) async {
-    final language = AppLocalizations.of(context)!;
+    final utilController =
+        UtilController(onChange: onChangeValueFechaNacimiento);
 
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      locale: Locale(language.localeName),
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1950),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      final String date = DateFormat(
-        AppConstants.formatDate,
-      ).format(
-        pickedDate,
-      );
-
-      onChangeValueFechaNacimiento(date);
-      dateInput.text = date;
-    } else {}
+    utilController.openDatePicker(context, dateInput);
   }
 
   Future<void> openDatePickerFechaDiagnostico(
     BuildContext context,
     TextEditingController dateInput,
   ) async {
-    final language = AppLocalizations.of(context)!;
+    final utilController =
+        UtilController(onChange: onChangeValueFechaDiagnostico);
 
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      locale: Locale(language.localeName),
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1950),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      final String date = DateFormat(
-        AppConstants.formatDate,
-      ).format(
-        pickedDate,
-      );
-
-      onChangeValueFechaDiagnostico(date);
-      dateInput.text = date;
-    } else {}
+    utilController.openDatePicker(context, dateInput);
   }
 
   Future<void> update(context, language) async {
@@ -295,5 +261,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
         );
       }
     }
+
+    sessionService.saveSolicitado(null);
   }
 }

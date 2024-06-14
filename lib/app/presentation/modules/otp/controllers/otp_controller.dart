@@ -89,6 +89,7 @@ class OTPController extends StateNotifier<OTPState> {
           MaterialPageRoute(
             builder: (context) => UsuarioDetailView(
               usuarioModel: usuarioModel,
+              allowUpdate: true,
             ),
           ),
         );

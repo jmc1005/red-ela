@@ -4,6 +4,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import 'app/config/theme_config.dart';
 import 'app/presentation/routes/app_routes.dart';
@@ -13,13 +14,13 @@ import 'provider/locale_provider.dart';
 
 class Redela extends StatefulWidget {
   const Redela({super.key});
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   State<Redela> createState() => _RedelaState();
 }
 
 class _RedelaState extends State<Redela> {
-  final _navigatorKey = GlobalKey<NavigatorState>();
   late AppLinks _appLinks;
   StreamSubscription<Uri>? _linkSubscription;
 
@@ -27,7 +28,7 @@ class _RedelaState extends State<Redela> {
   void initState() {
     super.initState();
 
-    initDeepLinks();
+    _initDeepLinks();
   }
 
   @override
@@ -37,7 +38,7 @@ class _RedelaState extends State<Redela> {
     super.dispose();
   }
 
-  Future<void> initDeepLinks() async {
+  Future<void> _initDeepLinks() async {
     _appLinks = AppLinks();
 
     // Handle links
@@ -48,7 +49,7 @@ class _RedelaState extends State<Redela> {
   }
 
   void openAppLink(Uri uri) {
-    _navigatorKey.currentState?.pushNamed(uri.fragment);
+    Redela.navigatorKey.currentState?.pushNamed(uri.fragment);
   }
 
   @override
@@ -71,7 +72,17 @@ class _RedelaState extends State<Redela> {
                 }
               },
               child: MaterialApp(
-                navigatorKey: _navigatorKey,
+                navigatorKey: Redela.navigatorKey,
+                builder: (context, child) => ResponsiveBreakpoints.builder(
+                  breakpoints: [
+                    const Breakpoint(start: 0, end: 450, name: MOBILE),
+                    const Breakpoint(start: 451, end: 800, name: TABLET),
+                    const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+                    const Breakpoint(
+                        start: 1921, end: double.infinity, name: '4K'),
+                  ],
+                  child: child!,
+                ),
                 initialRoute: Routes.signIn,
                 onGenerateRoute: generateRoute,
                 // routes: appRoutes,

@@ -170,10 +170,19 @@
   "datos_hospital": "Datos Hospital",
   "hospital": "Hospital",
   "asunto": "Asunto",
+  "fecha": "Fecha",
   "fecha_inicio": "Fecha inicio",
   "hora_inicio": "Hora inicio",
   "fecha_fin": "Fecha fin",
   "hora_fin": "Hora fin",
   "lugar": "Lugar",
-  "notas": "Notas"
+  "notas": "Notas",
+  "nombre_completo": "Nombre y apellidos",
+  "cita": "cita",
+  "error_hora": "La hora de inicio no puede ser posterior a la de fin",
+  "gestion_tratamientos": "Gestión Tratamientos",
+  "gestion_hospitales": "Gestión Hospitales",
+  "tratamientos": "Tratamientos",
+  "hospitales": "Hospitales",
+  "sin_citas": "Sin citas"
 }

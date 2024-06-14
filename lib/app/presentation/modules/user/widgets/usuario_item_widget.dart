@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../global/dialogs/confirm_dialog.dart';

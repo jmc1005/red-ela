@@ -1,45 +1,57 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/gestor_casos_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
+import '../../../global/widgets/text_form_widget.dart';
 import '../controllers/cita_controller.dart';
 
-class DropdownPacientesWidget extends StatelessWidget {
+class DropdownPacientesWidget extends StatefulWidget {
   const DropdownPacientesWidget({
     super.key,
     required this.citaController,
+    required this.label,
+    required this.uidPaciente,
   });
 
   final CitaController citaController;
+  final String label;
+  final String? uidPaciente;
+
+  @override
+  State<DropdownPacientesWidget> createState() =>
+      _DropdownPacientesWidgetState();
+}
+
+class _DropdownPacientesWidgetState extends State<DropdownPacientesWidget> {
+  UsuarioModel? selectedItem;
 
   @override
   Widget build(BuildContext context) {
     final usuarioRepo = Provider.of<UsuarioRepo>(context);
     final gestorRepo = Provider.of<GestorCasosRepo>(context);
+    final language = AppLocalizations.of(context)!;
 
-    return DropdownSearch<UsuarioModel>(
-      asyncItems: (filter) => getData(gestorRepo, usuarioRepo, filter),
-      itemAsString: (item) => item.nombreCompleto,
-      compareFn: (i, s) => i.uid == s.uid,
-      popupProps: PopupPropsMultiSelection.modalBottomSheet(
-        isFilterOnline: true,
-        showSelectedItems: true,
-        showSearchBox: true,
-        itemBuilder: _customPopupItemBuilder,
-      ),
-      onChanged: onChanged,
+    return FutureBuilder(
+      future: getData(gestorRepo, usuarioRepo, widget.uidPaciente),
+      builder: (_, snapshot) {
+        return snapshot.hasData
+            ? pacienteWidget(snapshot.data!, language)
+            : const Center(child: CircularProgressIndicator());
+      },
     );
   }
 
   Future<List<UsuarioModel>> getData(
     GestorCasosRepo gestorRepo,
     UsuarioRepo usuarioRepo,
-    String filter,
+    String? uidPaciente,
   ) async {
+    selectedItem = null;
     final list = <UsuarioModel>[];
 
     final responseGestorCasos = await gestorRepo.getGestorCasos();
@@ -59,16 +71,13 @@ class DropdownPacientesWidget extends StatelessWidget {
           (error) => debugPrint(error),
         );
       }
+
+      if (uidPaciente != null && uidPaciente.isNotEmpty) {
+        selectedItem = list.where((p) => p.uid == uidPaciente).first;
+      }
     }
 
-    return filter.isNotEmpty
-        ? list
-            .where(
-              (u) =>
-                  u.nombreCompleto.toLowerCase().contains(filter.toLowerCase()),
-            )
-            .toList()
-        : list;
+    return Future.value(list);
   }
 
   Widget _customPopupItemBuilder(
@@ -77,6 +86,7 @@ class DropdownPacientesWidget extends StatelessWidget {
     bool isSelected,
   ) {
     return Container(
+      width: MediaQuery.of(context).size.width / 1.1,
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
           ? null
@@ -93,6 +103,48 @@ class DropdownPacientesWidget extends StatelessWidget {
   }
 
   void onChanged(UsuarioModel? value) {
-    if (value != null) {}
+    if (value != null) {
+      widget.citaController.onChangeUidPaciente(value.uid);
+    }
+  }
+
+  Widget pacienteWidget(List<UsuarioModel> list, AppLocalizations language) {
+    return selectedItem != null
+        ? SizedBox(
+            width: MediaQuery.of(context).size.width / 1.1,
+            child: TextFormWidget(
+              label: language.paciente,
+              readOnly: true,
+              keyboardType: TextInputType.text,
+              initialValue: selectedItem!.nombreCompleto,
+            ),
+          )
+        : DropdownSearch<UsuarioModel>(
+            items: list,
+            itemAsString: (item) => item.nombreCompleto,
+            compareFn: (i, s) => i.uid == s.uid,
+            selectedItem: selectedItem,
+            filterFn: (item, filter) {
+              if (filter.isEmpty) {
+                return true;
+              }
+
+              return item.nombreCompleto
+                  .toLowerCase()
+                  .contains(filter.toLowerCase());
+            },
+            popupProps: PopupPropsMultiSelection.modalBottomSheet(
+              isFilterOnline: true,
+              showSelectedItems: true,
+              showSearchBox: true,
+              itemBuilder: _customPopupItemBuilder,
+            ),
+            onChanged: selectedItem != null ? null : onChanged,
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownSearchDecoration:
+                  InputDecoration(labelText: widget.label),
+            ),
+            enabled: selectedItem == null,
+          );
   }
 }

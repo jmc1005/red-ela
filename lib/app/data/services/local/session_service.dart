@@ -50,7 +50,7 @@ class SessionService {
     return _flutterSecureStorage.read(key: _keySolicitado);
   }
 
-  Future<void> saveSolicitado(String solicitado) {
+  Future<void> saveSolicitado(String? solicitado) {
     return _flutterSecureStorage.write(key: _keySolicitado, value: solicitado);
   }
 }

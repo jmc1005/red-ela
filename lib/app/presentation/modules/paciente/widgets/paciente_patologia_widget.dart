@@ -7,6 +7,7 @@ import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
+import 'dropdown_tratamientos_widget.dart';
 
 class PacientePatologiaWidget extends StatefulWidget with ValidatorMixin {
   PacientePatologiaWidget({super.key, required this.usuarioController});
@@ -22,12 +23,6 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
 
   final dateInput = TextEditingController();
-
-  var headerStyle = const TextStyle(
-    color: Color(0xffffffff),
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
 
   void _setPacienteVacio() {
     const paciente = PacienteModel(usuarioUid: '');
@@ -65,11 +60,15 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
           );
 
           if (result is PacienteModel) {
-            controller.paciente = result;
+            if (controller.state!.paciente == null) {
+              controller.paciente = result;
+            }
 
-            if (result.fechaDiagnostico != null &&
-                result.fechaDiagnostico!.isNotEmpty) {
-              dateInput.text = result.fechaDiagnostico!;
+            if (controller.state!.paciente != null) {
+              if (controller.state!.paciente!.fechaDiagnostico != null &&
+                  controller.state!.paciente!.fechaDiagnostico!.isNotEmpty) {
+                dateInput.text = controller.state!.paciente!.fechaDiagnostico!;
+              }
             }
           } else {
             final response = FirebaseResponse(
@@ -87,58 +86,57 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
         }
 
         return Container(
-          width: MediaQuery.of(context).size.width / 1.8,
+          width: MediaQuery.of(context).size.width / 1.1,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  Flexible(
-                    child: TextFormWidget(
-                      label: language.tratamiento,
-                      initialValue:
-                          controller.state!.paciente!.tratamiento ?? '',
-                      keyboardType: TextInputType.text,
-                      onChanged: (text) => controller.onChangeTratamiento(text),
-                      validator: (value) => widget.textValidator(
-                        value,
-                        language,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: TextFormWidget(
-                      label: language.inicio,
-                      initialValue: controller.state!.paciente!.inicio,
-                      keyboardType: TextInputType.text,
-                      onChanged: (text) => controller.onChangeValueInicio(text),
-                      validator: (value) => widget.textValidator(
-                        value,
-                        language,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 8),
-              TextFormWidget(
-                key: const Key('kFechaDiagnostico'),
-                controller: dateInput,
-                label: language.fecha_diagnostico,
-                keyboardType: TextInputType.datetime,
-                suffixIcon: const Align(
-                  widthFactor: 1.0,
-                  heightFactor: 1.0,
-                  child: Icon(
-                    Icons.calendar_today,
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.1,
+                child: Flexible(
+                  child: DropdownTratamientosWidget(
+                    usuarioController: controller,
+                    label: language.tratamiento,
+                    uuidTratamiento: controller.state!.paciente!.tratamiento,
                   ),
                 ),
-                onTap: () => controller.openDatePickerFechaDiagnostico(
-                  context,
-                  dateInput,
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.1,
+                child: Flexible(
+                  child: TextFormWidget(
+                    label: language.inicio,
+                    initialValue: controller.state!.paciente!.inicio,
+                    keyboardType: TextInputType.text,
+                    onChanged: (text) => controller.onChangeValueInicio(text),
+                    validator: (value) => widget.textValidator(
+                      value,
+                      language,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.1,
+                child: TextFormWidget(
+                  key: const Key('kFechaDiagnostico'),
+                  controller: dateInput,
+                  label: language.fecha_diagnostico,
+                  keyboardType: TextInputType.datetime,
+                  suffixIcon: const Align(
+                    widthFactor: 1.0,
+                    heightFactor: 1.0,
+                    child: Icon(
+                      Icons.calendar_today,
+                    ),
+                  ),
+                  onTap: () => controller.openDatePickerFechaDiagnostico(
+                    context,
+                    dateInput,
+                  ),
                 ),
               ),
             ],

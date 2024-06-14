@@ -44,6 +44,7 @@ class TextFormWidget extends StatelessWidget {
           label: Text(
             label,
             overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 16),
           ),
           suffixIcon: suffixIcon,
           prefixText: prefixText,
@@ -53,6 +54,7 @@ class TextFormWidget extends StatelessWidget {
         focusNode: focusNode,
         onTap: onTap,
         readOnly: readOnly,
+        style: const TextStyle(fontSize: 16),
       ),
     );
   }

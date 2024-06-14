@@ -1,14 +1,12 @@
-import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/rol/rol_model.dart';
 import '../../../../utils/validators/validator_mixin.dart';
-import '../../../global/widgets/accordion_widget.dart';
 import '../../../global/widgets/app_bar_widget.dart';
+import '../../../global/widgets/seccion_widget.dart';
 import '../../../global/widgets/submit_button_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
@@ -28,11 +26,6 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
   final _formKey = GlobalKey<FormState>();
   var textRolController = TextEditingController();
   var textDescripcionController = TextEditingController();
-  var headerStyle = const TextStyle(
-    color: Color(0xffffffff),
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -84,55 +77,46 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
                               );
 
                               if (rolController.state == null) {
-                                rolController.rol = const RolModel(
-                                  uuid: '',
-                                  rol: '',
-                                  descripcion: '',
-                                );
+                                if (rol != null) {
+                                  rolController.rol = rol;
+                                } else {
+                                  rolController.rol = const RolModel(
+                                    uuid: '',
+                                    rol: '',
+                                    descripcion: '',
+                                  );
+                                }
                               }
 
                               return Column(
                                 children: [
-                                  AccordionWidget(children: [
-                                    AccordionSection(
-                                      header: Text(
-                                        language.datos_de(language.rol),
-                                        style: headerStyle,
-                                      ),
-                                      headerBackgroundColor:
-                                          ColorConfig.primary,
-                                      headerBackgroundColorOpened:
-                                          ColorConfig.primary,
-                                      contentVerticalPadding: 20,
-                                      contentBackgroundColor:
-                                          ColorConfig.primaryBackground,
-                                      content: Column(
-                                        children: [
-                                          TextFormWidget(
-                                            label: language.rol,
-                                            controller: textRolController,
-                                            keyboardType: TextInputType.text,
-                                            validator: (value) =>
-                                                textValidator(value, language),
-                                            onChanged: (text) =>
-                                                rolController.onChangeRol(text),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          TextFormWidget(
-                                            label: language.descripcion,
-                                            controller:
-                                                textDescripcionController,
-                                            keyboardType: TextInputType.text,
-                                            validator: (value) =>
-                                                textValidator(value, language),
-                                            onChanged: (text) => rolController
-                                                .onChangeDescripcion(text),
-                                          ),
-                                        ],
-                                      ),
-                                      isOpen: true,
+                                  SeccionWidget(
+                                    widget: Column(
+                                      children: [
+                                        TextFormWidget(
+                                          label: language.rol,
+                                          controller: textRolController,
+                                          keyboardType: TextInputType.text,
+                                          validator: (value) =>
+                                              textValidator(value, language),
+                                          onChanged: (text) =>
+                                              rolController.onChangeRol(text),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        TextFormWidget(
+                                          label: language.descripcion,
+                                          controller: textDescripcionController,
+                                          keyboardType: TextInputType.text,
+                                          validator: (value) =>
+                                              textValidator(value, language),
+                                          onChanged: (text) => rolController
+                                              .onChangeDescripcion(text),
+                                        ),
+                                      ],
                                     ),
-                                  ]),
+                                    title: language.datos_de(language.rol),
+                                  ),
+                                  const SizedBox(height: 8),
                                   SubmitButtonWidget(
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {

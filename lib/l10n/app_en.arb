@@ -170,10 +170,19 @@
   "datos_hospital": "Hospital Data",
   "hospital": "Hospital",
   "asunto": "Subject",
+  "fecha": "Date",
   "fecha_inicio": "Start date",
   "hora_inicio": "Start hour",
   "fecha_fin": "End date",
   "hora_fin": "End hour",
   "lugar": "Location",
-  "notas": "Notes"
+  "notas": "Notes",
+  "nombre_completo": "Name and surname",
+  "cita": "appointment",
+  "error_hora": "The start time cannot be later than the final",
+  "gestion_tratamientos": "Treatments management",
+  "gestion_hospitales": "Hospitals management",
+  "tratamientos": "Treatments",
+  "hospitales": "Hospitals",
+  "sin_citas": "Without appointments"
 }

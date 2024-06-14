@@ -141,8 +141,9 @@ class _DialogContentState extends State<_DialogContent> {
       child: PopScope(
         child: AlertDialog(
           backgroundColor: Colors.white,
+          insetPadding: const EdgeInsets.all(10),
           content: SizedBox(
-            width: size.width / 1.4,
+            width: size.width,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -18,6 +18,9 @@ class EncryptData {
     'pacientes',
     'cuidador',
     'gestor_caso',
+    'uid_paciente',
+    'uid_gestor_casos',
+    'uid_cuidador'
   ];
 
   EncryptData._() {
@@ -53,7 +56,7 @@ class EncryptData {
     final iv = IV.fromUtf8(_encryptIV);
     final encrypter = Encrypter(AES(key));
 
-    if (encryptedText == null) {
+    if (encryptedText == '' || encryptedText == null) {
       return '';
     }
 
@@ -64,17 +67,19 @@ class EncryptData {
   }
 
   static Future<Json> decryptDataJson(Json json) async {
-    await getSecureKey();
     final Json result = json;
+    try {
+      await getSecureKey();
 
-    json.forEach((key, value) async {
-      if (!notDecryptList.contains(key) && value.toString().isNotEmpty) {
-        final decrypt = await decryptData(value);
-        result[key] = decrypt;
-      }
-    });
-
-    material.debugPrint(jsonEncode(result));
+      json.forEach((key, value) async {
+        if (!notDecryptList.contains(key) && value.toString().isNotEmpty) {
+          final decrypt = await decryptData(value);
+          result[key] = decrypt;
+        }
+      });
+    } catch (e) {
+      material.debugPrint(e.toString());
+    }
 
     return Future.value(result);
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CentralPanelWidget extends StatelessWidget {
   const CentralPanelWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final language = AppLocalizations.of(context)!;
+    // final language = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),

@@ -32,12 +32,16 @@ class _DialogContent extends StatelessWidget {
     return PopScope(
       child: AlertDialog(
         backgroundColor: Colors.white,
-        title: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
+        insetPadding: const EdgeInsets.all(10),
+        title: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
         ),
         shape: RoundedRectangleBorder(

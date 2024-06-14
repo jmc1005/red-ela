@@ -72,8 +72,8 @@ class InvitacionRepoImpl extends InvitacionRepo {
   Future<Result> updateInvitacion(String telefono, String estado) async {
     try {
       return firebaseService.updateFieldsOnDocument(
-        collectionPath: collection,
-        documentPath: telefono,
+        collection: collection,
+        document: telefono,
         data: {
           'estado': await EncryptData.encryptData(estado),
         },
