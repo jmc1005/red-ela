@@ -143,7 +143,7 @@ class _DialogContentState extends State<_DialogContent> {
           backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(10),
           content: SizedBox(
-            width: size.width,
+            width: size.width / 1.1,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -176,49 +176,58 @@ class _DialogContentState extends State<_DialogContent> {
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextFormWidget(
-                                controller: emailController,
-                                focusNode: emailFocusNode,
-                                label: language.email,
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (text) => widget.emailValidator(
-                                  text,
-                                  language,
+                              SizedBox(
+                                width: size.width / 1.1,
+                                child: TextFormWidget(
+                                  controller: emailController,
+                                  focusNode: emailFocusNode,
+                                  label: language.email,
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (text) => widget.emailValidator(
+                                    text,
+                                    language,
+                                  ),
+                                  onChanged: (text) {
+                                    invitacionController.onChangeEmail(text);
+                                  },
                                 ),
-                                onChanged: (text) {
-                                  invitacionController.onChangeEmail(text);
-                                },
                               ),
                               const SizedBox(height: 8),
-                              TextFormWidget(
-                                controller: phoneNumberController,
-                                focusNode: phoneNumberFocusNode,
-                                label: language.telefono,
-                                keyboardType: TextInputType.phone,
-                                prefixText: '+34 ',
-                                validator: (text) => widget.phoneValidator(
-                                  text,
-                                  language,
+                              SizedBox(
+                                width: size.width / 1.1,
+                                child: TextFormWidget(
+                                  controller: phoneNumberController,
+                                  focusNode: phoneNumberFocusNode,
+                                  label: language.telefono,
+                                  keyboardType: TextInputType.phone,
+                                  prefixText: '+34 ',
+                                  validator: (text) => widget.phoneValidator(
+                                    text,
+                                    language,
+                                  ),
+                                  onChanged: (text) {
+                                    invitacionController.onChangeTelefono(text);
+                                  },
                                 ),
-                                onChanged: (text) {
-                                  invitacionController.onChangeTelefono(text);
-                                },
                               ),
                               const SizedBox(height: 8),
-                              DropdownButtonFormField(
-                                value: invitacionController.state.rol,
-                                decoration: InputDecoration(
-                                  label: Text(language.roles),
+                              SizedBox(
+                                width: size.width / 1.1,
+                                child: DropdownButtonFormField(
+                                  value: invitacionController.state.rol,
+                                  decoration: InputDecoration(
+                                    label: Text(language.roles),
+                                  ),
+                                  items: invitacionController.items,
+                                  onChanged: (text) {
+                                    if (text != null) {
+                                      invitacionController.onChangeRol(text);
+                                    }
+                                  },
+                                  isExpanded: true,
+                                  validator: (value) =>
+                                      widget.textValidator(value, language),
                                 ),
-                                items: invitacionController.items,
-                                onChanged: (text) {
-                                  if (text != null) {
-                                    invitacionController.onChangeRol(text);
-                                  }
-                                },
-                                isExpanded: true,
-                                validator: (value) =>
-                                    widget.textValidator(value, language),
                               ),
                             ],
                           );
