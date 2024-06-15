@@ -13,7 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: flutter packages get; dart run build_runner build --delete-conflicting-outputs; flutter pub get; flutter clean; flutter pub get;
+      - uses: dart-lang/setup-dart@v1
+      
+      - name: Build runner
+        run: dart run build_runner build
+        
+      - name: Install dependencies
+        run: dart pub get
+        
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
