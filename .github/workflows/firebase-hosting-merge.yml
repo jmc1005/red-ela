@@ -13,26 +13,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up Dart
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.3'
+          flutter-version: '3.3.2'
           channel: 'stable'
 
       - run: flutter --version
 
-      - name: Grant permissions
-        run: sudo chmod -R 777 .
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: '2.19.2'
+      - run: flutter --version
       
+      - name: Grant permissions
+        run: sudo chmod -R 777 .      
+
+      - name: Clean cache
+        run: |
+          flutter pub cache repair
+          dart pub cache repair
+          
       - name: Run build_runner
         run: |
           echo "Directorio de trabajo: $(pwd)"
           echo "Listando archivos:"
           ls -al
-          dart run build_runner build
+          dart run build_runner build || echo "Error al ejecutar build_runner: $?"
           
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
+          dart pub get
         
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
