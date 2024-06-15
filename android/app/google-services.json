@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "757105304257-6jr5dpgdbh45k58hstc69j7cudgnhh2u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.ubu.tfg2324.ela.red_ela",
+            "certificate_hash": "6143a9e706f5570bcb9ae873751a0eb926255acb"
+          }
+        },
+        {
           "client_id": "757105304257-ka5c5iuaq68bhr9scof2hkj3o0pmgbic.apps.googleusercontent.com",
           "client_type": 3
         }
