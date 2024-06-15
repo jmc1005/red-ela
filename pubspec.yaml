@@ -65,4 +65,4 @@ flutter:
   assets:
     - assets/images/redela_logo.png
     - assets/images/redela_logo.png
-    - .env
+    - env/.env

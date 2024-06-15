@@ -18,6 +18,7 @@ import '../../citas/views/citas_view.dart';
 import '../../citas/widgets/recordatorio_widget.dart';
 import '../../cuidador/widgets/cuidador_paciente_widget.dart';
 import '../../gestor_casos/widgets/gestor_casos_pacientes_widget.dart';
+import '../../invitacion/dialogs/invitar_usuario_dialog.dart';
 import '../../paciente/widgets/paciente_cuidador_widget.dart';
 import '../../paciente/widgets/paciente_gestor_casos_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
@@ -38,6 +39,7 @@ class _HomeViewState extends State<HomeView> {
   var openCuidadorAccordion = true;
   UsuarioModel? usuarioModel;
   bool showAddCita = false;
+  bool showAddPaciente = false;
 
   @override
   void initState() {
@@ -121,6 +123,7 @@ class _HomeViewState extends State<HomeView> {
               usuarioModel!.rol == UsuarioTipo.cuidador.value;
 
           showAddCita = homeController.currentIndex == 1 && isGestorCasos;
+          showAddPaciente = homeController.currentIndex == 2 && isGestorCasos;
 
           return Scaffold(
             backgroundColor: Colors.grey.shade100,
@@ -148,7 +151,17 @@ class _HomeViewState extends State<HomeView> {
                     mini: true,
                     child: const Icon(Icons.add, color: Colors.white, size: 25),
                   )
-                : null,
+                : showAddPaciente
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          showInvitarUsuarioDialog(context,
+                              rol: UsuarioTipo.gestorCasos.value);
+                        },
+                        mini: true,
+                        child: const Icon(Icons.add,
+                            color: Colors.white, size: 25),
+                      )
+                    : null,
             body: SafeArea(
               child: SingleChildScrollView(
                 child: ConstrainedBox(

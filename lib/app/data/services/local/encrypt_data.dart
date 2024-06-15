@@ -28,7 +28,7 @@ class EncryptData {
   }
 
   static Future<void> getSecureKey() async {
-    await dotenv.load();
+    await dotenv.load(fileName: 'env/.env');
     _encryptKey = dotenv.get('ENCRYPT_KEY');
     _encryptIV = dotenv.get('ENCRYPT_IV');
   }

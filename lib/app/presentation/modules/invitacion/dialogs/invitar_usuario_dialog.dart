@@ -99,7 +99,7 @@ class _DialogContentState extends State<_DialogContent> {
             getInvitacion(invitacionController.state.telefono);
 
             if (invitacionModel == null) {
-              invitacionController.sendEmailPhone(context, language);
+              await invitacionController.sendEmailPhone(context, language);
 
               invitacionRepo.addInvitacion(
                 telefono: invitacionController.state.telefono,
