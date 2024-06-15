@@ -35,8 +35,10 @@ jobs:
 
       - name: Clean cache
         run: |
+          npm cache clean --force
           flutter pub cache repair
           dart pub cache repair
+          flutter pub get
           
       - name: Run build_runner
         run: |
