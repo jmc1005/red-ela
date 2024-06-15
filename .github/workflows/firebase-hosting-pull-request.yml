@@ -55,10 +55,13 @@ jobs:
 
       - name: Build Flutter Web
         run: flutter build web
+
+      - name: Install Firebasse
+        run: npm install firebase
         
       - name: Deploy to Firebase Hosting
         run: |
-          npx firebase-tools@latest deploy --only hosting --project redela-81338 --json || echo "Error al implementar en Firebase Hosting: $?"
+          firebase deploy --only hosting --project redela-81338 --json || echo "Error al implementar en Firebase Hosting: $?"
           echo "Listando archivos:"
           ls -al
           
