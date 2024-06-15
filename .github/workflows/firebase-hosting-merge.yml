@@ -11,7 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: flutter packages get; dart run build_runner build --delete-conflicting-outputs; flutter pub get; flutter clean; flutter pub get;
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v3
+        with:
+          channel: stable
+          version: 3.3.2
+      
+      - name: Build runner
+        run: dart run build_runner build
+        
+      - name: Install dependencies
+        run: flutter pub get
+        
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
