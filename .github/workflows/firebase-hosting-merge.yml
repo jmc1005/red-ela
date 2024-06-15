@@ -64,6 +64,7 @@ jobs:
 
       - name: Create .env file
         run: |
+          mkdir -p env
           touch env/.env
           echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> env/.env
           echo "USER_PASS=${{ secrets.USER_PASS }}" >> env/.env
