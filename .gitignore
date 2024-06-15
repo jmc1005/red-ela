@@ -72,4 +72,4 @@ pubspec.lock
 !.vscode/*.code-snippets
 .vscode/
 
-*.env
+/env/*.env

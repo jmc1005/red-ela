@@ -21,7 +21,6 @@ import '../../../global/controllers/state/state_notifier.dart';
 import '../../../global/controllers/util_controller.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
-import '../../home/views/home_view.dart';
 import '../../user/controllers/usuario_controller.dart';
 import '../dialogs/cita_dialog.dart';
 

@@ -47,8 +47,6 @@ class _SignViewState extends State<SignView> {
     hasInternet = await connectionRepo.hasInternet;
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     final UsuarioRepo usuarioRepo = context.read();
@@ -86,7 +84,7 @@ class _SignViewState extends State<SignView> {
                       height: 100,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('images/redela_logo.png'),
+                          image: AssetImage('assets/images/redela_logo.png'),
                         ),
                       ),
                     ),

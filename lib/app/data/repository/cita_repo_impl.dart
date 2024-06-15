@@ -46,7 +46,7 @@ class CitaRepoImpl implements CitaRepo {
       'fecha': await EncryptData.encryptData(fecha),
       'hora_inicio': await EncryptData.encryptData(horaInicio),
       'hora_fin': await EncryptData.encryptData(horaFin),
-      'lugar': await EncryptData.encryptData(asunto),
+      'lugar': await EncryptData.encryptData(lugar),
       'notas': notas != null ? await EncryptData.encryptData(notas) : null,
     };
 
@@ -106,7 +106,7 @@ class CitaRepoImpl implements CitaRepo {
         'fecha': await EncryptData.encryptData(fecha),
         'hora_inicio': await EncryptData.encryptData(horaInicio),
         'hora_fin': await EncryptData.encryptData(horaFin),
-        'lugar': await EncryptData.encryptData(asunto),
+        'lugar': await EncryptData.encryptData(lugar),
         'notas': notas != null ? await EncryptData.encryptData(notas) : null,
       };
 

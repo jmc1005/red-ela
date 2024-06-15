@@ -73,7 +73,7 @@ class _OTPCodigoWidgetState extends State<OTPCodigoWidget> {
                   height: 100,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('images/redela_logo.png'),
+                      image: AssetImage('assets/images/redela_logo.png'),
                     ),
                   ),
                 ),
