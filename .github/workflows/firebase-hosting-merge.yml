@@ -61,7 +61,15 @@ jobs:
 
       - name: Clean build
         run: flutter clean
-      
+
+      - name: Create .env file
+        run: |
+          touch env/.env
+          echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> env/.env
+          echo "USER_PASS=${{ secrets.USER_PASS }}" >> env/.env
+          echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> env/.env
+          echo "ENCRYPT_IV=${{ secrets.ENCRYPT_IV }}" >> env/.env
+          
       - name: Build Flutter Web
         run: flutter build web
 
