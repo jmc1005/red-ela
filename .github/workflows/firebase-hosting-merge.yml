@@ -54,10 +54,10 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20'
           
       - name: Install Firebase Tools
-        run: npm install -g firebase-tools@13.11.2
+        run: npm install -g firebase-tools
 
       - name: Clean build
         run: flutter clean
@@ -82,12 +82,6 @@ jobs:
           npx firebase-tools@latest deploy --only hosting --project redela-81338 --json || echo "Error al implementar en Firebase Hosting: $?"
           echo "Listando archivos en build/web:"
           ls -al build/web
-        
-      - name: Deploy to Firebase Hosting
-        run: |
-          firebase deploy --only hosting --project redela-81338 --json || echo "Error al implementar en Firebase Hosting: $?"
-          echo "Listando archivos:"
-          ls -al
         
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
