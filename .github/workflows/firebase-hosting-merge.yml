@@ -14,18 +14,15 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Set up Dart
-        uses: dart-lang/setup-dart@v1
+        uses: subosito/flutter-action@v2
         with:
-          sdk: stable
+          flutter-version: '3.7.3'
+          channel: 'stable'
+
+      - run: flutter --version
 
       - name: Grant permissions
         run: sudo chmod -R 777 .
-
-      - name: Clean cache
-        run: dart pub cache repair
-        
-      - name: Install dependencies
-        run: dart pub get
       
       - name: Run build_runner
         run: |
@@ -33,6 +30,9 @@ jobs:
           echo "Listando archivos:"
           ls -al
           dart run build_runner build
+          
+      - name: Install dependencies
+        run: flutter pub get
         
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
