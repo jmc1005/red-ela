@@ -24,7 +24,7 @@ jobs:
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: '2.19.2'
+          sdk: '2.18.1'
       - run: flutter --version
       
       - name: Grant permissions
