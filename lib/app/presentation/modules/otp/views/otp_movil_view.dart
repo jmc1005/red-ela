@@ -73,7 +73,7 @@ class _OTPMovilViewState extends State<OTPMovilView> {
                         height: 100,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('images/redela_logo.png'),
+                            image: AssetImage('assets/images/redela_logo.png'),
                           ),
                         ),
                       ),
@@ -83,7 +83,7 @@ class _OTPMovilViewState extends State<OTPMovilView> {
                         overflow: TextOverflow
                             .ellipsis, // añade los tres puntos cuando no muestra
                         // overflow: TextOverflow.fade, // añade sombra
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: ColorConfig.secondary,
                         ),

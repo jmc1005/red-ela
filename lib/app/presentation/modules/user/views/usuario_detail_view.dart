@@ -63,7 +63,7 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
 
         return Scaffold(
           appBar: AppBarWidget(
-            asset: 'images/redela_logo.png',
+            asset: 'assets/images/redela_logo.png',
             backgroundColor: ColorConfig.primary,
             width: 90,
             leading: IconButton(

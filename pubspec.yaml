@@ -37,7 +37,6 @@ dependencies:
   phone_form_field: ^9.2.3
   url_launcher: ^6.2.6
   go_router: ^14.1.0
-  app_links: ^6.0.1
   phone_numbers_parser: ^8.2.1
   encrypt: ^5.0.3
   flutter_dotenv: ^5.1.0
@@ -49,7 +48,9 @@ dependencies:
   onesignal_flutter: ^5.2.0
   cloud_functions: ^5.0.0
   responsive_framework: ^1.4.0
+  app_links: ^6.1.1
 
+  flutter_gen: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,4 +66,4 @@ flutter:
   assets:
     - assets/images/redela_logo.png
     - assets/images/redela_logo.png
-    - .env
+    - env/.env

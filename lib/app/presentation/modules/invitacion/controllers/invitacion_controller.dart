@@ -194,7 +194,7 @@ class InvitacionController extends StateNotifier<InvitacionState> {
   }
 
   Future<void> getSecureCredentials() async {
-    await dotenv.load();
+    await dotenv.load(fileName: 'env/.env');
     _username = dotenv.get('USER_EMAIL');
     _password = dotenv.get('PASS_EMAIL');
   }
