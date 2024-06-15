@@ -11,14 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Flutter SDK
-      - uses: dart-lang/setup-dart@v1
       
-      - name: Build runner
-        run: dart run build_runner build
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
         
       - name: Install dependencies
         run: dart pub get
+      
+      - name: Run build_runner
+        run: dart run build_runner build
         
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
