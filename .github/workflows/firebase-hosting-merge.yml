@@ -9,6 +9,7 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 5 # Aumenta este valor según sea necesario
     steps:
       - uses: actions/checkout@v4
       
@@ -16,12 +17,22 @@ jobs:
         uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
+
+      - name: Grant permissions
+        run: sudo chmod -R 777 .
+
+      - name: Clean cache
+        run: dart pub cache repair
         
       - name: Install dependencies
         run: dart pub get
       
       - name: Run build_runner
-        run: dart run build_runner build
+        run: |
+          echo "Directorio de trabajo: $(pwd)"
+          echo "Listando archivos:"
+          ls -al
+          dart run build_runner build
         
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
