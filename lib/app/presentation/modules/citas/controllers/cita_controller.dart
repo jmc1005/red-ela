@@ -505,44 +505,7 @@ class CitaController extends StateNotifier<CitaModel?> {
     return appointment;
   }
 
-  Future<void> enviarNotificacion() async {
-    final url = Uri.parse(AppConstants.oneSignalUri);
-
-    final headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization': 'Basic ${AppConstants.oneSignalApiKey}',
-    };
-
-    final body = jsonEncode({
-      'app_id': AppConstants.oneSignalId,
-      'include_aliases': {
-        'external_id': [state!.uidPaciente]
-      },
-      'target_channel': 'push',
-      'headings': {'en': 'English Title', 'es': 'Spanish Title'},
-      'contents': {
-        'en': 'This is a test',
-        'es': 'Esto es una prueba !',
-      },
-      'filters': [
-        {
-          'field': 'tag',
-          'key': 'userId',
-          'relation': '=',
-          'value': state!.uidPaciente
-        }
-      ],
-      'content_available': true
-    });
-
-    final response = await http.post(url, headers: headers, body: body);
-
-    if (response.statusCode == 200) {
-      debugPrint('Notificación enviada');
-    } else {
-      debugPrint('Fallo al enviar notificación: ${response.body}');
-    }
-  }
+  Future<void> enviarNotificacion() async {}
 
   void clear() {
     if (appointments.isNotEmpty) {

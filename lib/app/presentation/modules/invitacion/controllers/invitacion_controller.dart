@@ -8,7 +8,6 @@ import 'package:mailer/smtp_server.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/rol/rol_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/rol_repo.dart';
@@ -23,12 +22,10 @@ class InvitacionController extends StateNotifier<InvitacionState> {
     super._state, {
     required this.invitacionRepo,
     required this.usuarioRepo,
-    required this.sessionService,
   });
 
   final InvitacionRepo invitacionRepo;
   final UsuarioRepo usuarioRepo;
-  final SessionService sessionService;
 
   set invitacion(InvitacionState invitacion) {
     onlyUpdate(invitacion);
@@ -196,7 +193,7 @@ class InvitacionController extends StateNotifier<InvitacionState> {
   Future<void> getSecureCredentials() async {
     await dotenv.load(fileName: 'env/.env');
     _username = dotenv.get('USER_EMAIL');
-    _password = dotenv.get('PASS_EMAIL');
+    _password = dotenv.get('USER_PASS');
   }
 
   Future<void> sendEmailWeb(

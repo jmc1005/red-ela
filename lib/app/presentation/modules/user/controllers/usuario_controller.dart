@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/services/local/session_service.dart';
+import '../../../../data/services/local/preferencias_usuario.dart';
 import '../../../../domain/models/cuidador/cuidador_model.dart';
 import '../../../../domain/models/gestor_casos/gestor_casos_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
@@ -21,7 +21,6 @@ import '../../sign/controllers/sign_controller.dart';
 
 class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   UsuarioController({
-    required this.sessionService,
     required this.usuarioRepo,
     required this.pacienteController,
     required this.cuidadorController,
@@ -29,7 +28,6 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     required this.signController,
   }) : super(null);
 
-  final SessionService sessionService;
   final UsuarioRepo usuarioRepo;
   final PacienteController pacienteController;
   final CuidadorController cuidadorController;
@@ -201,7 +199,8 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   }
 
   Future<void> updateUsuarioPorTipo(rol) async {
-    final solicitado = await sessionService.solicitado;
+    final prefs = PreferenciasService();
+    final solicitado = prefs.solicitado;
 
     if (rol == UsuarioTipo.paciente.value) {
       String? gestorCasos;
@@ -231,7 +230,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     } else if (rol == UsuarioTipo.cuidador.value) {
       String? paciente;
 
-      if (solicitado != null) {
+      if (solicitado != '') {
         paciente = solicitado;
 
         await pacienteController.pacienteRepo.relacionaPacienteCuidador(
@@ -262,6 +261,6 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
       }
     }
 
-    sessionService.saveSolicitado(null);
+    prefs.solicitado = '';
   }
 }

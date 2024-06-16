@@ -16,7 +16,6 @@ dependencies:
     sdk: flutter
   intl: any
   top_snackbar_flutter: ^3.1.0
-  flutter_secure_storage: ^9.0.0
   uuid: ^4.4.0
   firebase_core: ^2.31.0
   firebase_crashlytics: 3.5.5
@@ -46,11 +45,12 @@ dependencies:
   syncfusion_flutter_calendar: ^25.2.6+1
   dropdown_search: ^5.0.6
   mailer: ^6.1.0
-  awesome_notifications_core: ^0.9.3
-  awesome_notifications: any
-  awesome_notifications_fcm: any
-  onesignal_flutter: ^5.2.0
   responsive_framework: ^1.4.0
+  firebase_messaging: ^14.9.4
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  shared_preferences: ^2.2.3
+  flutter_local_notifications: ^17.1.2
 
 dev_dependencies:
   flutter_test:

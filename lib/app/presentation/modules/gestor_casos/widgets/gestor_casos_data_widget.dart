@@ -59,10 +59,13 @@ class _GestorCasosDataWidgetState extends State<GestorCasosDataWidget> {
           return Container(
             width: MediaQuery.of(context).size.width / 1.1,
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: DropdownHospitalesWidget(
-              usuarioController: controller,
-              label: language.hospital,
-              uuidHospital: uuidHospital,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width / 1.1,
+              child: DropdownHospitalesWidget(
+                usuarioController: controller,
+                label: language.hospital,
+                uuidHospital: uuidHospital,
+              ),
             ),
           );
         });

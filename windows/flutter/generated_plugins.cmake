@@ -4,14 +4,11 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
-  awesome_notifications
-  awesome_notifications_core
   cloud_firestore
   connectivity_plus
   firebase_auth
   firebase_core
   firebase_storage
-  flutter_secure_storage_windows
   url_launcher_windows
 )
 

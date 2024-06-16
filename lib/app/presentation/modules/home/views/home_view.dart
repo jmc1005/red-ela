@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
+import '../../../../data/services/bloc/notificaciones_bloc.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
@@ -18,6 +18,7 @@ import '../../citas/views/citas_view.dart';
 import '../../citas/widgets/recordatorio_widget.dart';
 import '../../cuidador/widgets/cuidador_paciente_widget.dart';
 import '../../gestor_casos/widgets/gestor_casos_pacientes_widget.dart';
+import '../../invitacion/dialogs/invitar_usuario_dialog.dart';
 import '../../paciente/widgets/paciente_cuidador_widget.dart';
 import '../../paciente/widgets/paciente_gestor_casos_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
@@ -38,6 +39,7 @@ class _HomeViewState extends State<HomeView> {
   var openCuidadorAccordion = true;
   UsuarioModel? usuarioModel;
   bool showAddCita = false;
+  bool showAddPaciente = false;
 
   @override
   void initState() {
@@ -48,6 +50,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final usuarioRepo = Provider.of<UsuarioRepo>(context);
     final language = AppLocalizations.of(context)!;
+    context.read<NotificacionesBloc>().requestPermission();
 
     final List<Widget> actions = [
       IconButton(
@@ -95,17 +98,6 @@ class _HomeViewState extends State<HomeView> {
               (success) {
                 usuarioModel = success;
                 usuarioController.usuario = success;
-
-                OneSignal.Notifications.addForegroundWillDisplayListener(
-                  (event) {
-                    if (event.notification.additionalData?['userId'] !=
-                        success.uid) {
-                      event.preventDefault();
-                    } else {
-                      event.notification.display();
-                    }
-                  },
-                );
               },
               (error) => debugPrint(error),
             );
@@ -121,6 +113,7 @@ class _HomeViewState extends State<HomeView> {
               usuarioModel!.rol == UsuarioTipo.cuidador.value;
 
           showAddCita = homeController.currentIndex == 1 && isGestorCasos;
+          showAddPaciente = homeController.currentIndex == 2 && isGestorCasos;
 
           return Scaffold(
             backgroundColor: Colors.grey.shade100,
@@ -148,7 +141,17 @@ class _HomeViewState extends State<HomeView> {
                     mini: true,
                     child: const Icon(Icons.add, color: Colors.white, size: 25),
                   )
-                : null,
+                : showAddPaciente
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          showInvitarUsuarioDialog(context,
+                              rol: UsuarioTipo.gestorCasos.value);
+                        },
+                        mini: true,
+                        child: const Icon(Icons.add,
+                            color: Colors.white, size: 25),
+                      )
+                    : null,
             body: SafeArea(
               child: SingleChildScrollView(
                 child: ConstrainedBox(

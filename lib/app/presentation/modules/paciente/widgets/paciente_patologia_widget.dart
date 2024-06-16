@@ -102,7 +102,7 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(height: 8),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
                 child: Flexible(
