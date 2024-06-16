@@ -17,10 +17,10 @@ jobs:
       - name: Create dotenv file
         run: |
           touch dotenv
-          echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> env/.env
-          echo "USER_PASS=${{ secrets.USER_PASS }}" >> env/.env
-          echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> env/.env
-          echo "ENCRYPT_IV=${{ secrets.ENCRYPT_IV }}" >> env/.env
+          echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> dotenv
+          echo "USER_PASS=${{ secrets.USER_PASS }}" >> dotenv
+          echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> dotenv
+          echo "ENCRYPT_IV=${{ secrets.ENCRYPT_IV }}" >> dotenv
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
