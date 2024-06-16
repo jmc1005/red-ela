@@ -27,8 +27,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace "es.ubu.tfg2324.ela.red_ela"
+	compileSdk 33
     ndkVersion flutter.ndkVersion
-    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -48,26 +48,18 @@ android {
         applicationId "es.ubu.tfg2324.ela.red_ela"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 28
-        targetSdkVersion 34
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
-    signingConfigs {
-        release {
-        storeFile file('redela.keystore')
-        storePassword '4b4tfg'
-        keyAlias 'key_alias'
-        keyPassword '4b4tfg'
-        }
-    }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
     }
 }
