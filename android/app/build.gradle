@@ -1,7 +1,7 @@
 plugins {
     id "com.android.application"
     // START: FlutterFire Configuration
-    id 'com.google.gms.google-services'
+    id 'com.google.gms.google-services' version '4.4.2' apply false
     // END: FlutterFire Configuration
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
@@ -27,7 +27,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "es.ubu.tfg2324.ela.red_ela"
-	compileSdk 33
+	compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -69,10 +69,7 @@ flutter {
 }
 
 dependencies {
-    // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:33.0.0')
-    // Add the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation platform('com.google.firebase:firebase-bom:33.1.0')
     implementation("com.google.firebase:firebase-auth")
     implementation 'com.google.android.material:material:1.13.0-alpha03'
     implementation 'com.google.firebase:firebase-analytics'
