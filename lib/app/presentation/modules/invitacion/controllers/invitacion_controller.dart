@@ -1,6 +1,4 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
@@ -10,7 +8,6 @@ import 'package:mailer/smtp_server.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/rol/rol_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/rol_repo.dart';
@@ -25,12 +22,10 @@ class InvitacionController extends StateNotifier<InvitacionState> {
     super._state, {
     required this.invitacionRepo,
     required this.usuarioRepo,
-    required this.sessionService,
   });
 
   final InvitacionRepo invitacionRepo;
   final UsuarioRepo usuarioRepo;
-  final SessionService sessionService;
 
   set invitacion(InvitacionState invitacion) {
     onlyUpdate(invitacion);
@@ -207,46 +202,29 @@ class InvitacionController extends StateNotifier<InvitacionState> {
     nombreCompleto,
     rol,
   ) async {
+    await getSecureCredentials();
+
+    final smtpServer = gmail(_username, _password);
+
+    final message = Message()
+      ..from = Address(_username, 'Equipo RedELA')
+      ..recipients.add(state.email)
+      ..subject = language.subject_invitacion
+      ..html = language.body_invitacion(nombreCompleto, rol);
+
     try {
-      final googleSignIn = GoogleSignIn.standard(scopes: [
-        'email',
-        'https://www.googleapis.com/auth/gmail.send',
-      ]);
+      final sendReport = await send(message, smtpServer);
 
-      // Signing in
-      final account = await googleSignIn.signIn();
+      showSuccess(context, language.email_enviado);
 
-      if (account == null) {
-        // User didn't authorize
-        return;
+      debugPrint('Message sent: $sendReport');
+    } on MailerException catch (e) {
+      debugPrint('Message not sent.');
+      for (final p in e.problems) {
+        debugPrint('Problem: ${p.code}: ${p.msg}');
       }
 
-      final auth = await account.authentication;
-
-      final smtpServer = gmailRelaySaslXoauth2(_username, auth.accessToken!);
-
-      final message = Message()
-        ..from = Address(_username, 'Equipo RedELA')
-        ..recipients.add(state.email)
-        ..subject = language.subject_invitacion
-        ..html = language.body_invitacion(nombreCompleto, rol);
-
-      try {
-        final sendReport = await send(message, smtpServer);
-
-        showSuccess(context, language.email_enviado);
-
-        debugPrint('Message sent: $sendReport');
-      } on MailerException catch (e) {
-        debugPrint('Message not sent.');
-        for (final p in e.problems) {
-          debugPrint('Problem: ${p.code}: ${p.msg}');
-        }
-
-        showError(context, language.email_error_envio);
-      }
-    } on PlatformException catch (e) {
-      debugPrint(e.toString());
+      showError(context, language.email_error_envio);
     }
   }
 }

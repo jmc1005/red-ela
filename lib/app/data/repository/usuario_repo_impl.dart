@@ -9,21 +9,20 @@ import '../../domain/repository/usuario_repo.dart';
 import '../firebase/fireauth_service.dart';
 import '../firebase/firebase_service.dart';
 import '../services/local/encrypt_data.dart';
-import '../services/local/session_service.dart';
+import '../services/local/preferencias_usuario.dart';
 
 class UsuarioRepoImpl extends UsuarioRepo {
   final FireAuthService fireAuthService;
   final FirebaseService firebaseService;
-  final SessionService sessionService;
 
   UsuarioRepoImpl({
     required this.fireAuthService,
     required this.firebaseService,
-    required this.sessionService,
   });
 
   final String collection = 'usuarios';
   final String urlLinkSingUp = '/accounts:signUp';
+  final prefs = PreferenciasService();
 
   @override
   Future<Result<UsuarioModel, dynamic>> getUsuario() async {
@@ -38,7 +37,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
           final rolDecrypt = await EncryptData.decryptData(rol);
 
           if (rolDecrypt != null) {
-            sessionService.saveRol(rolDecrypt);
+            prefs.rol = rolDecrypt;
           }
           return successFromJson(json);
         },
@@ -81,7 +80,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
     );
 
     if (result is User) {
-      sessionService.saveCurrentUid(result.uid);
+      prefs.currentUid = result.uid;
 
       return Success(result);
     }
@@ -260,9 +259,9 @@ class UsuarioRepoImpl extends UsuarioRepo {
     required String smsCode,
   }) async {
     try {
-      sessionService.saveVerificationId(verificationId);
-      sessionService.saveSmsCode(smsCode);
-      sessionService.saveRol(smsCode);
+      prefs.verificationId = verificationId;
+      prefs.smsCode = smsCode;
+      prefs.rol = rol;
 
       final result = await fireAuthService.phoneCredential(
         verificationId: verificationId,
@@ -341,8 +340,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
     final currentUser = fireAuthService.currentUser()!;
     currentUser.delete();
 
-    final verificationId = await sessionService.verificationId;
-    final smsCode = await sessionService.smsCode;
+    final verificationId = prefs.verificationId;
+    final smsCode = prefs.smsCode;
 
     final credential =
         await FirebaseAuth.instance.createUserWithEmailAndPassword(

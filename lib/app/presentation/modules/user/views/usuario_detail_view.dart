@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
-import '../../../../data/services/local/session_service.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/app_bar_widget.dart';
@@ -48,7 +47,6 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
 
     return ChangeNotifierProvider<UsuarioController>(
       create: (_) => UsuarioController(
-        sessionService: context.read(),
         usuarioRepo: context.read(),
         pacienteController: context.read(),
         cuidadorController: context.read(),
@@ -56,11 +54,6 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
         signController: context.read(),
       ),
       child: Builder(builder: (_) {
-        final sessionService = Provider.of<SessionService>(
-          context,
-          listen: false,
-        );
-
         return Scaffold(
           appBar: AppBarWidget(
             asset: 'assets/images/redela_logo.png',
@@ -70,14 +63,6 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   ctx = context;
-                  _getCurrentRol(sessionService);
-
-                  // if (currentRol != null &&
-                  //     currentRol == UsuarioTipo.admin.value) {
-                  //   _navegateToUsuarios(usuario);
-                  // } else {
-                  //   navigateTo(Routes.home, context);
-                  // }
                   Navigator.pop(context);
                 }
               },
@@ -200,9 +185,5 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
         ),
       ),
     );
-  }
-
-  Future<void> _getCurrentRol(SessionService sessionService) async {
-    currentRol = await sessionService.rol;
   }
 }

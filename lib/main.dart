@@ -3,8 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import 'app/data/firebase/fireauth_service.dart';
@@ -19,7 +18,8 @@ import 'app/data/repository/paciente_repo_impl.dart';
 import 'app/data/repository/rol_repo_impl.dart';
 import 'app/data/repository/tratamiento_repo_impl.dart';
 import 'app/data/repository/usuario_repo_impl.dart';
-import 'app/data/services/local/session_service.dart';
+import 'app/data/services/bloc/notificaciones_bloc.dart';
+import 'app/data/services/local/preferencias_usuario.dart';
 import 'app/data/services/remote/check_connection.dart';
 import 'app/domain/repository/cita_repo.dart';
 import 'app/domain/repository/connection_repo.dart';
@@ -46,14 +46,13 @@ import 'app/presentation/modules/sign/controllers/sign_controller.dart';
 import 'app/presentation/modules/sign/controllers/state/sign_state.dart';
 import 'app/presentation/modules/tratamiento/controllers/tratamiento_controller.dart';
 import 'app/presentation/modules/user/controllers/usuario_controller.dart';
-import 'app/utils/constants/app_constants.dart';
 import 'firebase_options.dart';
 import 'red_ela.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final sessionService = SessionService(const FlutterSecureStorage());
+  await PreferenciasService.init();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -81,23 +80,14 @@ Future<void> main() async {
       fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
       pacienteRepo: pacienteRepo);
 
-  OneSignal.initialize(AppConstants.oneSignalId);
-  OneSignal.Notifications.requestPermission(true);
-  OneSignal.Notifications.addPermissionObserver((state) {
-    debugPrint('Has permission $state');
-  });
-
   runApp(
-    MultiProvider(
+    MultiBlocProvider(
       providers: [
         Provider<ConnectionRepo>(
           create: (_) => ConnectionRepoImpl(
             Connectivity(),
             CheckConnection(),
           ),
-        ),
-        Provider<SessionService>(
-          create: (_) => sessionService,
         ),
         Provider<RolRepo>(
           create: (_) => RolRepoImpl(
@@ -118,7 +108,6 @@ Future<void> main() async {
           create: (_) => UsuarioRepoImpl(
             firebaseService: FirebaseService(firestore: firestore),
             fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
-            sessionService: sessionService,
           ),
         ),
         Provider<PacienteRepo>(
@@ -171,7 +160,6 @@ Future<void> main() async {
             pacienteRepo: context.read(),
             cuidadorRepo: context.read(),
             gestorCasosRepo: context.read(),
-            sessionService: sessionService,
           ),
         ),
         Provider<RolController>(
@@ -215,7 +203,6 @@ Future<void> main() async {
             pacienteController: context.read(),
             cuidadorController: context.read(),
             gestorCasosController: context.read(),
-            sessionService: sessionService,
             signController: SignController(
               const SignState(),
               usuarioRepo: context.read(),
@@ -231,7 +218,6 @@ Future<void> main() async {
             pacienteRepo: context.read(),
             cuidadorRepo: context.read(),
             gestorCasosRepo: context.read(),
-            sessionService: sessionService,
           ),
         ),
         ChangeNotifierProvider<RolController>(
@@ -260,7 +246,6 @@ Future<void> main() async {
             const InvitacionState(),
             invitacionRepo: context.read(),
             usuarioRepo: context.read(),
-            sessionService: sessionService,
           ),
         ),
         ChangeNotifierProvider<CitaController>(
@@ -268,6 +253,7 @@ Future<void> main() async {
             citaRepo: context.read(),
           ),
         ),
+        BlocProvider(create: (_) => NotificacionesBloc())
       ],
       child: const Redela(),
     ),

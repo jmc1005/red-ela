@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
+import '../../../../data/services/bloc/notificaciones_bloc.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
@@ -50,6 +50,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final usuarioRepo = Provider.of<UsuarioRepo>(context);
     final language = AppLocalizations.of(context)!;
+    context.read<NotificacionesBloc>().requestPermission();
 
     final List<Widget> actions = [
       IconButton(
@@ -97,17 +98,6 @@ class _HomeViewState extends State<HomeView> {
               (success) {
                 usuarioModel = success;
                 usuarioController.usuario = success;
-
-                OneSignal.Notifications.addForegroundWillDisplayListener(
-                  (event) {
-                    if (event.notification.additionalData?['userId'] !=
-                        success.uid) {
-                      event.preventDefault();
-                    } else {
-                      event.notification.display();
-                    }
-                  },
-                );
               },
               (error) => debugPrint(error),
             );

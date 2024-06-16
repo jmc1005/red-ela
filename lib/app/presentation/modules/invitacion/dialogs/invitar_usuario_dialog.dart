@@ -136,7 +136,6 @@ class _DialogContentState extends State<_DialogContent> {
         const InvitacionState(),
         invitacionRepo: context.read(),
         usuarioRepo: context.read(),
-        sessionService: context.read(),
       ),
       child: PopScope(
         child: AlertDialog(

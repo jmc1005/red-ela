@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_estado.dart';
@@ -70,13 +69,6 @@ class SignController extends StateNotifier<SignState> {
             if (success.rol == UsuarioTipo.admin.value) {
               navigateTo(Routes.admin, context);
             } else {
-              try {
-                await OneSignal.login(success.uid); // external id one signal
-                await OneSignal.User.addTagWithKey('userId', success.uid);
-              } catch (e) {
-                debugPrint(e.toString());
-              }
-
               navigateTo(Routes.home, context);
             }
           }, (error) => showError(error, language));
