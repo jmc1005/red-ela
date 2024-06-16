@@ -133,34 +133,32 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                     ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width / 1.1,
-                    child: Flexible(
-                      child: TextFormWidget(
-                        key: const Key('kFechaInicio'),
-                        controller: _fechaInicio,
-                        label: language.fecha_inicio,
-                        keyboardType: TextInputType.text,
-                        readOnly: widget.readOnly,
-                        suffixIcon: const Align(
-                          widthFactor: 1.0,
-                          heightFactor: 1.0,
-                          child: Icon(
-                            Icons.calendar_today,
-                          ),
+                    child: TextFormWidget(
+                      key: const Key('kFechaInicio'),
+                      controller: _fechaInicio,
+                      label: language.fecha_inicio,
+                      keyboardType: TextInputType.text,
+                      readOnly: widget.readOnly,
+                      suffixIcon: const Align(
+                        widthFactor: 1.0,
+                        heightFactor: 1.0,
+                        child: Icon(
+                          Icons.calendar_today,
                         ),
-                        validator: !widget.readOnly
-                            ? (value) => textValidator(
-                                  value,
-                                  language,
-                                )
-                            : null,
-                        onTap: !widget.readOnly
-                            ? () =>
-                                widget.citaController.openDatePickerFechaInicio(
-                                  context,
-                                  _fechaInicio,
-                                )
-                            : null,
                       ),
+                      validator: !widget.readOnly
+                          ? (value) => textValidator(
+                                value,
+                                language,
+                              )
+                          : null,
+                      onTap: !widget.readOnly
+                          ? () =>
+                              widget.citaController.openDatePickerFechaInicio(
+                                context,
+                                _fechaInicio,
+                              )
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -168,7 +166,8 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                     width: MediaQuery.of(context).size.width / 1.1,
                     child: Row(
                       children: [
-                        Flexible(
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 1.1,
                           child: TextFormWidget(
                             key: const Key('kHoraInicio'),
                             controller: _horaInicio,
@@ -198,7 +197,8 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Flexible(
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 1.1,
                           child: TextFormWidget(
                             key: const Key('kHoraFin'),
                             controller: _horaFin,

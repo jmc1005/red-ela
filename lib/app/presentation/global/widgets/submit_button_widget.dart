@@ -16,9 +16,7 @@ class SubmitButtonWidget extends StatelessWidget {
         child: Text(
           label,
           style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-          ),
+              fontWeight: FontWeight.w600, fontSize: 16, color: Colors.white),
         ),
       ),
     );

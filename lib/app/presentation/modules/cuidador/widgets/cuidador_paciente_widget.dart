@@ -107,14 +107,12 @@ class _CuidadorPacienteWidgetState extends State<CuidadorPacienteWidget> {
                       width: MediaQuery.of(context).size.width / 1.1,
                       child: SizedBox(
                         width: double.infinity,
-                        child: Flexible(
-                          child: TextFormWidget(
-                            label: language.telefono,
-                            keyboardType: TextInputType.phone,
-                            controller: telefonoController,
-                            prefixText: '+34 ',
-                            readOnly: true,
-                          ),
+                        child: TextFormWidget(
+                          label: language.telefono,
+                          keyboardType: TextInputType.phone,
+                          controller: telefonoController,
+                          prefixText: '+34 ',
+                          readOnly: true,
                         ),
                       ),
                     ),

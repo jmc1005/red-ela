@@ -19,7 +19,7 @@ class ThemeConfig {
           minimumSize: const Size.fromHeight(54),
           maximumSize: const Size.fromHeight(54),
           backgroundColor: ColorConfig.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: ColorConfig.secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -45,6 +45,7 @@ class ThemeConfig {
           ),
           borderRadius: BorderRadius.circular(12),
         ),
+        focusColor: ColorConfig.alternate,
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: Colors.grey,

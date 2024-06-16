@@ -65,27 +65,27 @@ class UsuarioItemWidget extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: const Color(0x4D9489F5),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFF6F61EF),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: const Icon(
-                  Icons.no_photography_outlined,
-                  size: 48,
-                ),
-              ),
-            ),
-          ),
+          // Container(
+          //   width: 100,
+          //   height: 100,
+          //   decoration: BoxDecoration(
+          //     color: const Color(0x4D9489F5),
+          //     borderRadius: BorderRadius.circular(12),
+          //     border: Border.all(
+          //       color: const Color(0xFF6F61EF),
+          //     ),
+          //   ),
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(2),
+          //     child: ClipRRect(
+          //       borderRadius: BorderRadius.circular(10),
+          //       child: const Icon(
+          //         Icons.no_photography_outlined,
+          //         size: 48,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Expanded(
             child: Padding(
               padding: const EdgeInsetsDirectional.only(start: 12),

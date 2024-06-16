@@ -112,63 +112,74 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
                     const SizedBox(height: 8),
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 1.1,
-                      child: Row(
-                        children: [
-                          Flexible(
-                            child: TextFormWidget(
-                              label: language.hospital,
-                              controller: hospitalController,
-                              keyboardType: TextInputType.text,
-                              readOnly: true,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Flexible(
-                            child: TextFormWidget(
-                              label: language.telefono,
-                              controller: telefonoController,
-                              keyboardType: TextInputType.phone,
-                              prefixText: '+34 ',
-                              readOnly: true,
-                            ),
-                          ),
-                        ],
+                      child: TextFormWidget(
+                        label: language.hospital,
+                        controller: hospitalController,
+                        keyboardType: TextInputType.text,
+                        readOnly: true,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextFormWidget(
+                        label: language.telefono,
+                        controller: telefonoController,
+                        keyboardType: TextInputType.phone,
+                        prefixText: '+34 ',
+                        readOnly: true,
                       ),
                     ),
                   ],
                 );
               } else {
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextFormWidget(
-                      label: language.nombre_completo,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextFormWidget(
+                        label: language.nombre_completo,
+                        keyboardType: TextInputType.text,
+                        readOnly: true,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.apellido,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextFormWidget(
+                        label: language.apellido,
+                        keyboardType: TextInputType.text,
+                        readOnly: true,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.apellido2,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextFormWidget(
+                        label: language.apellido2,
+                        keyboardType: TextInputType.text,
+                        readOnly: true,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.hospital,
-                      keyboardType: TextInputType.text,
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextFormWidget(
+                        label: language.hospital,
+                        keyboardType: TextInputType.text,
+                        readOnly: true,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    TextFormWidget(
-                      label: language.telefono,
-                      keyboardType: TextInputType.phone,
-                      prefixText: '+34 ',
-                      readOnly: true,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: TextFormWidget(
+                        label: language.telefono,
+                        keyboardType: TextInputType.phone,
+                        prefixText: '+34 ',
+                        readOnly: true,
+                      ),
                     ),
                   ],
                 );

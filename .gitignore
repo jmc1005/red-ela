@@ -43,7 +43,7 @@ app.*.map.json
 /android/app/release
 
 # dotenv environment variables file
-.env*
+assets/dotenv
 
 # Avoid committing generated Javascript files:
 *.dart.js
@@ -71,5 +71,3 @@ pubspec.lock
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 .vscode/
-
-/env/*.env
