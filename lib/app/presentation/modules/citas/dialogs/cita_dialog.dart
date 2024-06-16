@@ -71,6 +71,7 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
     final citaRepo = Provider.of<CitaRepo>(context);
+    final width = MediaQuery.of(context).size.width;
 
     _asunto.text = widget.citaController.state!.asunto;
     _fechaInicio.text = widget.citaController.state!.fecha;
@@ -86,14 +87,14 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
           backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(10),
           content: SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: width,
             child: Form(
               key: widget.formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.1,
+                    width: width / 1.1,
                     child: TextFormWidget(
                       controller: _asunto,
                       label: language.asunto,
@@ -117,7 +118,7 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                   ),
                   if (!widget.readOnly)
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.1,
+                      width: width / 1.1,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -132,107 +133,99 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                       ),
                     ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    child: Flexible(
-                      child: TextFormWidget(
-                        key: const Key('kFechaInicio'),
-                        controller: _fechaInicio,
-                        label: language.fecha_inicio,
-                        keyboardType: TextInputType.text,
-                        readOnly: widget.readOnly,
-                        suffixIcon: const Align(
-                          widthFactor: 1.0,
-                          heightFactor: 1.0,
-                          child: Icon(
-                            Icons.calendar_today,
-                          ),
+                    width: width / 1.1,
+                    child: TextFormWidget(
+                      key: const Key('kFechaInicio'),
+                      controller: _fechaInicio,
+                      label: language.fecha_inicio,
+                      keyboardType: TextInputType.text,
+                      readOnly: widget.readOnly,
+                      suffixIcon: const Align(
+                        widthFactor: 1.0,
+                        heightFactor: 1.0,
+                        child: Icon(
+                          Icons.calendar_today,
                         ),
-                        validator: !widget.readOnly
-                            ? (value) => textValidator(
-                                  value,
-                                  language,
-                                )
-                            : null,
-                        onTap: !widget.readOnly
-                            ? () =>
-                                widget.citaController.openDatePickerFechaInicio(
-                                  context,
-                                  _fechaInicio,
-                                )
-                            : null,
                       ),
+                      validator: !widget.readOnly
+                          ? (value) => textValidator(
+                                value,
+                                language,
+                              )
+                          : null,
+                      onTap: !widget.readOnly
+                          ? () =>
+                              widget.citaController.openDatePickerFechaInicio(
+                                context,
+                                _fechaInicio,
+                              )
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: TextFormWidget(
-                            key: const Key('kHoraInicio'),
-                            controller: _horaInicio,
-                            label: language.hora_inicio,
-                            keyboardType: TextInputType.text,
-                            readOnly: widget.readOnly,
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                              child: Icon(
-                                Icons.schedule,
-                              ),
-                            ),
-                            validator: !widget.readOnly
-                                ? (value) => textValidator(
-                                      value,
-                                      language,
-                                    )
-                                : null,
-                            onTap: !widget.readOnly
-                                ? () => widget.citaController
-                                        .openTimePickerHoraInicio(
-                                      context,
-                                      _horaInicio,
-                                    )
-                                : null,
-                          ),
+                    width: width / 1.1,
+                    child: TextFormWidget(
+                      key: const Key('kHoraInicio'),
+                      controller: _horaInicio,
+                      label: language.hora_inicio,
+                      keyboardType: TextInputType.text,
+                      readOnly: widget.readOnly,
+                      suffixIcon: const Align(
+                        widthFactor: 1.0,
+                        heightFactor: 1.0,
+                        child: Icon(
+                          Icons.schedule,
                         ),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: TextFormWidget(
-                            key: const Key('kHoraFin'),
-                            controller: _horaFin,
-                            label: language.hora_fin,
-                            keyboardType: TextInputType.text,
-                            readOnly: widget.readOnly,
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                              child: Icon(
-                                Icons.schedule,
-                              ),
-                            ),
-                            validator: !widget.readOnly
-                                ? (value) => textValidator(
-                                      value,
-                                      language,
-                                    )
-                                : null,
-                            onTap: !widget.readOnly
-                                ? () =>
-                                    widget.citaController.openTimePickerHoraFin(
-                                      context,
-                                      _horaFin,
-                                    )
-                                : null,
-                          ),
-                        ),
-                      ],
+                      ),
+                      validator: !widget.readOnly
+                          ? (value) => textValidator(
+                                value,
+                                language,
+                              )
+                          : null,
+                      onTap: !widget.readOnly
+                          ? () =>
+                              widget.citaController.openTimePickerHoraInicio(
+                                context,
+                                _horaInicio,
+                              )
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.1,
+                    width: width / 1.1,
+                    child: TextFormWidget(
+                      key: const Key('kHoraFin'),
+                      controller: _horaFin,
+                      label: language.hora_fin,
+                      keyboardType: TextInputType.text,
+                      readOnly: widget.readOnly,
+                      suffixIcon: const Align(
+                        widthFactor: 1.0,
+                        heightFactor: 1.0,
+                        child: Icon(
+                          Icons.schedule,
+                        ),
+                      ),
+                      validator: !widget.readOnly
+                          ? (value) => textValidator(
+                                value,
+                                language,
+                              )
+                          : null,
+                      onTap: !widget.readOnly
+                          ? () => widget.citaController.openTimePickerHoraFin(
+                                context,
+                                _horaFin,
+                              )
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: width / 1.1,
                     child: TextFormWidget(
                       controller: _lugar,
                       label: language.lugar,
@@ -251,7 +244,7 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.1,
+                    width: width / 1.1,
                     child: TextFormWidget(
                       controller: _notas,
                       label: language.notas,

@@ -121,8 +121,9 @@ class _UsuariosViewState extends State<UsuariosView> {
                               final usuarioModel = snapshot.data![index];
 
                               return UsuarioRowWidget(
-                                usuarioModel: usuarioModel,
-                              );
+                                  usuarioModel: usuarioModel,
+                                  allowUpdate:
+                                      widget.rol == UsuarioTipo.admin.value);
                             },
                             itemCount: snapshot.data!.length,
                           )

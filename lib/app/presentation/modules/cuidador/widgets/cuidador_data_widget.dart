@@ -27,7 +27,7 @@ class _CuidadorDataWidgetState extends State<CuidadorDataWidget> {
 
   Future<Result<CuidadorModel, dynamic>> _getFutureCuidador() async {
     return widget.usuarioController.cuidadorController.cuidadorRepo
-        .getCuidador();
+        .getCuidadorByUid(widget.usuarioController.state!.usuario.uid);
   }
 
   @override

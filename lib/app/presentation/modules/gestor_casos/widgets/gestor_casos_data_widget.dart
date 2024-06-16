@@ -27,7 +27,7 @@ class _GestorCasosDataWidgetState extends State<GestorCasosDataWidget> {
 
   Future<Result<GestorCasosModel, dynamic>> _getFutureGestorCasos() async {
     return widget.usuarioController.gestorCasosController.gestorCasosRepo
-        .getGestorCasos();
+        .getGestorCasosByUid(widget.usuarioController.state!.usuario.uid);
   }
 
   @override

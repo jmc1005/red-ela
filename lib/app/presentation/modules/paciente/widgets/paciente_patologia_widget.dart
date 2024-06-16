@@ -29,12 +29,6 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
     widget.usuarioController.paciente = paciente;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    futurePaciente = _getFuturePaciente();
-  }
-
   Future<Result<PacienteModel, dynamic>> _getFuturePaciente() async {
     final usuarioController = widget.usuarioController;
     final uid = usuarioController.state!.usuario.uid;
@@ -91,30 +85,25 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 8),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
-                child: Flexible(
-                  child: DropdownTratamientosWidget(
-                    usuarioController: controller,
-                    label: language.tratamiento,
-                    uuidTratamiento: controller.state!.paciente!.tratamiento,
-                  ),
+                child: DropdownTratamientosWidget(
+                  usuarioController: controller,
+                  label: language.tratamiento,
+                  uuidTratamiento: controller.state!.paciente!.tratamiento,
                 ),
               ),
               const SizedBox(height: 8),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
-                child: Flexible(
-                  child: TextFormWidget(
-                    label: language.inicio,
-                    initialValue: controller.state!.paciente!.inicio,
-                    keyboardType: TextInputType.text,
-                    onChanged: (text) => controller.onChangeValueInicio(text),
-                    validator: (value) => widget.textValidator(
-                      value,
-                      language,
-                    ),
+                child: TextFormWidget(
+                  label: language.inicio,
+                  initialValue: controller.state!.paciente!.inicio,
+                  keyboardType: TextInputType.text,
+                  onChanged: (text) => controller.onChangeValueInicio(text),
+                  validator: (value) => widget.textValidator(
+                    value,
+                    language,
                   ),
                 ),
               ),

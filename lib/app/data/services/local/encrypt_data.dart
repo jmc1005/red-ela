@@ -27,14 +27,13 @@ class EncryptData {
     getSecureKey();
   }
 
-  static Future<void> getSecureKey() async {
-    await dotenv.load(fileName: 'env/.env');
+  static void getSecureKey() {
     _encryptKey = dotenv.get('ENCRYPT_KEY');
     _encryptIV = dotenv.get('ENCRYPT_IV');
   }
 
   static Future<String> encryptData(String plainText) async {
-    await getSecureKey();
+    getSecureKey();
 
     if (plainText.isNotEmpty) {
       final key = Key.fromUtf8(_encryptKey);
@@ -46,11 +45,12 @@ class EncryptData {
 
       return encoded;
     }
+
     return '';
   }
 
   static Future<String?> decryptData(String? encryptedText) async {
-    await getSecureKey();
+    getSecureKey();
 
     final key = Key.fromUtf8(_encryptKey);
     final iv = IV.fromUtf8(_encryptIV);
@@ -69,7 +69,7 @@ class EncryptData {
   static Future<Json> decryptDataJson(Json json) async {
     final Json result = json;
     try {
-      await getSecureKey();
+      getSecureKey();
 
       json.forEach((key, value) async {
         if (!notDecryptList.contains(key) && value.toString().isNotEmpty) {

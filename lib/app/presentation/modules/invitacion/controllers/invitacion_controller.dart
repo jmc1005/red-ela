@@ -190,8 +190,7 @@ class InvitacionController extends StateNotifier<InvitacionState> {
     return '';
   }
 
-  Future<void> getSecureCredentials() async {
-    await dotenv.load(fileName: 'env/.env');
+  void getSecureCredentials() {
     _username = dotenv.get('USER_EMAIL');
     _password = dotenv.get('USER_PASS');
   }
@@ -202,7 +201,7 @@ class InvitacionController extends StateNotifier<InvitacionState> {
     nombreCompleto,
     rol,
   ) async {
-    await getSecureCredentials();
+    getSecureCredentials();
 
     final smtpServer = gmail(_username, _password);
 

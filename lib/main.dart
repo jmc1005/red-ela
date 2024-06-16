@@ -19,6 +19,7 @@ import 'app/data/repository/rol_repo_impl.dart';
 import 'app/data/repository/tratamiento_repo_impl.dart';
 import 'app/data/repository/usuario_repo_impl.dart';
 import 'app/data/services/bloc/notificaciones_bloc.dart';
+import 'app/data/services/local/environment_service.dart';
 import 'app/data/services/local/preferencias_usuario.dart';
 import 'app/data/services/remote/check_connection.dart';
 import 'app/domain/repository/cita_repo.dart';
@@ -53,6 +54,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await PreferenciasService.init();
+  await EnvironmentService.init();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
