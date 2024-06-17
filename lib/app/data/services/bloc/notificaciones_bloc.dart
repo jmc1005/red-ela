@@ -2,14 +2,25 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../local/preferencias_usuario.dart';
 import '../local/notificacion_service.dart';
+import '../local/preferencias_usuario.dart';
 
 part 'notificaciones_event.dart';
 part 'notificaciones_state.dart';
+
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  final mensaje = message.data;
+  final title = mensaje['title'];
+  final body = mensaje['body'];
+  final random = Random();
+  final id = random.nextInt(100000);
+
+  NotificacionService.showLocalNotification(id: id, title: title, body: body);
+}
 
 class NotificacionesBloc
     extends Bloc<NotificacionesEvent, NotificacionesState> {
@@ -19,27 +30,34 @@ class NotificacionesBloc
     _onForegroundMessage();
   }
 
-  void requestPermission() async {
+  Future<void> requestPermission() async {
     final settings = await messaging.requestPermission();
 
     await NotificacionService.requestPermissionLocalNotifications();
-    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-      return;
-    }
-
+    settings.authorizationStatus;
     _getFCMToken();
   }
 
-  void _getFCMToken() async {
+  Future<void> _getFCMToken() async {
     try {
-      final token = await messaging.getToken();
+      final settings = await messaging.getNotificationSettings();
+      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+        return;
+      }
+
+      String? token;
+
+      final vapidKey = dotenv.get('VAPID_KEY');
+      if (kIsWeb) {
+        token = await messaging.getToken(vapidKey: vapidKey);
+      } else {
+        token = await messaging.getToken();
+      }
 
       if (token != null) {
         final prefs = PreferenciasService();
         prefs.token = token;
       }
-
-      // FirebaseFirestore.instance.doc('').set({'token': FieldValue.arrayUnion([token])},SetOptions(merge: true),);
     } catch (e) {
       debugPrint(e.toString());
     }

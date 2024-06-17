@@ -21,6 +21,7 @@ jobs:
           echo "USER_PASS=${{ secrets.USER_PASS }}" >> assets/dotenv
           echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> assets/dotenv
           echo "ENCRYPT_IV=${{ secrets.ENCRYPT_IV }}" >> assets/dotenv
+          echo "VAPID_KEY=${{ secrets.VAPID }}" >> assets/dotenv
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -37,3 +38,6 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_REDELA_81338 }}
           channelId: live
           projectId: redela-81338
+
+      - name: Build Android App
+        uses: sparkfabrik/android-build-action@v1.5.0

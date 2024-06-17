@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ import 'app/data/repository/tratamiento_repo_impl.dart';
 import 'app/data/repository/usuario_repo_impl.dart';
 import 'app/data/services/bloc/notificaciones_bloc.dart';
 import 'app/data/services/local/environment_service.dart';
+import 'app/data/services/local/notificacion_service.dart';
 import 'app/data/services/local/preferencias_usuario.dart';
 import 'app/data/services/remote/check_connection.dart';
 import 'app/domain/repository/cita_repo.dart';
@@ -81,6 +83,10 @@ Future<void> main() async {
       firebaseService: FirebaseService(firestore: firestore),
       fireAuthService: FireAuthService(firebaseAuth: firebaseAuth),
       pacienteRepo: pacienteRepo);
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await NotificacionService.initializeLocalNotifications();
+  await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
   runApp(
     MultiBlocProvider(
