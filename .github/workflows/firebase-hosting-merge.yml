@@ -47,3 +47,4 @@ jobs:
           ruby-version: "2.7.5"
           bundler-version: "2.3.26"
           fastlane-env: "debug"
+          fastlane-version: "2.220.0"
