@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
@@ -31,10 +32,13 @@ class NotificacionesBloc
   }
 
   Future<void> requestPermission() async {
-    final settings = await messaging.requestPermission();
+    await messaging.requestPermission();
+
+    if (Platform.isAndroid) {
+      await FirebaseMessaging.instance.setAutoInitEnabled(true);
+    }
 
     await NotificacionService.requestPermissionLocalNotifications();
-    settings.authorizationStatus;
     _getFCMToken();
   }
 
@@ -65,6 +69,8 @@ class NotificacionesBloc
 
   void handleRemoteMessage(RemoteMessage message) {
     final mensaje = message.data;
+    debugPrint('mensaje: $mensaje');
+
     final title = mensaje['title'];
     final body = mensaje['body'];
 

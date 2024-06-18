@@ -12,7 +12,8 @@ class NotificacionService {
   static Future<void> initializeLocalNotifications() async {
     final flutterLocalnotificationsPlugin = FlutterLocalNotificationsPlugin();
     const initializationSettingsAndroid =
-        AndroidInitializationSettings('launcher_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
     const initializationSettingsDarwin = DarwinInitializationSettings(
         onDidReceiveLocalNotification: iosShowNotification);
 

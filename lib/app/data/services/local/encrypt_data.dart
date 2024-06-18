@@ -20,7 +20,8 @@ class EncryptData {
     'gestor_caso',
     'uid_paciente',
     'uid_gestor_casos',
-    'uid_cuidador'
+    'uid_cuidador',
+    'token',
   ];
 
   EncryptData._() {

@@ -53,9 +53,6 @@ class _SignViewState extends State<SignView> {
   Widget build(BuildContext context) {
     final UsuarioRepo usuarioRepo = context.read();
     context.read<NotificacionesBloc>().requestPermission();
-    final prefs = PreferenciasService();
-
-    debugPrint('token ${prefs.token}');
 
     return ChangeNotifierProvider<SignController>(
       create: (context) => SignController(

@@ -18,6 +18,7 @@ class UsuarioModel with _$UsuarioModel {
     String? password,
     @JsonKey(name: 'fecha_nacimiento') String? fechaNacimiento,
     required String rol,
+    List<String>? token,
   }) = _UsuarioModel;
 
   factory UsuarioModel.fromJson(Json json) => _$UsuarioModelFromJson(json);

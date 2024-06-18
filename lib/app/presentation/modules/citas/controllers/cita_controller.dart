@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -13,7 +11,6 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/cita/cita_model.dart';
 import '../../../../domain/models/cita/citas_datasource.dart';
 import '../../../../domain/repository/cita_repo.dart';
-import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';

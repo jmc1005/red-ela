@@ -50,7 +50,6 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final usuarioRepo = Provider.of<UsuarioRepo>(context);
     final language = AppLocalizations.of(context)!;
-    context.read<NotificacionesBloc>().requestPermission();
 
     final List<Widget> actions = [
       IconButton(

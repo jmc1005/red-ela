@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -62,6 +63,13 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await FirebaseAppCheck.instance
+      // Your personal reCaptcha public key goes here:
+      .activate(
+    androidProvider: AndroidProvider.debug,
+    appleProvider: AppleProvider.debug,
+  );
+
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
 
@@ -86,7 +94,6 @@ Future<void> main() async {
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await NotificacionService.initializeLocalNotifications();
-  await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
   runApp(
     MultiBlocProvider(

@@ -154,19 +154,25 @@ class UsuarioRepoImpl extends UsuarioRepo {
         data['uid'] = nuevoUid;
         return firebaseService
             .setDataOnDocument(
-              collection: collection,
-              document: nuevoUid,
-              data: data,
-            )
-            .then((value) => const Success('data-updated'));
+          collection: collection,
+          document: nuevoUid,
+          data: data,
+        )
+            .then((value) async {
+          await addDeviceToken(nuevoUid);
+          return const Success('data-updated');
+        });
       } else {
         return firebaseService
             .updateDataOnDocument(
-              collection: collection,
-              document: uid,
-              data: data,
-            )
-            .then((value) => const Success('data-updated'));
+          collection: collection,
+          document: uid,
+          data: data,
+        )
+            .then((value) async {
+          await addDeviceToken(uid);
+          return const Success('data-updated');
+        });
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -355,5 +361,26 @@ class UsuarioRepoImpl extends UsuarioRepo {
     );
 
     await credential.user!.updatePhoneNumber(phoneCredential);
+  }
+
+  Future<void> addDeviceToken(String uid) async {
+    final prefs = PreferenciasService();
+
+    debugPrint('token ${prefs.token}');
+
+    final docRef = firebaseService.getDocumentFromCollection(
+        collection: collection, document: uid);
+
+    if (prefs.token.isNotEmpty) {
+      docRef.get().then(
+        (d) async {
+          if (d.exists) {
+            await docRef.update({
+              'token': FieldValue.arrayUnion([prefs.token])
+            });
+          }
+        },
+      );
+    }
   }
 }
