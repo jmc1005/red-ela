@@ -131,38 +131,38 @@ class InvitacionController extends StateNotifier<InvitacionState> {
 
     response.when(
       (success) async {
-        if (kIsWeb) {
-          await sendEmailWeb(
-            context,
-            language,
-            success.nombreCompleto,
-            success.rol,
-          );
-        } else {
-          final Email email = Email(
-            body: language.body_invitacion(success.nombreCompleto, rol),
-            subject: language.subject_invitacion,
-            recipients: [state.email],
-            isHTML: true,
-          );
+        // if (kIsWeb) {
+        await sendEmailWeb(
+          context,
+          language,
+          success.nombreCompleto,
+          success.rol,
+        );
+        // } else {
+        //   final Email email = Email(
+        //     body: language.body_invitacion(success.nombreCompleto, rol),
+        //     subject: language.subject_invitacion,
+        //     recipients: [state.email],
+        //     isHTML: true,
+        //   );
 
-          bool isSuccess = false;
-          try {
-            await FlutterEmailSender.send(email);
-            isSuccess = true;
-          } catch (error) {
-            debugPrint(error.toString());
-          }
+        //   bool isSuccess = false;
+        //   try {
+        //     await FlutterEmailSender.send(email);
+        //     isSuccess = true;
+        //   } catch (error) {
+        //     debugPrint(error.toString());
+        //   }
 
-          if (!mounted) {
-            return;
-          }
-          if (isSuccess) {
-            showSuccess(context, language.email_enviado);
-          } else {
-            showError(context, language.email_error_envio);
-          }
-        }
+        //   if (!mounted) {
+        //     return;
+        //   }
+        //   if (isSuccess) {
+        //     showSuccess(context, language.email_enviado);
+        //   } else {
+        //     showError(context, language.email_error_envio);
+        //   }
+        // }
       },
       (error) => debugPrint(error),
     );
@@ -217,8 +217,9 @@ class InvitacionController extends StateNotifier<InvitacionState> {
       showSuccess(context, language.email_enviado);
 
       debugPrint('Message sent: $sendReport');
+      Navigator.pop(context, true);
     } on MailerException catch (e) {
-      debugPrint('Message not sent.');
+      debugPrint('Message not sent. $e');
       for (final p in e.problems) {
         debugPrint('Problem: ${p.code}: ${p.msg}');
       }

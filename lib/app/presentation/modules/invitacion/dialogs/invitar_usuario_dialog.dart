@@ -46,7 +46,6 @@ class _DialogContentState extends State<_DialogContent> {
 
   final phoneNumberController = TextEditingController();
   final phoneNumberFocusNode = FocusNode();
-  late final InvitacionRepo invitacionRepo;
   InvitacionModel? invitacionModel;
 
   @override
@@ -55,8 +54,11 @@ class _DialogContentState extends State<_DialogContent> {
   }
 
   Future<void> getInvitacion(telefono) async {
+    final InvitacionController invitacionController = context.read();
+
     invitacionModel = null;
-    final response = await invitacionRepo.getInvitacion(telefono);
+    final response =
+        await invitacionController.invitacionRepo.getInvitacion(telefono);
 
     response.when(
       (success) => invitacionModel = success,
@@ -68,7 +70,7 @@ class _DialogContentState extends State<_DialogContent> {
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
     final InvitacionController invitacionController = context.read();
-    invitacionRepo = invitacionController.invitacionRepo;
+    final invitacionRepo = invitacionController.invitacionRepo;
     final invitacion = invitacionController.state;
     final size = MediaQuery.of(context).size;
 
@@ -95,17 +97,17 @@ class _DialogContentState extends State<_DialogContent> {
       ),
       OutlinedButton(
         onPressed: () async {
+          final ctx = context;
           if (_formKey.currentState!.validate()) {
             getInvitacion(invitacionController.state.telefono);
 
             if (invitacionModel == null) {
-              await invitacionController.sendEmailPhone(context, language);
+              await invitacionController.sendEmailPhone(ctx, language);
 
               invitacionRepo.addInvitacion(
                 telefono: invitacionController.state.telefono,
                 rol: invitacionController.state.rol,
               );
-              Navigator.pop(context, true);
             } else {
               debugPrint('Ya existe invitación enviada');
               invitacionController.showError(

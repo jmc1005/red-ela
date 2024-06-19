@@ -16,8 +16,8 @@ class SnackBarUtils {
       Overlay.of(context),
       CustomSnackBar.success(message: message),
       dismissType: DismissType.onSwipe,
-      dismissDirection: [DismissDirection.endToStart],
-      snackBarPosition: SnackBarPosition.bottom,
+      // dismissDirection: [DismissDirection.endToStart],
+      // snackBarPosition: SnackBarPosition.top,
     );
   }
 
@@ -26,8 +26,8 @@ class SnackBarUtils {
       Overlay.of(context),
       CustomSnackBar.error(message: message),
       dismissType: DismissType.onSwipe,
-      dismissDirection: [DismissDirection.endToStart],
-      snackBarPosition: SnackBarPosition.bottom,
+      // dismissDirection: [DismissDirection.endToStart],
+      // snackBarPosition: SnackBarPosition.top,
     );
   }
 

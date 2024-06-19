@@ -6,11 +6,12 @@ class AppConstants {
   static const String googleCloudAccountsV1 =
       'https://identitytoolkit.googleapis.com/v1';
 
-  static const String weatherApiKey = '0e5d2457c9c406846ae163afd8c20141';
-
   var headerStyle = const TextStyle(
     color: Color(0xffffffff),
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
+
+  static const String uriSendPushMessage =
+      'https://fcm.googleapis.com/v1/projects/redela-81338/messages:send';
 }

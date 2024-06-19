@@ -2,15 +2,20 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:googleapis/datastore/v1.dart';
 import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../../config/color_config.dart';
+import '../../../../data/services/bloc/notificaciones_bloc.dart';
 import '../../../../domain/models/cita/cita_model.dart';
 import '../../../../domain/models/cita/citas_datasource.dart';
 import '../../../../domain/repository/cita_repo.dart';
+import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
@@ -73,6 +78,39 @@ class CitaController extends StateNotifier<CitaModel?> {
     final language = AppLocalizations.of(context)!;
     final formKey = GlobalKey<FormState>();
 
+    if (details.targetElement == CalendarElement.appointment ||
+        details.targetElement == CalendarElement.agenda) {
+      final Appointment appointment = details.appointments![0];
+
+      final isReadOnly = (appointment.startTime.isBefore(DateTime.now()) &&
+              rol == UsuarioTipo.gestorCasos.value) ||
+          rol != UsuarioTipo.gestorCasos.value;
+
+      final actions = getActions(context, language, formKey, isReadOnly);
+
+      _uuidCitaSel = appointment.id!.toString();
+
+      citaModel = citas
+          .where(
+            (c) => c.uuid == appointment.id!.toString(),
+          )
+          .first;
+
+      cita = citaModel;
+
+      showCitaDialog(
+        context,
+        actions: actions,
+        cita: citaModel,
+        citaController: citaController,
+        formKey: formKey,
+        readOnly: isReadOnly,
+      );
+    }
+  }
+
+  List<Widget> getActions(BuildContext context, AppLocalizations language,
+      GlobalKey<FormState> formKey, bool isReadOnly) {
     final List<Widget> actions = [
       OutlinedButton(
         onPressed: () {
@@ -91,7 +129,7 @@ class CitaController extends StateNotifier<CitaModel?> {
           ),
         ),
       ),
-      if (rol == UsuarioTipo.gestorCasos.value)
+      if (!isReadOnly)
         OutlinedButton(
           onPressed: () {
             if (formKey.currentState!.validate()) {
@@ -136,98 +174,14 @@ class CitaController extends StateNotifier<CitaModel?> {
           ),
         ),
     ];
-
-    if (details.targetElement == CalendarElement.appointment ||
-        details.targetElement == CalendarElement.agenda) {
-      final Appointment appointment = details.appointments![0];
-
-      _uuidCitaSel = appointment.id!.toString();
-
-      citaModel = citas
-          .where(
-            (c) => c.uuid == appointment.id!.toString(),
-          )
-          .first;
-
-      cita = citaModel;
-
-      showCitaDialog(
-        context,
-        actions: actions,
-        cita: citaModel,
-        citaController: citaController,
-        formKey: formKey,
-        readOnly: rol != UsuarioTipo.gestorCasos.value,
-      );
-    }
+    return actions;
   }
 
   void nuevaCita(context, usuarioModel, citaController) {
     final language = AppLocalizations.of(context)!;
     final formKey = GlobalKey<FormState>();
 
-    final List<Widget> actions = [
-      OutlinedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        style: OutlinedButton.styleFrom(
-          backgroundColor: ColorConfig.cancelar,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-        ),
-        child: Text(
-          language.cancelar,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-      OutlinedButton(
-        onPressed: () {
-          if (formKey.currentState!.validate()) {
-            final partsInicio = state!.horaInicio.split(':');
-            final hourInicio = int.parse(partsInicio[0]);
-            final minuteInicio = int.parse(partsInicio[1]);
-
-            final partsFin = state!.horaFin.split(':');
-            final hourFin = int.parse(partsFin[0]);
-            final minuteFin = int.parse(partsFin[1]);
-
-            final timeInicio =
-                TimeOfDay(hour: hourInicio, minute: minuteInicio);
-            final timeFin = TimeOfDay(hour: hourFin, minute: minuteFin);
-
-            final isFinPosterior = timeFin.hour > timeInicio.hour ||
-                (timeFin.hour == timeInicio.hour &&
-                    timeFin.minute > timeInicio.minute);
-
-            if (!isFinPosterior) {
-              final snackbarUtil = SnackBarUtils(
-                context: context,
-                message: language.error_hora,
-              );
-              snackbarUtil.showWarning();
-            } else {
-              crearCita(context, language);
-            }
-          }
-        },
-        style: OutlinedButton.styleFrom(
-          backgroundColor: ColorConfig.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-        ),
-        child: Text(
-          language.aceptar,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-    ];
+    final actions = getActions(context, language, formKey, false);
 
     const citaModel = CitaModel(
       uuid: '',
@@ -279,7 +233,7 @@ class CitaController extends StateNotifier<CitaModel?> {
       (success) async {
         showSuccess(context, language, success);
         Navigator.pop(context);
-        await enviarNotificacion();
+        await enviarNotificacion(context);
       },
       (error) => showError(context, language, error),
     );
@@ -434,14 +388,16 @@ class CitaController extends StateNotifier<CitaModel?> {
   }
 
   void addCitaToAppointments(CitaModel cita) {
-    final appointment = createAppointment(cita);
+    if (cita.horaInicio.isNotEmpty && cita.horaFin.isNotEmpty) {
+      final appointment = createAppointment(cita);
 
-    if (!citas.any((c) => c.uuid == cita.uuid)) {
-      citas.add(cita);
-    }
+      if (!citas.any((c) => c.uuid == cita.uuid)) {
+        citas.add(cita);
+      }
 
-    if (!appointments.any((a) => a.id != null && a.id! == cita.uuid)) {
-      appointments.add(appointment);
+      if (!appointments.any((a) => a.id != null && a.id! == cita.uuid)) {
+        appointments.add(appointment);
+      }
     }
   }
 
@@ -502,7 +458,23 @@ class CitaController extends StateNotifier<CitaModel?> {
     return appointment;
   }
 
-  Future<void> enviarNotificacion() async {}
+  Future<void> enviarNotificacion(BuildContext context) async {
+    final blocNotificacion = context.read<NotificacionesBloc>();
+    final usuarioRepo = context.read<UsuarioRepo>();
+
+    final titulo = cita.asunto;
+    final cuerpo = '${cita.horaInicio} ${cita.horaFin}';
+
+    final response = await usuarioRepo.getUsuarioByUid(uid: state!.uidPaciente);
+    response.when(
+      (success) => blocNotificacion.sendPushMessage(
+        titulo,
+        cuerpo,
+        success.token,
+      ),
+      (error) => debugPrint(error),
+    );
+  }
 
   void clear() {
     if (appointments.isNotEmpty) {
