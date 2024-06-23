@@ -30,6 +30,7 @@ jobs:
       - run: dart run build_runner build
       - run: flutter pub get
       - run: flutter build web --profile
+      - run: flutter build apk --profile
       - run: flutter --version
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -38,13 +39,3 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_REDELA_81338 }}
           channelId: live
           projectId: redela-81338
-
-      - name: Build Android App
-        uses: sparkfabrik/android-build-action@v1.5.0
-        with:
-          project-path: android
-          output-path: redela-app.apk
-          ruby-version: "2.7.5"
-          bundler-version: "2.3.26"
-          fastlane-env: "debug"
-          fastlane-version: "2.220.0"
