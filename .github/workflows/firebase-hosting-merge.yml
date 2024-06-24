@@ -26,7 +26,7 @@ jobs:
           echo "USER_PASS=${{ secrets.USER_PASS }}" >> assets/dotenv
           echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> assets/dotenv
           echo "ENCRYPT_IV=${{ secrets.ENCRYPT_IV }}" >> assets/dotenv
-          echo "VAPID_KEY=${{ secrets.VAPID }}" >> assets/dotenv
+          echo "VAPID_KEY=${{ secrets.VAPID_KEY }}" >> assets/dotenv
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -36,10 +36,7 @@ jobs:
       - run: flutter pub get
       - run: flutter --version
       - name: Start release build web
-        run: flutter build web --profile
-      - name: Start release build apk
-        run: flutter build appbundle
-      
+        run: flutter build web --profile      
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
