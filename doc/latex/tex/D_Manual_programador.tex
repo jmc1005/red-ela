@@ -108,9 +108,48 @@ Realizar la siguiente configuración de android studio.
 	\item En el diálogo del Administrador de dispositivos, haga clic en el icono \textbf{ejecutar} al lado derecho del AVD deseado. El emulador se inicia y muestra la pantalla predeterminada para la versión de Android OS y dispositivo seleccionados.
 \end{enumerate}
 
-\subsubsection{Generar fichero variables de entorno}
+\subsubsection{Fichero variables de entorno}
+Antes de generar el fichero, debemos seguir los pasos descritos en el paquete de \textbf{Flutter} \textbf{encrypt} \url{https://pub.dev/packages/encrypt}:
+\begin{itemize}
+	\item Activar el paquete \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{pub global activate encrypt}
+\end{itemize}
 
-\subsubsection{Github}
+Para generar las claves seguras de manera aleatoria utilizaremos la siguiente instrucción \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{secure-random}. Con ella podremos generar claves que nos servirán para encriptar de manera segura los datos tratados por nuestra aplicación.
+\imagen{flutter-encrypt-secure-random}{Encrypt secure random}
+
+Este fichero lo tenemos que generar dentro de la carpeta \textbf{assets} con el nombre \textbf{dotenv}, ya que está ignorado en las subidas a \textbf{Github}. El fichero contendrá unas claves necesarias para el correcto funcionamiento de la aplicación:
+\begin{itemize}
+	\item \textbf{ENCRYPT\_KEY} esta clave la generaremos con la instrucción anterior y cuya longitud debe de ser de 32
+	\item \textbf{ENCRYPT\_IV }esta clave la generaremos con la instrucción anterior y cuya longitud debe de ser de 12
+	\item \textbf{USER\_EMAIL}=redelaubutfg@gmail.com
+	\item \textbf{USER\_PASS}=qdmucyqwausbluzw
+	\item \textbf{VAPID\_KEY} esta clave la necesitamos para poder obtener notificaciones push en nuestra web. Explicado en \textbf{\ref{subsec:firebase} Firebase}
+\end{itemize}
+
+\subsubsection{\label{subsec:firebase}Firebase}
+Crearemos una cuenta Firebase y agregaremos un proyecto con el nombre \textbf{RedELA}
+\begin{enumerate}
+\item Agregaremos el proyecto 
+\imagen{firebase-agregar-proyecto}{Agregar proyecto}
+\item Introduciremos el nombre del proyecto. Pulsaremos \textbf{continuar}
+\imagen{firebase-nombre-proyecto}{Agregar proyecto}
+\item Deshabilitaremos Google Analytics y pulsaremos \textbf{crear proyecto}
+\end{enumerate}
+
+Tras unos segundos tendremos creado nuestro proyecto, ahora necesitamos enlazar ese proyecto con nuestro código descargado desde \textbf{\ref{subsec:github} Github} \url{https://github.com/jmc1005/red-ela}
+
+Una vez creado nuestro proyecto en Firebase, debemos obtener el \textbf{VAPID\_KEY} en \textbf{descripción general} \textbf{configuración del proyecto} vamos a la sección de \textbf{cloud messaging} y al final en \textbf{configuración web} en \textbf{certificacdos push web} encontraremos en \textbf{par de claves} nuestro \textbf{VAPID\_KEY}.
+
+\subsubsection{\label{subsec:github}Github}
+Para empezar, necesitamos crear nuestros secrets en Github. Para acceder a \textbf{secrets} debemos a acceder a \textbf{Settings} y luego sobre el menú lateral izquierdo ir a \textbf{Secrets and variables} y pulsaremos sobre actions
+\imagen{github-secrets}{Secrets and variables}
+
+Posteriormente, sobre \textbf{Repository secrets} añadiremos nuestras variables necesarias para los despliegues mediante los workflow.
+\imagen{github-repository-secrets}{Respository secrets}
+
+En este punto vamos a explicar un poco a cerca de los workflows definidos en nuestro proyecto y además crear los secrets que serán necesarios para nuestro proyecto.
+
+Los workflow son acciones que nos van a permitir desplegar en el hosting de firebase nuestra web y generar nuestras apks para posteriormente poderlas publicar en \textbf{Google Play}.
 
 \section{Compilación}
 Para poder compilar el proyecto debemos ejecutar estos comandos \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{dart run build\_runner build} y \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{flutter pub get}. El primer comando nos generará el código automático de las clases que están con la anotación @freezed en nuestro proyecto. Estas anotaciones nos permiten generar código automático con pocas líneas de código.
