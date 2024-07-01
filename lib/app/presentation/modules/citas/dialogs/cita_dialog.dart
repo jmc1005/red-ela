@@ -274,7 +274,7 @@ class _DialogContentState extends State<_DialogContent> with ValidatorMixin {
                           if (widget.cita.uuid != '')
                             TextGestureDetectorWidget(
                               onTap: () {
-                                widget.citaController.cancelarCita();
+                                widget.citaController.cancelarCita(context);
                                 Navigator.pop(context);
                               },
                               tapString:

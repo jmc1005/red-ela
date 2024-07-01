@@ -18,4 +18,8 @@ abstract class CuidadorRepo {
   });
 
   Future<Result<dynamic, dynamic>> deleteCuidador();
+
+  Future<Result<dynamic, dynamic>> deleteCuidadorByUid({
+    required String uid,
+  });
 }

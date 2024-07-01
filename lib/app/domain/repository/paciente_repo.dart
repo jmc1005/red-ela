@@ -21,8 +21,6 @@ abstract class PacienteRepo {
     String? gestorCasos,
   });
 
-  Future<Result<dynamic, dynamic>> deletePaciente();
-
   Future<Result<List<String>, dynamic>> getAllPacientesByUidCuidador({
     required String uidCuidador,
     required String email,
@@ -33,4 +31,8 @@ abstract class PacienteRepo {
   Future<void> relacionaPacienteCuidador({
     required String uidPaciente,
   });
+
+  Future<Result<dynamic, dynamic>> deletePaciente();
+
+  Future<Result<dynamic, dynamic>> deletePacienteByUid({required uid});
 }

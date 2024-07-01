@@ -1,9 +1,6 @@
-importScripts("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
 importScripts(
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"
-);
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"
+  "https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"
 );
 
 firebase.initializeApp({
@@ -15,10 +12,10 @@ firebase.initializeApp({
   storageBucket: "redela-81338.appspot.com",
   measurementId: "G-GRYW8XM20W",
 });
-// Necessary to receive background messages:
+
 const messaging = firebase.messaging();
 
 // Optional:
-messaging.onBackgroundMessage((m) => {
-  console.log("onBackgroundMessage", m);
+messaging.onBackgroundMessage((message) => {
+  console.log("onBackgroundMessage", message);
 });

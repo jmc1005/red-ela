@@ -1,0 +1,131 @@
+\apendice{Documentación técnica de programación}
+
+\section{Introducción}
+
+Este anexo va orientado a describir y documentar la información necesaria sobre la poder realizar la instalación de las herramientas necesarias para el desarrollo, que estructura tiene la aplicación, como compilarlo, que servicios se necesitan.
+
+- Cuenta firebase
+- Generar dotenv
+- Descargar el proyecto
+- Comandos para arrancar el proyecto
+
+\section{Estructura de directorios}
+La estructura de nuestro proyecto está orientado en la arquitectura MVVM y será la siguiente;
+\imagen{mvvm-clean-arquitecture}{mvvm}
+
+\begin{itemize}
+	\item \textcolor{darkblue}{\url{/.github}}: carpeta contiene los actions para los despliegues CI/CD en web y android al realizar push sobre la rama \textbf{main}.
+	\item \textcolor{darkblue}{\url{/android}}: carpeta que contiene el código para la aplicación android.
+	\item \textcolor{darkblue}{\url{/assets}}: carpeta que contendrá las imágenas y  fichero dotenv para las variables de entorno.
+	\item \textcolor{darkblue}{\url{/doc}}: carpeta que contendrá la memoria y anexos.
+	\item \textcolor{darkblue}{\url{/lib}}: directorio donde se encuentra el código fuente del proyecto.
+		\begin{itemize}
+			\item \textcolor{darkblue}{\url{main.dart}}: fichero principal del proyecto.
+			\item \textcolor{darkblue}{\url{/app}}: contendrá la estructura de carpetas de nuestro Model-View-ViewModel
+			\begin{itemize}
+				\item \textcolor{darkblue}{\url{/data}}: contiene las implementaciones a los repositorios
+				\item \textcolor{darkblue}{\url{/domain}}: contiene los modelos y las interfaces de los repositorios
+				\item \textcolor{darkblue}{\url{/presententation}}: contiene los modulos que representan las vistas de nuestra aplicación
+			\end{itemize}
+			\item \textcolor{darkblue}{\url{/l10n}}: contrendrá los archivos para la internacionalización de la aplicación
+		\end{itemize}
+	\item \textcolor{darkblue}{\url{/web}}: carpeta que contiene el código para la aplicación web
+	\item \textcolor{darkblue}{\url{analysis_options.yaml}}
+	\item \textcolor{darkblue}{\url{build.yaml}}
+	\item \textcolor{darkblue}{\url{pubspec.yaml}}: archivo que contendrá los paquetes necesarios para el correcto funcionamiento de la aplicación
+	\item \textcolor{darkblue}{\url{l10n.yaml}}: archivo para la internacionalización de la aplicación
+\end{itemize}
+
+
+\section{Manual del programador}
+Este manual está pensado para que futuros programadores puedan poner en marcha el proyecto y saber que pasos deben seguir para el correcto funcionamiento.
+
+Cómo primer requisito es instalar Flutter~\cite{flutter}, para ello tendremos que ir a la página oficial de flutter \url{https://docs.flutter.dev/get-started/install} y elegir el sistema donde vamos a realizar la instalación y para que tipo de aplicación queremos desarrollar (en nuestro caso android).
+\imagen{flutter-so}{Plataforma desarrollo}
+
+Una vez realizada las instalaciones y configuraciones correspondientes, debemos comprobar que todo ha ido correctamente, para ello utilizaremos la siguiente instrucción en el terminal de \textbf{VS Code} \textbf{flutter doctor}
+\imagen{flutter-doctor-command}{Comprobación correcta instalación Flutter}
+
+\subsection{Visual Studio Code}
+Para ello debemos de tener instalado VS Code, en caso contrario descargar de la página oficial \url{https://code.visualstudio.com/}.
+
+Una vez instalado añadimos la extensión de Flutter
+\imagen{flutter-extension}{Añadir Flutter a Visual Studio Code}
+
+\subsection{Flutter SDK}
+Siguiendo los pasos que indican en la guía de Flutter, nosotros escogimos instalar Flutter SDK desde VS Code, para ello debemos hacer:
+\begin{enumerate}
+	\item Abrir \textbf{VS Code}
+	\item Pulsar \textbf{Ctrl}+\textbf{Shift}+\textbf{P} para abrir la paleta de comandos
+	\item Seleccionar \textbf{New Project}
+		\begin{itemize}
+			\item Si no lo tienes descargado, pulsa en \textbf{Download SDK}.
+			\item Si lo tienes descargado, pulsa \textbf{Locate SDK}
+		\end{itemize}
+	\item Cuando te pregunte que plantilla usar, hay que ignorarlo.
+\end{enumerate}
+
+\imagen{flutter-command-palette}{Paleta de comandos VS Code}
+
+\subsection{Android Studio}
+Para ello si no lo tenemos instalado, tendremos que realizar la instalación de \textbf{Android Studio} desde \url{https://developer.android.com/studio/install#windows} en mi caso lo instalo para Windows. Una vez instalado deberemos instalar el plugin de Flutter para Intellij \url{https://plugins.jetbrains.com/plugin/9212-flutter}
+
+Para poder crear aplicación con Flutter, necesitamos comprobar que tenemos instalados los siguientes componentes de Android:
+\begin{itemize}
+	\item Android SDK Platform, API 34.0.5
+	\item Android SDK Command-line Tools
+	\item Android SDK Build-Tools
+	\item Android SDK Platform-Tools
+	\item Android Emulator
+\end{itemize}
+
+\subsubsection{Configuracion Android Studio}
+Realizar la siguiente configuración de android studio.
+\begin{enumerate}
+	\item Habilite la aceleración de VM en su computadora de desarrollo.
+	\item Inicie \textbf{Android Studio}.
+	\item Vaya al diálogo de Configuración para ver el \textbf{Administrador de SDK}.
+	\begin{itemize}
+		\item Si tiene un proyecto abierto, vaya a \textbf{Herramientas} > \textbf{Administrador de dispositivos}.
+		\item Si se muestra el diálogo de bienvenida, haga clic en el icono pulsar \textbf{más opciones} que sigue al botón \textbf{abrir} y seleccione \textbf{administrador de dispositivos} desde el menú desplegable.
+	\end{itemize}
+	\item Haga clic en \textbf{virtual}.
+	\item Haga clic en \textbf{crear dispositivo}. El diálogo de configuración de dispositivo virtual se muestra.
+	\item Seleccione el tipo de dispositivo bajo la categoría.
+	\item Seleccione una definición de dispositivo. Puede explorar o buscar por el dispositivo.
+	\item Haga clic en \textbf{siguiente}.
+	\item Haga clic en \textbf{imagenes x86}.
+	\item Haga clic en una imagen del sistema para la versión de Android que desee emular.
+	\begin{itemize}
+		\item Si la imagen deseada tiene un icono de descarga al lado del nombre de lanzamiento, haga clic en él.
+		 \item Cuando complete la descarga, haga clic en \textbf{finalizar}.
+	\end{itemize}
+	\item Haga clic en \textbf{siguiente}. La configuración del dispositivo virtual se muestra en su paso de verificación.
+	\item Para renombrar el \textbf{Dispositivo Virtual de Android (AVD)}, cambie el valor en el cuadro de texto \textbf{nombre AVD}.
+	\item Haga clic en \textbf{mostrar configuraciones avanzadas} y desplace hasta \textbf{rendimiento emulado}.
+	\item Desde el menú desplegable \textbf{gráficos}, seleccione \textbf{Hardware - GLES 2.0}. (Esto habilita la aceleración de hardware y mejora el rendimiento de renderizado).
+	\item Verifique la configuración de su AVD. Si todo está correcto, haga clic en \textbf{finalizar}.
+	\item En el diálogo del Administrador de dispositivos, haga clic en el icono \textbf{ejecutar} al lado derecho del AVD deseado. El emulador se inicia y muestra la pantalla predeterminada para la versión de Android OS y dispositivo seleccionados.
+\end{enumerate}
+
+\subsubsection{Generar fichero variables de entorno}
+
+\subsubsection{Github}
+
+\section{Compilación}
+Para poder compilar el proyecto debemos ejecutar estos comandos \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{dart run build\_runner build} y \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{flutter pub get}. El primer comando nos generará el código automático de las clases que están con la anotación @freezed en nuestro proyecto. Estas anotaciones nos permiten generar código automático con pocas líneas de código.
+
+\section{Ejecución del proyecto}
+La aplicación se puede ejecutar tanto en la web como en un dispositivo móvil. Para ejecutar las pruebas podemos realizarlas tanto en un dispositivo móvil con Android que tenga API 34 o bien accediendo a la web.
+
+También se pueden hacer pruebas en local desde VSCode \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{flutter run -d chrome} si queremos que se ejecute en chrome o bien seleccionando un dispositivo como se muestra en la imagen.
+\imagen{flutter-device}{Seleccionar dispositivo}
+
+\section{Pruebas del sistema}
+Se ha generado una clase que testea mediante \textbf{flutter\_test} Firebase que será el gestione los datos que utiliza la aplicación.
+
+Para poder ejecutar los test deberemos pulsar los iconos que serán un play
+\imagen{flutter-test}{Test}
+
+Cuando los tests pasan se verá de la siguiente manera.
+\imagen{flutter-test-ok}{Test OK}

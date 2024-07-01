@@ -1,0 +1,610 @@
+\apendice{Especificación de Requisitos}
+
+\section{Introducción}
+
+En este punto vamos a definir los requisitos que va a tener nuestra primera versión del proyecto. Para ello vamos a seguir la \textbf{especificación de requisitos de sofware (ERS)}~\cite{wiki:ieee830-1998}, donde se recogen una serie de buenas prácticas y son las siguientes:
+\begin{itemize}
+\tightlist 
+\item \textbf{Completa}. Todos los requerimientos deben estar contemplados en ella y deben estar definidas todas las referencias .
+\item \textbf{Consistente}. Debe tener coherencia con los requerimientos y además, con otras especificaciones.
+\item \textbf{Inequívoca}. Claridad a la hora de redactar el documento para que no haya malas interpretaciones.
+\item \textbf{Correcta}. Se deben cumplir con los requisitos recogidos en la especificación.
+\item \textbf{Trazable}. Hace referencia a la posibilidad de comprobar la historia, aplicación o ubicación de un item mediante su identificación almacenada y documentada.
+\item \textbf{Priorizable}. Posibilidad de organizar los items según la relevancia y separándolos en esenciales, condicionales y opcionales.
+\item \textbf{Modificable}. Dar la posibilidad de poder ser modificable.
+\item \textbf{Verificable}. Tener la posibilidad de realizar las pruebas de manera finita y sin costo.
+\item \textbf{Clara}. Debe ser entendible.
+\end{itemize}
+
+\section{Objetivos generales}
+Nuestro proyecto tendrá como objetivos principales:
+\begin{itemize}
+\tightlist 
+\item Crear una aplicación multiplataforma en Android y Web.
+\item Gestionar las citas a través de los gestores de casos y asignárselas a pacientes con ELA.
+\item Visualizar las citas que tengan en el día.
+\item Visualizar las citas que tengan en un calendario.
+\item Gestionar aquella información necesaria para los pacientes, como tratamientos, hospitales.
+\end{itemize}
+\section{Catálogo de requisitos}
+Vamos a hacer en el catálogo de requisitos una mención de los requisitos específicos tras el análisis de los objetivos generales.
+
+\subsection{Requisitos Funcionales (RF)}
+\subsubsection{RF-1 Gestión Gestor Casos}
+\begin{itemize}
+\tightlist 
+\item \textbf{RF-1.1 Invitar gestor casos}. El gestor de casos puede enviar una invitación para que un gestor de casos se registre en la aplicación.
+\item \textbf{RF-1.2 Invitar paciente}. El gestor de casos puede enviar una invitación para que el paciente se registre en la aplicación.
+\item \textbf{RF-1.3 Eliminar paciente}. El paciente podrá ser eliminado por parte del gestor de casos.
+\item \textbf{RF-1.4 Listar pacientes}. El gestor de casos podrá ver un listado de pacientes asignados a él.
+\item \textbf{RF-1.5 Ver paciente}. El gestor de casos podrá ver los datos del paciente seleccionado.
+\item \textbf{RF-1.6 Editar gestor casos}. Podrá actualizar sus datos.
+\item \textbf{RF-1.7 Ver citas}. Ver citas.
+\item \textbf{RF-1.8 Crear cita}. Podrá crear cita.
+\item \textbf{RF-1.9 Editar cita}. Podrá crear cita.
+\item \textbf{RF-1.10 Cancelar cita}. Podrá cancelar cita.
+\end{itemize}
+
+\subsubsection{RF-2 Gestión Paciente}
+\begin{itemize}
+\tightlist 
+\item \textbf{RF-2.1 Editar paciente}. El paciente será el encargado de gestionar sus datos.
+\item \textbf{RF-2.2 Invitar cuidador principal}. El paciente puede enviar una invitación para que el cuidador se registre en la aplicación.
+\item \textbf{RF-2.3 Ver usuarios asociados}. El paciente podrá ver la información del cuidador y el gestor de casos asociados.
+\item \textbf{RF-2.4 Cancelar cita}. Podrá cancelar cita.
+\end{itemize}
+
+\subsubsection{RF-3 Gestión Cuidador Principal}
+\begin{itemize}
+\tightlist 
+\item \textbf{RF-3.1 Editar cuidador}. El paciente será el encargado de gestionar sus datos.
+\item \textbf{RF-3.2 Invitar cuidador principal}. El paciente puede enviar una invitación para que el cuidador se registre en la aplicación.
+\item \textbf{RF-3.3 Ver pacientes asociados}. El cuidador podrá ver la información del paciente.
+\item \textbf{RF-3.4 Cancelar cita}. Podrá cancelar cita.
+\end{itemize}
+
+\subsubsection{RF-4 Gestión Citas}
+\begin{itemize}
+\tightlist 
+\item \textbf{RF-4.1 Crear cita}. Crear una cita nueva.
+\item \textbf{RF-4.2 Cancelar cita}. Eliminar cita.
+\item \textbf{RF-4.3 Listar citas}. Ver las citas creadas.
+\item \textbf{RF-4.3 Editar cita}. Editar la cita.
+\end{itemize}
+
+\subsubsection{RF-5 Gestión Admin}
+\begin{itemize}
+\tightlist 
+\item \textbf{RF-5.1 Invitar admin}. Envía invitación para que un usuario pueda registrarse como admin.
+\item \textbf{RF-5.2 Invitar gestor casos}. Envía invitación para que un usuario pueda registrarse como gestor de casos.
+\item \textbf{RF-5.3 Listar admin}. Puede ver los administradores de la aplicación.
+\item \textbf{RF-5.4 Listar gestores de casos}. Puede ver los gestores de casos de la aplicación.
+\item \textbf{RF-5.5 Listar pacientes}. Puede ver los pacientes de la aplicación.
+\item \textbf{RF-5.6 Listar cuidadores}. Puede ver los cuidadores de la aplicación.
+\item \textbf{RF-5.7 Eliminar usuario}. Puede eliminar usuario.
+\item \textbf{RF-5.8 Ver usuario}. Ver usuario.
+\item \textbf{RF-5.9 Listar hospitales}. Ver las hospitales.
+\item \textbf{RF-5.10 Crear hospital}. Crear hospital.
+\item \textbf{RF-5.11 Editar hospital}. Editar hospital.
+\item \textbf{RF-5.12 Eliminar hospital}. Eliminar hospital.
+\item \textbf{RF-5.13 Listar tratamientos}. Ver las tratamientos.
+\item \textbf{RF-5.14 Crear tratamiento}. Crear tratamiento.
+\item \textbf{RF-5.16 Editar tratamiento}. Editar tratamiento.
+\item \textbf{RF-5.17 Eliminar tratamiento}. Eliminar tratamiento.
+\item \textbf{RF-5.18 Editar admin}. Editar admin.
+\end{itemize}
+
+\section{Especificación de requisitos}
+\subsection{Diagramas de flujo}
+\imagen{admin-flujo}{Diagrama flujo admin}
+\imagen{gestor-casos-flujo}{Diagrama flujo gestor casos}
+\imagen{paciente-cuidador-flujo}{Diagrama flujo paciente/cuidador}
+\subsection{Casos de Uso}
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-1}    & \textbf{Gestión usuarios}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre}\\
+		\textbf{Requisitos asociados} & RF-1, RF-2, RF-3, RF-5\\
+		\textbf{Descripción}          & Permite gestionar los gestores de casos \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ver información personal
+			\item Todos menos el admin ver las citas
+			\item Todos menos el admin ver usuarios asociados
+			\item Si es gestor o admin ver botón invitar a usuario
+			\item Solo admin ver usuarios (administradores, gestores casos, pacientes y cuidadores principales)
+			\item Solo admin ver tratamientos
+			\item Solo admin ver hospitales
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Los pacientes y citas coinciden con las que hay en la base de datos \\
+		\textbf{Excepciones}          & Error al obtener los pacientes o citas \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-1 Gestión Gestores de casos.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-2}    & \textbf{Enviar invitación}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.1, RF-1.2, RF-2.2, RF-3.2, RF-5.1, RF-5.2 \\
+		\textbf{Descripción}          & Permite invitar a un usuario \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ir a la pestaña de usuarios
+			\item Pulsar el botón (+) de añadir
+			\item Sale un pop up para rellenar los datos
+			\item Enviar invitación
+		\end{enumerate}\\
+		\textbf{Postcondición}        & La invitación es recibida por el usuario final \\
+		\textbf{Excepciones}          & Error al enviar invitación \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-2 Enviar invitación.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-3}    & \textbf{Eliminar usuario}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.3, RF-5.7 \\
+		\textbf{Descripción}          & Permite eliminar un usuario \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ir a la pestaña de usuarios
+			\item Pulsar papelera para borrar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El usuario se borra \\
+		\textbf{Excepciones}          & Error al borrar \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-3 Eliminar usuario.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-4}    & \textbf{Listar usuarios}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.4, RF-5.3, RF-5.4, RF-5.5, RF-5.6 \\
+		\textbf{Descripción}          & Permite listar usuarios \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ir a la pestaña de usuarios
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se muestran los usuarios \\
+		\textbf{Excepciones}          & Error al obtener listado \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-4 Listar usuarios.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-5}    & \textbf{Ver usuario}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.5, RF-2.3, RF-3.3, RF-5.8 \\
+		\textbf{Descripción}          & Permite ver un usuario \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ir a la pestaña de usuarios
+			\item Pulsar en usuario para ver la información
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El usuario se muestra con la información correcta \\
+		\textbf{Excepciones}          & Error al obtener los datos\\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-5 Ver usuario.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-6}    & \textbf{Editar usuario}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.6, RF-2.1, RF-3.1, RF-5.8, RF-5.18 \\
+		\textbf{Descripción}          & Permite editar un usuario \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Pulsar en el icono usuario
+			\item Editar la información
+		\end{enumerate}\\
+		\textbf{Postcondición}        & El usuario se borra \\
+		\textbf{Excepciones}          & Error al borrar \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-6 Editar usuario.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-7}    & \textbf{Gestión citas}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.8, RF-1.9, RF-1.10, RF-2.4, RF-3.4, RF-4 \\
+		\textbf{Descripción}          & Permite ver las citas\\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ver citas asociadas del día en la home
+			\item Ver todas las citas en el calendario
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se muestran las citas \\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-7 Gestión citas.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-8}    & \textbf{Crear cita}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.8, RF-4.1 \\
+		\textbf{Descripción}          & Permite crear una cita\\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ir al calendario
+			\item Pulsar botón (+) para crear cita
+			\item Introducir los datos
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se crea la cita \\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-8 Crear cita.}
+\end{table}
+
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-9}    & \textbf{Editar cita}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.9 RF-4.4 \\
+		\textbf{Descripción}          & Permite editar una cita\\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ir al calendario
+			\item Pulsar sobre una cita
+			\item Cambiar los datos
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se modifica la cita \\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-9 Editar cita.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-10}    & \textbf{Cancelar cita}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-1.10, RF-2.4, RF-3.4, RF-4.2 \\
+		\textbf{Descripción}          & Permite cancelar una cita\\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación
+			\item Ir al calendario
+			\item Pulsar sobre una cita
+			\item Pulsar sobre cancelar cita
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se cancela la cita \\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-10 Cancelar cita.}
+\end{table}
+
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-11}    & \textbf{Listar hospitales}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.9 \\
+		\textbf{Descripción}          & Permite ver los hospitales \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre hospitales
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se obtienen los hospitales\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-11 Listar hospitales.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-12}    & \textbf{Listar tratamientos}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.13 \\
+		\textbf{Descripción}          & Permite ver los tratamientos \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre tratamientos
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se obtienen los tratamientos\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-12 Listar tratamientos.}
+\end{table}
+
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-13}    & \textbf{Crear hospital}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.10 \\
+		\textbf{Descripción}          & Permite crear un hospital \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre hospitales
+			\item Pulsar sobre el botón (+)
+			\item Introducir los datos
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se guarda el hospital\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-13 Crear hospital.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-14}    & \textbf{Crear tratamiento}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.14 \\
+		\textbf{Descripción}          & Permite crear un tratamiento \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre tratamientos
+			\item Pulsar sobre el botón (+)
+			\item Introducir los datos
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se guarda el tratamiento\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-14 Crear tratamiento.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-15}    & \textbf{Editar hospital}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.11 \\
+		\textbf{Descripción}          & Permite crear un hospital \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre hospitales
+			\item Pulsar sobre un hospital
+			\item Introducir los datos
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se guarda el hospital\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-15 Editar hospital.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-16}    & \textbf{Editar tratamiento}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.15 \\
+		\textbf{Descripción}          & Permite editar un tratamiento \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre tratamientos
+			\item Pulsar sobre un tratamiento
+			\item Introducir los datos
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se guarda el tratamiento\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-16 Editar tratamiento.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-17}    & \textbf{Eliminar hospital}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.12 \\
+		\textbf{Descripción}          & Permite eliminar un hospital \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre hospitales
+			\item Pulsar sobre un hospital
+			\item pulsar sobre la papelera
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se elimina el hospital\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-17 Eliminar hospital.}
+\end{table}
+
+\begin{table}[p]
+	\centering
+	\begin{tabularx}{\linewidth}{ p{0.21\columnwidth} p{0.71\columnwidth} }
+		\toprule
+		\textbf{CU-18}    & \textbf{Eliminar tratamiento}\\
+		\toprule
+		\textbf{Versión}              & 1.0    \\
+		\textbf{Autor}                & {\nombre} \\
+		\textbf{Requisitos asociados} & RF-5.17 \\
+		\textbf{Descripción}          & Permite eliminar un tratamiento \\
+		\textbf{Precondición}         & Firebase está disponible \\
+		\textbf{Acciones}             &
+		\begin{enumerate}
+			\def\labelenumi{\arabic{enumi}.}
+			\tightlist
+			\item Accede a la aplicación como admin
+			\item Pulsar sobre tratamientos
+			\item Pulsar sobre la papelera
+			\item Aceptar
+		\end{enumerate}\\
+		\textbf{Postcondición}        & Se elimina el tratamiento\\
+		\textbf{Excepciones}          & Error al obtener los datos \\
+		\textbf{Importancia}          & Alta \\
+		\bottomrule
+	\end{tabularx}
+	\caption{CU-18 Eliminar tratamiento.}
+\end{table}

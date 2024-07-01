@@ -46,6 +46,7 @@
   "usuario_guardado": "User saved successfully",
   "leer_mas": "Read more",
   "gestion_enfermedad": "Disease management",
+  "gestion_enfermedad": "Disease management",
   "medicamentos": "Treatments",
   "otras_gestiones": "Other managements",
   "articulos": "Articles",
@@ -148,7 +149,7 @@
   },
   "administradores": "Administrators",
   "info_envio_email": "An invitation email will be sent so that the invited person can register in the application. Please contact the person invited to inform them.",
-  "body_invitacion": "<p>Dear user,</p><p>You have been invited by {usuario} to register in RedELA as {rol}</p><p>Greetings,</p><p>The RedELA Team</p>",
+  "body_invitacion": "<p>Dear user,</p><p>You have been invited by {usuario} to register in RedELA as {rol}</p>Can you access from <a href=\"https://redela-81338.web.app/\" target=\"_blank\">web</a> or download the application on <a href=\"https://play.google.com/store/apps/details?id=es.ubu.tfg2324.ela.red_ela\" target=\"_blank\">Play Store</a></div><br><p>Greetings,</p><p>The RedELA Team</p>",
   "@body_invitacion": {
     "description": "A message with a single parameter",
     "placeholders": {
@@ -184,5 +185,9 @@
   "gestion_hospitales": "Hospitals management",
   "tratamientos": "Treatments",
   "hospitales": "Hospitals",
-  "sin_citas": "Without appointments"
+  "sin_citas": "Without appointments",
+  "creada": "created",
+  "cancelada": "canceled",
+  "bulbar": "Bulbar",
+  "espinal": "Spinal"
 }

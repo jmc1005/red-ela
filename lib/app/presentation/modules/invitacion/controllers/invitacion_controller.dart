@@ -204,12 +204,30 @@ class InvitacionController extends StateNotifier<InvitacionState> {
     getSecureCredentials();
 
     final smtpServer = gmail(_username, _password);
+    var html = '';
+
+    if (rol == UsuarioTipo.gestorCasos.value) {
+      html = language.body_invitacion(
+        nombreCompleto,
+        language.gestor_casos.toLowerCase(),
+      );
+    } else if (rol == UsuarioTipo.paciente.value) {
+      html = language.body_invitacion(
+        nombreCompleto,
+        language.paciente.toLowerCase(),
+      );
+    } else if (rol == UsuarioTipo.cuidador.value) {
+      html = language.body_invitacion(
+        nombreCompleto,
+        language.cuidador.toLowerCase(),
+      );
+    }
 
     final message = Message()
       ..from = Address(_username, 'Equipo RedELA')
       ..recipients.add(state.email)
       ..subject = language.subject_invitacion
-      ..html = language.body_invitacion(nombreCompleto, rol);
+      ..html = html;
 
     try {
       final sendReport = await send(message, smtpServer);

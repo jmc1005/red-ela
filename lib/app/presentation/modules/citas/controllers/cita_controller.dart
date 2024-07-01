@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:googleapis/datastore/v1.dart';
 import 'package:intl/intl.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +14,7 @@ import '../../../../data/services/bloc/notificaciones_bloc.dart';
 import '../../../../domain/models/cita/cita_model.dart';
 import '../../../../domain/models/cita/citas_datasource.dart';
 import '../../../../domain/repository/cita_repo.dart';
+import '../../../../domain/repository/paciente_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_response.dart';
@@ -233,7 +233,7 @@ class CitaController extends StateNotifier<CitaModel?> {
       (success) async {
         showSuccess(context, language, success);
         Navigator.pop(context);
-        await enviarNotificacion(context);
+        await enviarNotificacionPaciente(context, false);
       },
       (error) => showError(context, language, error),
     );
@@ -242,7 +242,7 @@ class CitaController extends StateNotifier<CitaModel?> {
     navigateTo(Routes.home, context);
   }
 
-  void cancelarCita() {
+  Future<void> cancelarCita(context) async {
     final appointment = appointments
         .where(
           (a) => a.id.toString() == uuidCitaSel,
@@ -264,6 +264,8 @@ class CitaController extends StateNotifier<CitaModel?> {
     citas.remove(cita);
 
     citaRepo.deleteCita(uuid: uuidCitaSel);
+    await enviarNotificacionPaciente(context, true);
+    await enviarNotificacionGestorCasos(context);
   }
 
   Future<void> openDatePickerFechaInicio(context, dateInput) async {
@@ -458,14 +460,67 @@ class CitaController extends StateNotifier<CitaModel?> {
     return appointment;
   }
 
-  Future<void> enviarNotificacion(BuildContext context) async {
+  Future<void> enviarNotificacionPaciente(
+    BuildContext context,
+    bool cancelar,
+  ) async {
     final blocNotificacion = context.read<NotificacionesBloc>();
     final usuarioRepo = context.read<UsuarioRepo>();
+    final pacienteRepo = context.read<PacienteRepo>();
+    final language = AppLocalizations.of(context)!;
 
-    final titulo = cita.asunto;
+    final titulo = cancelar
+        ? '${cita.asunto} ${language.cancelada}'
+        : '${cita.asunto} ${language.creada}';
     final cuerpo = '${cita.horaInicio} ${cita.horaFin}';
 
     final response = await usuarioRepo.getUsuarioByUid(uid: state!.uidPaciente);
+    response.when(
+      (success) async {
+        blocNotificacion.sendPushMessage(
+          titulo,
+          cuerpo,
+          success.token,
+        );
+
+        final responsePaciente = await pacienteRepo.getPacienteByUid(
+          success.uid,
+        );
+
+        responsePaciente.when(
+          (sucPaciente) async {
+            if (sucPaciente.cuidador != null) {
+              final responseCuidador = await usuarioRepo.getUsuarioByUid(
+                uid: sucPaciente.cuidador!,
+              );
+
+              responseCuidador.when(
+                (sucCuidador) => blocNotificacion.sendPushMessage(
+                  titulo,
+                  cuerpo,
+                  sucCuidador.token,
+                ),
+                (errorCuidador) => debugPrint(errorCuidador),
+              );
+            }
+          },
+          (errorPac) => debugPrint(errorPac),
+        );
+      },
+      (error) => debugPrint(error),
+    );
+  }
+
+  Future<void> enviarNotificacionGestorCasos(BuildContext context) async {
+    final blocNotificacion = context.read<NotificacionesBloc>();
+    final usuarioRepo = context.read<UsuarioRepo>();
+    final language = AppLocalizations.of(context)!;
+
+    final titulo = '${cita.asunto} ${language.cancelada}';
+    final cuerpo = '${cita.horaInicio} ${cita.horaFin}';
+
+    final response =
+        await usuarioRepo.getUsuarioByUid(uid: state!.uidGestorCasos);
     response.when(
       (success) => blocNotificacion.sendPushMessage(
         titulo,

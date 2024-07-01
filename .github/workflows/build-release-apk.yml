@@ -1,0 +1,42 @@
+name: Build & Release APK for Flutter Application
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build and Release new apk
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Create dotenv file
+        run: |
+          touch assets/dotenv
+          echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> assets/dotenv
+          echo "USER_PASS=${{ secrets.USER_PASS }}" >> assets/dotenv
+          echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> assets/dotenv
+          echo "ENCRYPT_IV=${{ secrets.ENCRYPT_IV }}" >> assets/dotenv
+          echo "VAPID_KEY=${{ secrets.VAPID_KEY }}" >> assets/dotenv
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: dart run build_runner build
+      - run: flutter pub get
+      - run: flutter build apk --release --split-per-abi
+
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*"
+          tag: v0.0.1
+          token: ${{ secrets.TOKEN }}

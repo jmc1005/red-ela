@@ -47,6 +47,7 @@ class _UsuarioDetailViewState extends State<UsuarioDetailView> {
 
     return ChangeNotifierProvider<UsuarioController>(
       create: (_) => UsuarioController(
+        context:context,
         usuarioRepo: context.read(),
         pacienteController: context.read(),
         cuidadorController: context.read(),

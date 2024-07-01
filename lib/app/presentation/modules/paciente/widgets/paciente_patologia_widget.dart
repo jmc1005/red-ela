@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../../../domain/models/paciente/paciente_model.dart';
+import '../../../../utils/enums/inicio_enum.dart';
 import '../../../../utils/firebase/firebase_response.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';
@@ -21,6 +22,7 @@ class PacientePatologiaWidget extends StatefulWidget with ValidatorMixin {
 
 class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
   late final Future<Result<PacienteModel, dynamic>> futurePaciente;
+  final inicioEnum = InicioEnum.espinal;
 
   final dateInput = TextEditingController();
 
@@ -96,15 +98,16 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
               const SizedBox(height: 8),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 1.1,
-                child: TextFormWidget(
-                  label: language.inicio,
-                  initialValue: controller.state!.paciente!.inicio,
-                  keyboardType: TextInputType.text,
-                  onChanged: (text) => controller.onChangeValueInicio(text),
-                  validator: (value) => widget.textValidator(
-                    value,
-                    language,
-                  ),
+                child: DropdownButtonFormField<String>(
+                  value: controller.state!.paciente!.inicio,
+                  borderRadius: BorderRadius.circular(8),
+                  padding: const EdgeInsets.only(left: 15, right: 5),
+                  items: controller.dropdownInicioItems,
+                  onChanged: (value) {
+                    if (value != null && value != inicioEnum.value) {
+                      controller.onChangeValueInicio(value);
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 8),

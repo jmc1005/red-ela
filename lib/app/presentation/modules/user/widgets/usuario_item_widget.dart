@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../global/dialogs/confirm_dialog.dart';
+import '../controllers/usuario_controller.dart';
 
 class UsuarioItemWidget extends StatelessWidget {
   const UsuarioItemWidget({
@@ -18,6 +20,8 @@ class UsuarioItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.of(context)!;
+    final UsuarioController usuarioController = context.read();
+
     final nombre = usuarioModel.nombre ?? '';
     final apellido1 = usuarioModel.apellido1 ?? '';
     final apellido2 = usuarioModel.apellido2 ?? '';
@@ -43,7 +47,12 @@ class UsuarioItemWidget extends StatelessWidget {
         ),
       ),
       OutlinedButton(
-        onPressed: () {
+        onPressed: () async {
+          await usuarioController.borrarUsuarioPorTipo(
+            usuarioModel.rol,
+            usuarioModel.uid,
+          );
+
           Navigator.pop(context, true);
         },
         style: OutlinedButton.styleFrom(

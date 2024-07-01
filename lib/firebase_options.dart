@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCdabpO7hQBIolmQu9pFPCFCWIBXCHGI3A',
-    appId: '1:757105304257:android:f33502c4023baaf1f8ea40',
+    appId: '1:757105304257:android:f049c6b3b31e1c41f8ea40',
     messagingSenderId: '757105304257',
     projectId: 'redela-81338',
     storageBucket: 'redela-81338.appspot.com',

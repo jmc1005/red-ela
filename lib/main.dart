@@ -63,12 +63,12 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FirebaseAppCheck.instance
-      // Your personal reCaptcha public key goes here:
-      .activate(
-    androidProvider: AndroidProvider.debug,
-    appleProvider: AppleProvider.debug,
-  );
+  // await FirebaseAppCheck.instance
+  //     // Your personal reCaptcha public key goes here:
+  //     .activate(
+  //   androidProvider: AndroidProvider.debug,
+  //   appleProvider: AppleProvider.debug,
+  // );
 
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
@@ -214,6 +214,7 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<UsuarioController>(
           create: (context) => UsuarioController(
+            context: context,
             usuarioRepo: context.read(),
             pacienteController: context.read(),
             cuidadorController: context.read(),

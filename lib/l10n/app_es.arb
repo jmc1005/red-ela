@@ -148,7 +148,7 @@
   },
   "administradores": "Administradores",
   "info_envio_email": "Se va a proceder a enviar un email de invitación para que la persona invitada pueda registrarse en la aplicación. Por favor, póngase en contacto con la persona invitada para informarle.",
-  "body_invitacion": "<p>Estimado/a usuario,</p><p>Ha sido invitado por {usuario} para poder registrarse en RedELA como {rol}</p><p>Saludos,</p><p>El Equipo de RedELA</p>",
+  "body_invitacion": "<p>Estimado/a usuario,</p><p>Ha sido invitado por {usuario} para poder registrarse en RedELA como {rol}</p><br><div>Puede acceder desde la <a href=\"https://redela-81338.web.app/\" target=\"_blank\">web</a> o descargar la aplicación en <a href=\"https://play.google.com/store/apps/details?id=es.ubu.tfg2324.ela.red_ela\" target=\"_blank\">Play Store</a></div><br><p>Saludos,</p><p>El Equipo de RedELA</p>",
   "@body_invitacion": {
     "description": "A message with a single parameter",
     "placeholders": {
@@ -184,5 +184,9 @@
   "gestion_hospitales": "Gestión Hospitales",
   "tratamientos": "Tratamientos",
   "hospitales": "Hospitales",
-  "sin_citas": "Sin citas"
+  "sin_citas": "Sin citas",
+  "creada": "creada",
+  "cancelada": "cancelada",
+  "bulbar": "Bulbar",
+  "espinal": "Espinal"
 }

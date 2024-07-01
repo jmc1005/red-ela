@@ -39,8 +39,6 @@ abstract class UsuarioRepo {
     required String rol,
   });
 
-  Future<Result<dynamic, dynamic>> deleteUsuario();
-
   Future<void> signOut();
 
   Future<void> verifyPhoneNumber({
@@ -61,5 +59,11 @@ abstract class UsuarioRepo {
   Future<Result<UsuarioModel, dynamic>> findUsuarioByTelefonoOrEmail({
     required String telefono,
     String? email,
+  });
+
+  Future<Result<dynamic, dynamic>> deleteUsuario();
+
+  Future<Result<dynamic, dynamic>> deleteUsuarioByUid({
+    required String uid,
   });
 }
