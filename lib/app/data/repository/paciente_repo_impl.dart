@@ -208,4 +208,19 @@ class PacienteRepoImpl implements PacienteRepo {
       return Future.value(const Error('data-get-failed'));
     }
   }
+
+  @override
+  Future<Result> deletePacienteByUid({required uid}) {
+    try {
+      return firebaseService
+          .deleteDocumentFromCollection(
+            collectionPath: collection,
+            uid: uid,
+          )
+          .then((value) => const Success('data-deleted'));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-delete-failed'));
+    }
+  }
 }

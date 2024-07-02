@@ -146,4 +146,19 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
       debugPrint(e.toString());
     }
   }
+
+  @override
+  Future<Result> deleteGestorCasosByUid({required String uid}) {
+    try {
+      return firebaseService
+          .deleteDocumentFromCollection(
+            collectionPath: collection,
+            uid: uid,
+          )
+          .then((value) => const Success('data-deleted'));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-delete-failed'));
+    }
+  }
 }

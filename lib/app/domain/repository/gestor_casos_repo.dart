@@ -13,13 +13,17 @@ abstract class GestorCasosRepo {
     required String hospital,
   });
 
-  Future<Result<dynamic, dynamic>> deleteGestorCasos();
-
   Future<Result<GestorCasosModel, dynamic>> getGestorCasosByUid(
     String uid,
   );
 
   Future<void> relacionaGestorCasosPaciente({
     required String uidGestorCasos,
+  });
+
+  Future<Result<dynamic, dynamic>> deleteGestorCasos();
+
+  Future<Result<dynamic, dynamic>> deleteGestorCasosByUid({
+    required String uid,
   });
 }

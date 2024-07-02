@@ -1,0 +1,30 @@
+\apendice{Especificación de diseño}
+
+\section{Introducción}
+En este anexo vamos a definir en base a los objetivos y especificaciones que datos va a manejar la aplicación, que estructura, arquitectura y diseño tendrá.
+
+\section{Diseño de datos}
+Nuestra aplicación cuenta con un diseño de base de datos \textbf{NoSQL}, lo que nos permite mediante la flexibilidad de la estructura de datos adaptarnos rápidamente a los requisitos y necesidades del negocio. Mediante los documentos que darán vida a nuestras entidades estructurados con formato JSON, nos permitirán crear una aplicación donde el usuario no esté relacionado directamente como sucede en las bases de datos relacionales y nos permita mayor rendimiento cuando la aplicación vaya creciendo.
+
+A continuación, vamos a definir el diseño de datos con el que cuenta nuestra aplicación. Para poder entenderlo más rápidamente, vamos a representar cada elemento de nuestra aplicación como si fuera una una entidad relacional.
+\imagen{diseño-datos}{Diseño de datos actores}
+ 
+Otras entidades que necesitaremos para nuestra aplicación son:
+\imagen{entidades}{Entidades}
+
+\section{Diseño procedimental}
+En este punto vamos a definir el aspecto más relevante de la aplicación y es la gestión de las citas por parte del gestor de casos. En ella mostramos el diagrama de secuencia con la creación y borrado de una cita donde se notificará a los pacientes.
+
+\imagen{diagrama-secuencia-gestor-casos}{Diagrama de secuencia Gestor de casos}
+
+\section{Diseño arquitectónico}
+Al elegir hacer la aplicación con Flutter nos vimos ante la necesidad de realizar una arquitectura limpia y por esa misma razón escogimos usar MVVM (Model-View-ViewModel) estructurando nuestras carpetas de la siguiente forma:
+\begin{itemize}
+	\item nuestro model contendrá las entidades que controla la aplicación
+	\item nuestro view contendrá las vistas de la aplicación
+	\item nuestro viewmodel hará de intermediario entre la parte de los datos y la interfaz.
+\end{itemize}
+
+\imagen{mvvm-pattern}{MVVM}
+
+

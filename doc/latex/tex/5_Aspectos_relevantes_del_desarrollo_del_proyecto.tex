@@ -1,0 +1,62 @@
+\capitulo{5}{Aspectos relevantes del desarrollo del proyecto}
+
+Este apartado pretende recoger los aspectos más relevantes del desarrollo del proyecto, pasando por la creación del proyecto, que decisiones se tomaron y la resolución de 
+problemas encontrados y como se solucionaron.
+
+\section{Inicio del proyecto}
+El proyecto surgió a partir de la necesidad de ayudar a personas diagnosticadas con EM (Esclerósis Múltiple) y poder hacer su día a día más fácil a través de consejos, atención, ayuda.
+
+Para poder hacer posible esta solución, se crea una aplicación inicialmente para el móvil, donde se incluirán secciones que pueden ayudar a los usuarios que hagan uso de ellas. Tras la asignación del proyecto se inicia un estudio de las posibilidades tecnológicas disponibles para resolver esta necesidad.
+
+Desde el proyecto realizaremos llamadas a una API del cliente que nos proveerá de los datos necesarios para crear una aplicación amigable para los usuarios.
+
+Tras los inconvenientes que surgieron durante el desarrollo de la idea inicial, se decidió enfocar el proyecto a pacientes diagnosticados con ELA (Esclerosis Latera Amiotrófica), para ello se definió una nueva estructura de datos, empleando documentos que se guardarían en la nube. Esta nueva estructura de datos, se centra en un principio en 3 actores que son los pacientes, los cuidadores principales de los pacientes y gestores/as de casos que gestionarán las citas que necesitan los pacientes para ayudarles a convivir con la enfermedad.
+
+\section{Metodologías}
+Desde el comienzo se realiza una arquitectura limpia para reutilizar los componentes y que sean independientes sin que haya ningún impacto si se realizan cambios en alguno de ellos.
+Para la gestión del proyecto, se utiliza el panel que nos proporciona GitHub, usando la metodología ágil Scrum. El equipo al ser un proyecto creado para la realización del trabajo de fin de carrera, está formado por una persona. 
+Por otro lado, el proyecto inicial se alimentaba de una API externa, realizada por un compañero de la universidad, en la que se mantienen reuniones para recabar requisitos técnicos para desarrollar la aplicación. Ante la imposibilidad de continuar con la aplicación, por inconvenientes técnicos, se considera empezar un proyecto nuevo donde seamos nosotros los que controlemos la gestión de los datos de los actores que intervienen en una primera versión del aplicativo.
+
+Para el desarrollo de la metodología ágil se siguieron los siguientes puntos:
+\begin{itemize}
+\item crear iteraciones incrementales (sprints) y revisiones
+\item una vez terminado el sprint se añade a la rama main que será nuestro producto final.
+\item los sprints por regla general los hemos hecho de duración semanal.,
+\item para cada sprint se le asocian las tareas más importantes.
+\end{itemize}
+
+\section{Formación}
+Para abordar la realización y creación del proyecto se necesitaban adquirir una serie de conocimientos que inicialmente eran inexistentes. Entre los conocimientos adquiridos se destacan:
+\begin{itemize}
+\item Formación sobre Flutter~\cite{flutter,formacionFlutter}.
+\item Formación sobre Dart~\cite{dart}.
+\item Formación sobre Firebase~\cite{firebase}. Esta plataforma es la que nos permitira la gestión de los usuarios y almacenar los datos a través de documentos, además, también la gestión de notificaciones push para la creación o cancelación de citas y también para poder alojar la aplicación web.
+\end{itemize}
+
+Además, se profundiza en obtener información a cerca de que es la esclerosis múltiple y que tipos existen. Posteriormente, la aplicación se centra en recabar información de la esclerosis lateral amiotrófica.
+
+\section{Desarrollo}
+Durante el desarrollo de la aplicación nos aparecieron diversos retos de la versión incial:
+\begin{itemize}
+\item Conexión entre los diferentes componentes.
+\item Internacionalización de la aplicación.
+\item Contactar con el cliente ante desconexión de la dirección de la API facilitada inicialmente.
+\item Contactar con el cliente para resolución de dudas sobre la API.
+\end{itemize}
+
+Durante el desarrollo de la aplicación de la versión final del proyecto nos aparecieron diversos retos:
+\begin{itemize}
+\item Conexión entre los diferentes componentes.
+\item Contactar con el cliente para resolver dudas para la primera versión.
+\item Acordar con el cliente que llevaría esta primera versión.
+\item Trabajar con la plataforma Firebase~\cite{firebase} para la gestión de los datos, notificaciones push.
+\end{itemize}
+
+\section{Publicación}
+Una vez hubo una versión lista para desplegar en producción, se creó una cuenta en Google Play y se desplegó.
+Durante la creación de la cuenta de desarrollador de Google Play, nos encontramos con el reto de que no podemos verificar nuestra identidad aunque seguimos los pasos que indican durante el proceso. 
+
+Para próximas versiones, se tratará de crear un despliegue para otros dispositivos, como es iOS.
+
+
+

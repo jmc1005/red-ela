@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:757105304257:android:f049c6b3b31e1c41f8ea40",
+        "android_client_info": {
+          "package_name": "es.ubu.tfg2324.ela.redEla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757105304257-ka5c5iuaq68bhr9scof2hkj3o0pmgbic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdabpO7hQBIolmQu9pFPCFCWIBXCHGI3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757105304257-ka5c5iuaq68bhr9scof2hkj3o0pmgbic.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "757105304257-6rj8m34ma2h1nlc0ig6llgmgunag5942.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "es.ubu.tfg2324.ela.redEla"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:757105304257:android:f33502c4023baaf1f8ea40",
         "android_client_info": {
           "package_name": "es.ubu.tfg2324.ela.red_ela"

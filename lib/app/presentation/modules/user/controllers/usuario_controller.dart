@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/services/local/preferencias_usuario.dart';
 import '../../../../domain/models/cuidador/cuidador_model.dart';
@@ -7,6 +8,7 @@ import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/models/usuario_tipo/usuario_tipo_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
+import '../../../../utils/enums/inicio_enum.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/firebase/firebase_code_enum.dart';
 import '../../../../utils/firebase/firebase_response.dart';
@@ -21,6 +23,7 @@ import '../../sign/controllers/sign_controller.dart';
 
 class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
   UsuarioController({
+    required this.context,
     required this.usuarioRepo,
     required this.pacienteController,
     required this.cuidadorController,
@@ -28,6 +31,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     required this.signController,
   }) : super(null);
 
+  final BuildContext context;
   final UsuarioRepo usuarioRepo;
   final PacienteController pacienteController;
   final CuidadorController cuidadorController;
@@ -205,7 +209,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     if (rol == UsuarioTipo.paciente.value) {
       String? gestorCasos;
 
-      if (solicitado != null) {
+      if (solicitado != null && solicitado.isNotEmpty) {
         gestorCasos = solicitado;
         onChangeCuidadorPaciente(gestorCasos);
         await gestorCasosController.gestorCasosRepo
@@ -230,7 +234,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     } else if (rol == UsuarioTipo.cuidador.value) {
       String? paciente;
 
-      if (solicitado != '') {
+      if (solicitado != null && solicitado.isNotEmpty) {
         paciente = solicitado;
 
         await pacienteController.pacienteRepo.relacionaPacienteCuidador(
@@ -262,5 +266,48 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     }
 
     prefs.solicitado = '';
+  }
+
+  Future<void> borrarUsuarioPorTipo(rol, uid) async {
+    await usuarioRepo.deleteUsuarioByUid(uid: uid);
+
+    if (rol == UsuarioTipo.paciente.value) {
+      await pacienteController.pacienteRepo.deletePacienteByUid(
+        uid: uid,
+      );
+    } else if (rol == UsuarioTipo.cuidador.value) {
+      await cuidadorController.cuidadorRepo.deleteCuidadorByUid(
+        uid: uid,
+      );
+    } else if (rol == UsuarioTipo.gestorCasos.value) {
+      await gestorCasosController.gestorCasosRepo.deleteGestorCasosByUid(
+        uid: uid,
+      );
+    }
+  }
+
+  List<DropdownMenuItem<String>> get dropdownInicioItems {
+    final language = AppLocalizations.of(context)!;
+
+    return InicioEnum.values.map<DropdownMenuItem<String>>(
+      (InicioEnum inicio) {
+        final label = getInicioString(inicio, language);
+
+        return DropdownMenuItem<String>(
+          value: inicio.value,
+          alignment: Alignment.center,
+          child: Text(label),
+        );
+      },
+    ).toList();
+  }
+
+  String getInicioString(InicioEnum enumInicio, AppLocalizations language) {
+    switch (enumInicio) {
+      case InicioEnum.bulbar:
+        return language.bulbar;
+      case InicioEnum.espinal:
+        return language.espinal;
+    }
   }
 }

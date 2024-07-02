@@ -82,6 +82,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
     if (result is User) {
       prefs.currentUid = result.uid;
 
+      addDeviceToken(result.uid);
       return Success(result);
     }
 
@@ -356,8 +357,8 @@ class UsuarioRepoImpl extends UsuarioRepo {
     );
 
     final phoneCredential = PhoneAuthProvider.credential(
-      verificationId: verificationId!,
-      smsCode: smsCode!,
+      verificationId: verificationId,
+      smsCode: smsCode,
     );
 
     await credential.user!.updatePhoneNumber(phoneCredential);
@@ -381,6 +382,21 @@ class UsuarioRepoImpl extends UsuarioRepo {
           }
         },
       );
+    }
+  }
+
+  @override
+  Future<Result> deleteUsuarioByUid({required String uid}) {
+    try {
+      return firebaseService
+          .deleteDocumentFromCollection(
+            collectionPath: collection,
+            uid: uid,
+          )
+          .then((value) => const Success('data-deleted'));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.value(const Error('data-delete-failed'));
     }
   }
 }

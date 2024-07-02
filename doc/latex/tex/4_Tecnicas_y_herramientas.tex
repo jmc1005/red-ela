@@ -1,0 +1,113 @@
+\capitulo{4}{Técnicas y herramientas}
+\section{Metodologías}
+\subsection{Scrum}
+Scrum~\cite{wiki:scrum} es un marco que se emplea para la gestión de proyectos de metodología ágil y que facilita a los equipos la tarea de gestionar y estructurar el trabajo. Para ello, a través de iteraciones (sprints) se realiza una serie de tareas en un periodo de tiempo y se van incorporando al software.
+\imagen{scrum}{Scrum}{.9}
+
+\subsection{Gitflow}
+Gitflow~\cite{gitflow} se define como un flujo de trabajo para la creación de ramas en Git y llevar un control de versiones. En este flujo existen dos ramas principales, master y develop, y otras ramas que pueden ayudarnos en nuestro desarrollo como pueden ser: feature, release o  hotfix.
+\imagen{gitflow}{Gitflow}{.9}
+
+\section{Patrón de diseño}
+\subsection{Model-View-ViewModel MVVM}
+Es un patrón MVVM~\cite{mvvm}, también conocido como Model View ViewModel que se centra en separar la interfaz del usuario (View) de la parte lógica (Model). La interacción entre la parte lógica y la interfaz del usuario a través del recurso ViewModel.
+
+Algunas de las ventajas al usar este patrón son:
+\begin{itemize}
+\item Fácil desarrollo ya que al poder separar la vista de la lógica varios equipos pueden trabajar simultáneamente en varios componentes.
+\item Fácil testeo ya que no es necesario utilizar la vista para crear tests para el model o el viewmodel.
+\item Fácil mantenimiento ya que al realizar la separación de los componentes se crea un código simple y limpio.
+\end{itemize}
+
+Vamos a describir a continuación cada uno de los componentes que forman el MVVM:
+\begin{itemize}
+	\item Model: es el componente donde se encapsulan los datos de nuestra aplicación. En ella se pueden encontrar validación y lógica de negocio.
+	\item View: nos muestra el diseño y la apariencia de nuestra aplicación. En ella se verán los datos pero sin contener nada de la lógica de negocio.
+	\item ViewModel: es el componente que enlaza los datos o cambios de estado que puede tener nuestra aplicación.
+\end{itemize}
+
+\imagen{mvvm-pattern}{Arquitectura limpia}{.9}
+
+\section{Repositorio}
+Entre las herramientas consideradas GitHub~\cite{github}, Bitbucket~\cite{bitbucket}, GitLab~\cite{wiki:gitlab} se decide utilizar GitHub, porque nos permite alojar proyectos gratuitamente. Además podemos crear documentación a través de wikis, crear tareas, sprints.
+Al crear el respositorio en GitHub podemos usar el gestor de proyecto que tiene a través de sus paneles y saber el estado en el que está cada issue (tarea).
+Otra de las ventajas que encontramos con GitHub es que está integrado en multiples servicios de integración continua.
+
+\section{Control de versiones}
+Al haber escogido como repositorio GitHub para alojar nuestro proyecto, utilizamos como control de versiones Git~\cite{wiki:git} que es un sistema distribuido que nos permite realizar nuestro trabajo sin conexión, es ligero y rápido.
+El crear ramas y hacer los merges es muy rápido y pocas veces se obtienen conflictos.
+El historial es muy detallado.
+
+\section{Gestión del proyecto}
+Como gestor de proyectos utilizamos el que viene integrado en GitHub. Con esta herramienta podemos gestionar nuestro proyecto y ver en que estado está cada tarea, incluso podemos darle prioridad.
+
+\section{Entorno de desarrollo integrado (IDE)}
+\subsection{Flutter}
+\imagen{flutter}{Flutter}{.9}
+Flutter~\cite{flutter} es un SDK (Kit de Desarrollo de Software) desarrollado por Google que nos permite crear aplicaciones para varios dispositivos. Hemos elegido esta herramienta porque nos permite crear aplicaciones multiplataforma.
+Entre alguna de las ventajas destacamos:
+\begin{itemize}
+\item \textbf{Compila en nativo} tanto para Android como iOS.
+\item Mediante el uso de widgets, se pueden \textbf{crear interfaces gráficas flexibles}.
+\item \textbf{Rapidez} en el desarrollo.
+\end{itemize}
+
+\subsection{Dart}
+Dart~\cite{dart} es un \textbf{lenguaje de programación moderno}, desarrollado por Google, donde se mezcla la programación orientada a objetos POO con los lenguajes de programación basados en scripts.
+
+\subsection{Firebase}
+\imagen{firebase}{Firebase}{.9}
+Firebase~\cite{firebase} es una plataforma que nos permite crear aplicaciones web y móviles. Nos permite utilizar un número de herramientas o servicios para facilitarnos a los desarrolladores construir aplicación de forma rápida, segura y escalable. En nuestro proyecto hemos empleado los servicios:
+\begin{itemize}
+\item Autenticación para la gestión de los usuarios.
+\item Base de datos en la nube con Cloud Firestore que nos facilita la sincronización de los datos almacenados en tiempo real. Hemos decidido emplear Cloud Firestore que es un servicio de base de datos NoSQL porque nos permite una serie de ventajas como son la escalabilidad, eficiencia, flexibilidad, seguridad, entre otras. Otra de las razones de utilizar NoSQL es porque decidimos que cada actor tiene acceso a sus propios datos y aunque estén relacionados entre si, cada uno es dueño de la información que almacena en el aplicativo.
+\item Notificaciones push con Firebase Cloud Messaging (FCM).
+\item Hosting para alojar la aplicación web.
+\end{itemize}
+
+\subsection{Android Studio}
+
+\subsection{FlutterFlow}
+FlutterFlow~\cite{flutterflow} es una herramienta que nos permite crear aplicaciones insertando los componentes que tiene la herramienta, arrastrando y soltando. Es posible añadir lógica durante la creación de las páginas.
+
+\subsection{LaTeX}
+Entre las distintas herramientas de \LaTeX{} que existen hemos decidido utilizar TeXmaker~\cite{wiki:texmaker, texmaker} que es un editor de \LaTeX{} gratuito y multiplataforma. Además, incluye soporte unicode, corrección ortográfica, autocompletado y un visor de PDF integrado.
+
+\subsection{Documentación}
+Para la documentación del trabajo de fin de grado hemos empleado \LaTeX{}~\cite{wiki:latex} que es un sistema que permite componer textos con una alta calidad tipográfica. En el caso de la documentación del repositorio hemos empleado Markdown~\cite{wiki:markdown} que es un lenguaje de marcado ligero.
+
+\section{Integración y entregas continuas (CI/CD)}
+\subsection{Github}
+Github~\cite{github} para realizar CI/CD utilizaremos los actions que tiene esta herramienta. A cada push que hagamos contra la rama main esta activará los actions creados y desplegará la aplicación tanto generando la apk de Android como la desplegará en el hosting de Firebase
+
+\section{Herramientas contrucción del proyecto}
+Nuestro proyecto está creado Flutter~\cite{flutter} que nos permite construir aplicaciones nativas multiplataforma a partir de un único código base. Flutter dispone de comandos que permite construir el proyecto y generar distintas aplicaciones como en nuestro caso son la web y Android.
+
+\subsection{Librerías}
+
+\subsubsection{Flutter}
+Flutter dispone de un repositorio oficial para aplicaciones Dart y Flutter  \url{https://pub.dev} que contiene una infinidad de paquetes instalar en nuestro proyecto. 
+Algunos paquetes que cabe destacar son:
+
+\begin{itemize}
+	\item Para securizar los datos de los usuarios que emplean la aplicación \textbf{encrypt}.
+	\item Para la gestión de las citas \textbf{Syncfunsion Flutter Calendar}.
+	\item Para el envío de mails \textbf{mailer}.
+	\item Para almacenar nuestras variables de entorno del proyecto \textbf{dotenv}.
+\end{itemize}
+
+\subsubsection{Firebase}
+Firebase~\cite{firebase} que es una plataforma de Google para desarrollar aplicaciones web y móviles que se encuentra alojada en la nube. Algunas funcionalidades para el funcionamiento de nuestra aplicación que utilizamos de esta plataforma son la autenticación, el hosting para alojar la aplicación, firestore database como base de datos, messaging para las notificaciones push.
+
+Algunos paquetes que necesitamos instalar para poder trabajar con flutter son:
+\begin{itemize}
+	\item \textbf{Firebase Core}.
+	\item \textbf{Firebase Auth}.
+	\item \textbf{Firebase Storage}.
+	\item \textbf{Cloud Firestore}.
+	\item \textbf{Firebase messaging}.
+\end{itemize}
+
+
+
+

@@ -12,6 +12,7 @@ import '../../../../domain/models/rol/rol_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/rol_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
+import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
 import '../../../global/controllers/state/state_notifier.dart';
@@ -125,44 +126,44 @@ class InvitacionController extends StateNotifier<InvitacionState> {
   }
 
   Future<void> sendEmailPhone(context, AppLocalizations language) async {
-    final rol = getStringByRol(state.rol, language);
+    //final rol = getStringByRol(state.rol, language);
 
     final response = await usuarioRepo.getUsuario();
 
     response.when(
       (success) async {
-        if (kIsWeb) {
-          await sendEmailWeb(
-            context,
-            language,
-            success.nombreCompleto,
-            success.rol,
-          );
-        } else {
-          final Email email = Email(
-            body: language.body_invitacion(success.nombreCompleto, rol),
-            subject: language.subject_invitacion,
-            recipients: [state.email],
-            isHTML: true,
-          );
+        // if (kIsWeb) {
+        await sendEmailWeb(
+          context,
+          language,
+          success.nombreCompleto,
+          state.rol,
+        );
+        // } else {
+        //   final Email email = Email(
+        //     body: language.body_invitacion(success.nombreCompleto, rol),
+        //     subject: language.subject_invitacion,
+        //     recipients: [state.email],
+        //     isHTML: true,
+        //   );
 
-          bool isSuccess = false;
-          try {
-            await FlutterEmailSender.send(email);
-            isSuccess = true;
-          } catch (error) {
-            debugPrint(error.toString());
-          }
+        //   bool isSuccess = false;
+        //   try {
+        //     await FlutterEmailSender.send(email);
+        //     isSuccess = true;
+        //   } catch (error) {
+        //     debugPrint(error.toString());
+        //   }
 
-          if (!mounted) {
-            return;
-          }
-          if (isSuccess) {
-            showSuccess(context, language.email_enviado);
-          } else {
-            showError(context, language.email_error_envio);
-          }
-        }
+        //   if (!mounted) {
+        //     return;
+        //   }
+        //   if (isSuccess) {
+        //     showSuccess(context, language.email_enviado);
+        //   } else {
+        //     showError(context, language.email_error_envio);
+        //   }
+        // }
       },
       (error) => debugPrint(error),
     );
@@ -204,12 +205,41 @@ class InvitacionController extends StateNotifier<InvitacionState> {
     getSecureCredentials();
 
     final smtpServer = gmail(_username, _password);
+    var html = '';
+
+    if (rol == UsuarioTipo.gestorCasos.value) {
+      html = language.body_invitacion(
+        nombreCompleto,
+        language.gestor_casos.toLowerCase(),
+        AppConstants.uriWeb,
+        AppConstants.blank,
+        AppConstants.uriPlayStore,
+      );
+    } else if (rol == UsuarioTipo.paciente.value) {
+      html = language.body_invitacion(
+        nombreCompleto,
+        language.paciente.toLowerCase(),
+        AppConstants.uriWeb,
+        AppConstants.blank,
+        AppConstants.uriPlayStore,
+      );
+    } else if (rol == UsuarioTipo.cuidador.value) {
+      html = language.body_invitacion(
+        nombreCompleto,
+        language.cuidador.toLowerCase(),
+        AppConstants.uriWeb,
+        AppConstants.blank,
+        AppConstants.uriPlayStore,
+      );
+    }
+
+    debugPrint('html $html');
 
     final message = Message()
       ..from = Address(_username, 'Equipo RedELA')
       ..recipients.add(state.email)
       ..subject = language.subject_invitacion
-      ..html = language.body_invitacion(nombreCompleto, rol);
+      ..html = html;
 
     try {
       final sendReport = await send(message, smtpServer);
@@ -217,8 +247,9 @@ class InvitacionController extends StateNotifier<InvitacionState> {
       showSuccess(context, language.email_enviado);
 
       debugPrint('Message sent: $sendReport');
+      Navigator.pop(context, true);
     } on MailerException catch (e) {
-      debugPrint('Message not sent.');
+      debugPrint('Message not sent. $e');
       for (final p in e.problems) {
         debugPrint('Problem: ${p.code}: ${p.msg}');
       }

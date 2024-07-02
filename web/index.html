@@ -15,7 +15,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.ico" />
 
-    <title>My project</title>
+    <title>RedELA</title>
     <link rel="manifest" href="manifest.json" />
 
     <script src="./assets/packages/mixpanel_flutter/assets/mixpanel.js"></script>
@@ -32,27 +32,35 @@
     <script type="module">
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-      import {} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
-      import {} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      import {} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-analytics.js";
+      import { getMessaging } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-messaging.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
 
       // Your web app's Firebase configuration
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
         apiKey: "AIzaSyDKlew3tPoDXjB9vyN0yvcxFy_VcWJawR4",
-        authDomain: "redela-81338.firebaseapp.com",
-        projectId: "redela-81338",
-        storageBucket: "redela-81338.appspot.com",
-        messagingSenderId: "757105304257",
         appId: "1:757105304257:web:fcf313d670026837f8ea40",
+        messagingSenderId: "757105304257",
+        projectId: "redela-81338",
+        authDomain: "redela-81338.firebaseapp.com",
+        storageBucket: "redela-81338.appspot.com",
         measurementId: "G-GRYW8XM20W",
       };
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
+      const messaging = getMessaging(app);
+      const auth = getAuth(app);
+    </script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        });
+      }
     </script>
   </body>
 </html>

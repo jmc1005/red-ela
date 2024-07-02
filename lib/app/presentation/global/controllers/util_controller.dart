@@ -50,7 +50,14 @@ class UtilController {
     );
 
     if (pickedTime != null) {
-      final hour = pickedTime.format(context);
+      var hour = pickedTime.format(context);
+
+      if (hour.contains('AM') || hour.contains('PM')) {
+        final DateFormat format12 = DateFormat.jm();
+        final DateTime dateTime = format12.parse(hour);
+        final DateFormat format24 = DateFormat.Hm();
+        hour = format24.format(dateTime);
+      }
 
       onChange(hour);
       timeInput.text = hour;
