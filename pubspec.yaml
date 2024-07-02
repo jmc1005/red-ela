@@ -2,7 +2,7 @@ name: red_ela
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 1.0.0+1
+version: 1.0.4+4
 
 environment:
   sdk: ">=3.3.2 <4.0.0"

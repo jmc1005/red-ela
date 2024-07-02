@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/invitacion/invitacion_model.dart';
-import '../../../../domain/repository/invitacion_repo.dart';
 
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/text_form_widget.dart';

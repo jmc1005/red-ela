@@ -12,6 +12,7 @@ import '../../../../domain/models/rol/rol_model.dart';
 import '../../../../domain/repository/invitacion_repo.dart';
 import '../../../../domain/repository/rol_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
+import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../../utils/snackBar/snackbar_util.dart';
 import '../../../global/controllers/state/state_notifier.dart';
@@ -125,7 +126,7 @@ class InvitacionController extends StateNotifier<InvitacionState> {
   }
 
   Future<void> sendEmailPhone(context, AppLocalizations language) async {
-    final rol = getStringByRol(state.rol, language);
+    //final rol = getStringByRol(state.rol, language);
 
     final response = await usuarioRepo.getUsuario();
 
@@ -136,7 +137,7 @@ class InvitacionController extends StateNotifier<InvitacionState> {
           context,
           language,
           success.nombreCompleto,
-          success.rol,
+          state.rol,
         );
         // } else {
         //   final Email email = Email(
@@ -210,18 +211,29 @@ class InvitacionController extends StateNotifier<InvitacionState> {
       html = language.body_invitacion(
         nombreCompleto,
         language.gestor_casos.toLowerCase(),
+        AppConstants.uriWeb,
+        AppConstants.blank,
+        AppConstants.uriPlayStore,
       );
     } else if (rol == UsuarioTipo.paciente.value) {
       html = language.body_invitacion(
         nombreCompleto,
         language.paciente.toLowerCase(),
+        AppConstants.uriWeb,
+        AppConstants.blank,
+        AppConstants.uriPlayStore,
       );
     } else if (rol == UsuarioTipo.cuidador.value) {
       html = language.body_invitacion(
         nombreCompleto,
         language.cuidador.toLowerCase(),
+        AppConstants.uriWeb,
+        AppConstants.blank,
+        AppConstants.uriPlayStore,
       );
     }
+
+    debugPrint('html $html');
 
     final message = Message()
       ..from = Address(_username, 'Equipo RedELA')

@@ -14,4 +14,9 @@ class AppConstants {
 
   static const String uriSendPushMessage =
       'https://fcm.googleapis.com/v1/projects/redela-81338/messages:send';
+
+  static const String uriWeb = 'https://redela-81338.web.app/';
+  static const String uriPlayStore =
+      'https://play.google.com/store/apps/details?id=es.ubu.tfg2324.ela.red_ela';
+  static const String blank = '_blank';
 }

@@ -5,7 +5,6 @@ import 'package:multiple_result/multiple_result.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/color_config.dart';
-import '../../../../data/services/bloc/notificaciones_bloc.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
