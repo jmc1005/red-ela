@@ -26,6 +26,7 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
   final phoneController = TextEditingController();
 
   var isEmailEmpty = false;
+  var readOnlyPhone = false;
   var validConfirmPassword = true;
   bool _showPassword = false;
 
@@ -41,6 +42,8 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
     isEmailEmpty = usuario.email != null && usuario.email!.isEmpty;
 
     _showPassword = isEmailEmpty || usuario.uid == '';
+    phoneController.text = usuario.telefono ?? '';
+    readOnlyPhone = usuario.telefono != null && usuario.telefono!.isNotEmpty;
   }
 
   @override
@@ -48,10 +51,6 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
     final language = AppLocalizations.of(context)!;
     final usuarioController = widget.usuarioController;
     final usuario = usuarioController!.state!.usuario;
-    phoneController.text = usuario.telefono ?? '';
-    final readOnlyEmail = usuario.email != null && usuario.email!.isNotEmpty;
-    final readOnlyPhone =
-        usuario.telefono != null && usuario.telefono!.isNotEmpty;
 
     if (usuario.fechaNacimiento != null &&
         usuario.fechaNacimiento!.isNotEmpty) {
@@ -118,14 +117,14 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
           initialValue: usuario.email,
           label: language.email,
           keyboardType: TextInputType.emailAddress,
-          readOnly: readOnlyEmail,
-          validator: (value) => !readOnlyEmail
+          readOnly: !isEmailEmpty,
+          validator: (value) => isEmailEmpty
               ? widget.emailValidator(
                   value,
                   language,
                 )
               : null,
-          onChanged: (value) => !readOnlyEmail
+          onChanged: (value) => isEmailEmpty
               ? usuarioController.onChangeValueEmail(
                   value,
                 )
