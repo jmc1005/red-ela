@@ -1,16 +1,17 @@
 \capitulo{5}{Aspectos relevantes del desarrollo del proyecto}
 
-Este apartado pretende recoger los aspectos más relevantes del desarrollo del proyecto, pasando por la creación del proyecto, que decisiones se tomaron y la resolución de 
-problemas encontrados y como se solucionaron.
+Este apartado pretende recoger los aspectos más relevantes del desarrollo del proyecto, pasando por la creación del proyecto, que decisiones se tomaron y la resolución de problemas encontrados y como se solucionaron.
 
 \section{Inicio del proyecto}
-El proyecto surgió a partir de la necesidad de ayudar a personas diagnosticadas con EM (Esclerósis Múltiple) y poder hacer su día a día más fácil a través de consejos, atención, ayuda.
+El proyecto surgió a partir de la necesidad de ayudar a personas diagnosticadas con Esclerosis, tratando inicialmente la EM (Esclerósis Múltiple) y poder hacer su día a día más fácil a través de consejos, atención, ayuda.
 
 Para poder hacer posible esta solución, se crea una aplicación inicialmente para el móvil, donde se incluirán secciones que pueden ayudar a los usuarios que hagan uso de ellas. Tras la asignación del proyecto se inicia un estudio de las posibilidades tecnológicas disponibles para resolver esta necesidad.
 
 Desde el proyecto realizaremos llamadas a una API del cliente que nos proveerá de los datos necesarios para crear una aplicación amigable para los usuarios.
 
 Tras los inconvenientes que surgieron durante el desarrollo de la idea inicial, se decidió enfocar el proyecto a pacientes diagnosticados con ELA (Esclerosis Latera Amiotrófica), para ello se definió una nueva estructura de datos, empleando documentos que se guardarían en la nube. Esta nueva estructura de datos, se centra en un principio en 3 actores que son los pacientes, los cuidadores principales de los pacientes y gestores/as de casos que gestionarán las citas que necesitan los pacientes para ayudarles a convivir con la enfermedad.
+
+Durante el análisis del proyecto y al tratarse de información sensible de los pacientes, nos proponemos a securizar toda la información de los usuarios que van a utilizar la aplicación por lo que podemos garantizar que la información será cifrada.
 
 \section{Metodologías}
 Desde el comienzo se realiza una arquitectura limpia para reutilizar los componentes y que sean independientes sin que haya ningún impacto si se realizan cambios en alguno de ellos.
@@ -19,21 +20,22 @@ Por otro lado, el proyecto inicial se alimentaba de una API externa, realizada p
 
 Para el desarrollo de la metodología ágil se siguieron los siguientes puntos:
 \begin{itemize}
-\item crear iteraciones incrementales (sprints) y revisiones
-\item una vez terminado el sprint se añade a la rama main que será nuestro producto final.
-\item los sprints por regla general los hemos hecho de duración semanal.,
+\item crear iteraciones incrementales (sprints) y revisiones, que esto conlleva a realizar entregas semanales con actualizaciones de la aplicación y revisar aquellos puntos donde hayan surgido problemas.
+\item una vez terminado el sprint se añade a la rama main que será nuestro producto final. Esto significa que tendremos una versión actualizada de la aplicación añadiendo nuevas funcionalidades.
+\item los sprints por regla general los hemos hecho de duración semanal. 
 \item para cada sprint se le asocian las tareas más importantes.
 \end{itemize}
 
 \section{Formación}
 Para abordar la realización y creación del proyecto se necesitaban adquirir una serie de conocimientos que inicialmente eran inexistentes. Entre los conocimientos adquiridos se destacan:
 \begin{itemize}
-\item Formación sobre Flutter~\cite{flutter,formacionFlutter}.
-\item Formación sobre Dart~\cite{dart}.
+\item Formación sobre Flutter~\cite{flutter,formacionFlutter}. En este punto adquirimos los conocimientos sobre crear elementos en Flutter y poder dar forma a las vistas y funcionalidades que contendrá nuestra aplicación.
+\item Formación sobre Dart~\cite{dart}. Nos formamos para obtener los conocimientos necesarios para poder programar y desarrollar la aplicación.
 \item Formación sobre Firebase~\cite{firebase}. Esta plataforma es la que nos permitira la gestión de los usuarios y almacenar los datos a través de documentos, además, también la gestión de notificaciones push para la creación o cancelación de citas y también para poder alojar la aplicación web.
+\item Securizar los datos guardados en la aplicación mediante \textbf{AES (Advanced Encryption Standard)}~\cite{wiki:aes} considerado uno de los más seguros y utilizados actualmente que mediante una clave secreta única de cifrado y descifrado.
 \end{itemize}
 
-Además, se profundiza en obtener información a cerca de que es la esclerosis múltiple y que tipos existen. Posteriormente, la aplicación se centra en recabar información de la esclerosis lateral amiotrófica.
+Además, se profundiza en obtener información a cerca de que es la esclerosis múltiple y que tipos existen. Posteriormente, la aplicación se centra en recabar información de la \textbf{esclerosis lateral amiotrófica}.
 
 \section{Desarrollo}
 Durante el desarrollo de la aplicación nos aparecieron diversos retos de la versión incial:
@@ -53,10 +55,14 @@ Durante el desarrollo de la aplicación de la versión final del proyecto nos ap
 \end{itemize}
 
 \section{Publicación}
-Una vez hubo una versión lista para desplegar en producción, se creó una cuenta en Google Play y se desplegó.
-Durante la creación de la cuenta de desarrollador de Google Play, nos encontramos con el reto de que no podemos verificar nuestra identidad aunque seguimos los pasos que indican durante el proceso. 
+Una vez hubo una versión lista para desplegar, se creó una \textbf{cuenta} en \textbf{Google Play} y se realizó la subida para una prueba inicial dando posibilidad de descarga por invitación a los testers para poder hacer pruebas y comprobar el funcionamiento de la aplicación.
+Durante la creación de la \textbf{cuenta de desarrollador} de \textbf{Google Play}, nos encontramos con el reto de que no podemos verificar nuestra identidad aunque seguimos los pasos que indican durante el proceso. Finalmiente y pasando unos días nos verifican la identidad y conseguimos realizar nuestro primer despliegue en \textbf{Google Play Console} \url{https://play.google.com/console/u/0/developers}.
 
-Para próximas versiones, se tratará de crear un despliegue para otros dispositivos, como es iOS.
+Para próximas versiones, se tratará de crear un despliegue para otros dispositivos, como es iOS. 
+
+Cabe recalcar que la aplicación es multiplataforma, por lo que por el momento los usuarios que tengan dispositivos con sistema operativo de iOs podrán acceder a la aplicación a través del navegador web que utilicen.
+
+Este punto lo desarrolleros con más detalle en los anexos, en los que incluiremos que pasos hay que seguir para poder realizar la publicación de la aplicación incluso añadir las claves para poder desplegar una apk en un dispositivo android habilitando el modo \textbf{Desarrollador}.
 
 
 

@@ -24,32 +24,33 @@ Tras analizar los objetivos marcados por la asociación y ver que la aplicación
 
 En una primera fase vamos y para dar comienzo al proyecto se va a realizar el desarrollo e implementación de los siguientes puntos:
 \begin{itemize}
-\item \textbf{Administrador}
+\item \textbf{Administrador}. Este rol tiene la posibilidad de realizar las siguientes gestiones:
 	\begin{itemize}
 		\item \textbf{Gestión usuarios}
 			\begin{itemize}
-				\item \textbf{Gestión administradores}. Ver, invitar y eliminar
-				\item \textbf{Gestión gestores de casos}. Ver, invitar y eliminar
-				\item \textbf{Gestión pacientes}. Ver
-				\item \textbf{Gestión cuidadores}. Ver
+				\item \textbf{Gestión administradores}. Esta gestión se define por poder gestionar aquellos usuarios que son \textbf{administradores} de la aplicación. En ella se podrán ver la información relativa con los usuarios administradores y se podrá invitar a nuevos administradores. 
+				\item \textbf{Gestión gestores de casos}. Esta gestión se define por poder gestionar aquellos usuarios que son \textbf{gestores de casos} de la aplicación. En ella se podrán ver la información relativa con los usuarios gestores de casos y se podrá invitar a nuevos gestores. 
+				\item \textbf{Gestión pacientes}. Esta gestión se define por poder gestionar aquellos usuarios que son \textbf{pacientes} de la aplicación. En ella se podrán ver la información relativa con los usuarios que son pacientes. 
+				\item \textbf{Gestión cuidadores}. Esta gestión se define por poder gestionar aquellos usuarios que son \textbf{gestores de casos} de la aplicación. En ella se podrán ver la información relativa con los usuarios cuidadores. 
 			\end{itemize}
-		\item \textbf{Gestión roles}. Ver, crear y eliminar
-		\item \textbf{Gestión hospitales}. Ver, crear y eliminar
-		\item \textbf{Gestión tratamientos}. Ver, crear y eliminar
+		\item \textbf{Gestión roles}. Aquí realizamos la gestión de los roles que va a tener la aplicación. Inicialmente nos encontramos con los roles de \textbf{administrador}, \textbf{gestor de casos}, \textbf{paciente} y \textbf{cuidador}.
+		\item \textbf{Gestión hospitales}. Aquí realizamos gestiones pudiendo dar de alta, modificar o dar de baja hospitales.
+		\item \textbf{Gestión tratamientos}. Aquí realizamos gestiones pudiendo dar de alta, modificar o dar de baja tratamientos.
 	\end{itemize}
-\item \textbf{Gestor casos}
+\item \textbf{Gestor casos}. Este rol puede realizar las siguientes operaciones en la aplicación:
 			\begin{itemize}
-				\item \textbf{Gestión citas}. Crear, modificar y eliminar
-				\item \textbf{Gestión pacientes}. . Ver, invitar y eliminar
+				\item \textbf{Gestión citas}. El gestor de casos puede crear, modificar la cita o cancelar una cita para un paciente con ELA. Una vez realizada la operación de crear, cancelar o modificar una cita, llegará una notificación al paciente con la información.
+				\item \textbf{Gestión pacientes}. El gestor de casos puede invitar, ver la información del paciente del cual gestiona el caso o eliminar un paciente fallecido para realizar el derecho al olvido.
 			\end{itemize}
 \item \textbf{Paciente}
 			\begin{itemize}
-				\item \textbf{Usuarios asociados}. Enviar invitación a cuidador
-				\item \textbf{Gestión citas}. Ver y eliminar
+				\item \textbf{Gestión citas}. En este caso el paciente podrá ver aquellas citas que tenga asociadas y cancelarlas. Una vez cancelada la cita el gestor de casos recibirá una notificación push.
+				\item \textbf{Usuarios asociados}. El usuario al registrarse, en la pantalla de usuarios asociados, si no tiene cuidador asignado, podrá enviarle una invitación para que el usuario se registre. También puede ver en esta pantalla la información del gestor de su caso.
 			\end{itemize}
 \item \textbf{Cuidador}
 			\begin{itemize}
-				\item \textbf{Gestión citas}. Ver y eliminar
+				\item \textbf{Gestión citas}. En este caso el cuidador podrá ver aquellas citas que tenga asociadas el paciente del que se hace cargo y puede cancelarlas. Una vez cancelada la cita el gestor de casos recibirá una notificación push.
+				\item \textbf{Usuarios asociados}. En esta pantalla verá la información del paciente que tenga asignado.
 			\end{itemize}
 \end{itemize}
 
@@ -60,19 +61,19 @@ Algunos ejemplos de futuras versiones son
 \begin{itemize}
 \item \textbf{Material ortoprotésico}
 			\begin{itemize}
-				\item \textbf{Gestión material}.
+				\item \textbf{Gestión material}. En este punto se tratará de aquel material que sea de ayuda para facilitar el día a día de los paciente con ELA, como pueden ser gruas o camas.
 			\end{itemize}
 \item \textbf{Unidades ELA}
 			\begin{itemize}
-				\item \textbf{Gestión unidades ELA}.
+				\item \textbf{Gestión unidades ELA}. Aquí el usuario podrá ver aquellos puntos donde se encuentren las unidades de ELA para poder acercarse y consultar o recibir ayuda.
 			\end{itemize}
 \item \textbf{Ensayos clínicos}
 			\begin{itemize}
-				\item \textbf{Gestión ensayos clínicos}
+				\item \textbf{Gestión ensayos clínicos}. Se almacenaran y podrán consultar aquellos ensayos clínicos relacionados con la esclerosis.
 			\end{itemize}
 \item \textbf{Artículos de Invesigación}
 			\begin{itemize}
-				\item \textbf{Gestión artículos investigación}
+				\item \textbf{Gestión artículos investigación}. Se almacenaran y podrán consultar aquellos artículos de investigación relacionados con la esclerosis.
 			\end{itemize}
 \end{itemize}
 Una vez realizada el análisis de los requisitos, nos informamos a cerca de que la \textbf{Esclerosis Lateral Amiotrófica (ELA)}~\cite{wiki:ela} es una enfermedad neuromuscular degenerativa que provoca de manera gradual la parálisis muscular y que provoca con el tiempo la muerte del paciente que padece dicha enfermedad.
