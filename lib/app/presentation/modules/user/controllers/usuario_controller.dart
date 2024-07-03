@@ -150,7 +150,6 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
 
   Future<void> update(context, language) async {
     final result = await usuarioRepo.updateUsuario(
-      uid: state!.usuario.uid,
       nombre: state!.usuario.nombre!,
       apellido1: state!.usuario.apellido1!,
       apellido2: state!.usuario.apellido2!,
@@ -209,7 +208,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     if (rol == UsuarioTipo.paciente.value) {
       String? gestorCasos;
 
-      if (solicitado != null && solicitado.isNotEmpty) {
+      if (solicitado.isNotEmpty) {
         gestorCasos = solicitado;
         onChangeCuidadorPaciente(gestorCasos);
         await gestorCasosController.gestorCasosRepo
@@ -234,7 +233,7 @@ class UsuarioController extends StateNotifier<UsuarioTipoModel?> {
     } else if (rol == UsuarioTipo.cuidador.value) {
       String? paciente;
 
-      if (solicitado != null && solicitado.isNotEmpty) {
+      if (solicitado.isNotEmpty) {
         paciente = solicitado;
 
         await pacienteController.pacienteRepo.relacionaPacienteCuidador(

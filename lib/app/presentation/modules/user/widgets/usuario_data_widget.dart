@@ -25,7 +25,7 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
   final confirmPassFocusNode = FocusNode();
   final phoneController = TextEditingController();
 
-  var isEmailEmpty = false;
+  var redaOnlyEmail = false;
   var readOnlyPhone = false;
   var validConfirmPassword = true;
   bool _showPassword = false;
@@ -39,9 +39,9 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
   Future<void> visiblePassword() async {
     final usuarioController = widget.usuarioController;
     final usuario = usuarioController!.state!.usuario;
-    isEmailEmpty = usuario.email != null && usuario.email!.isEmpty;
+    redaOnlyEmail = usuario.email != null && usuario.email!.isNotEmpty;
 
-    _showPassword = isEmailEmpty || usuario.uid == '';
+    _showPassword = !redaOnlyEmail || usuario.uid == '';
     phoneController.text = usuario.telefono ?? '';
     readOnlyPhone = usuario.telefono != null && usuario.telefono!.isNotEmpty;
   }
@@ -117,14 +117,14 @@ class _UsuarioDataWidgetState extends State<UsuarioDataWidget> {
           initialValue: usuario.email,
           label: language.email,
           keyboardType: TextInputType.emailAddress,
-          readOnly: !isEmailEmpty,
-          validator: (value) => isEmailEmpty
+          readOnly: redaOnlyEmail,
+          validator: (value) => !redaOnlyEmail
               ? widget.emailValidator(
                   value,
                   language,
                 )
               : null,
-          onChanged: (value) => isEmailEmpty
+          onChanged: (value) => !redaOnlyEmail
               ? usuarioController.onChangeValueEmail(
                   value,
                 )

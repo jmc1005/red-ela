@@ -41,17 +41,15 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
   ) async {
     var paciente = usuarioController.state!.paciente;
 
-    if (paciente == null) {
-      final response =
-          await usuarioController.pacienteController.pacienteRepo.getPaciente();
-      response.when(
-        (success) {
-          paciente = success;
-          usuarioController.paciente = success;
-        },
-        (error) => debugPrint(error),
-      );
-    }
+    final response =
+        await usuarioController.pacienteController.pacienteRepo.getPaciente();
+    response.when(
+      (success) {
+        paciente = success;
+        usuarioController.paciente = success;
+      },
+      (error) => debugPrint(error),
+    );
 
     final usuarioRepo = usuarioController.usuarioRepo;
 
@@ -78,7 +76,7 @@ class _PacienteCuidadorWidgetState extends State<PacienteCuidadorWidget> {
           FutureBuilder(
             future: _getCuidadorPaciente(controller),
             builder: (_, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data! is! Error) {
                 final response = snapshot.data!;
 
                 response.when(

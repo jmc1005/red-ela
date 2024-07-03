@@ -7,7 +7,6 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../../data/services/bloc/notificaciones_bloc.dart';
 import '../../../../domain/repository/connection_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
-import '../../../../data/services/local/preferencias_usuario.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 import '../../../global/widgets/submit_button_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';

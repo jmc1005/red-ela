@@ -76,13 +76,23 @@ class PacienteRepoImpl implements PacienteRepo {
     );
 
     try {
-      return firebaseService
-          .updateDataOnDocument(
-            collection: collection,
-            document: usuarioUid,
-            data: data,
-          )
-          .then((value) => const Success('data-updated'));
+      if (cuidador != null && gestorCasos != null) {
+        return firebaseService
+            .updateDataOnDocument(
+              collection: collection,
+              document: usuarioUid,
+              data: data,
+            )
+            .then((value) => const Success('data-updated'));
+      } else {
+        return firebaseService
+            .updateFieldsOnDocument(
+              collection: collection,
+              document: usuarioUid,
+              data: data,
+            )
+            .then((value) => const Success('data-updated'));
+      }
     } catch (e) {
       debugPrint(e.toString());
       return Future.value(const Error('data-update-failed'));

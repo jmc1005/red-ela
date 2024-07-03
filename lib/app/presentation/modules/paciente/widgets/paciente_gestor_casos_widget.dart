@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../domain/models/gestor_casos/gestor_casos_model.dart';
 import '../../../../domain/models/paciente/paciente_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
+import '../../../../domain/repository/hospital_repo.dart';
 import '../../../../utils/validators/validator_mixin.dart';
 
 import '../../../global/widgets/text_form_widget.dart';
@@ -39,17 +41,15 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
   ) async {
     var paciente = controller.state!.paciente;
 
-    if (paciente == null) {
-      final response =
-          await controller.pacienteController.pacienteRepo.getPaciente();
-      response.when(
-        (success) {
-          paciente = success;
-          controller.paciente = success;
-        },
-        (error) => debugPrint(error),
-      );
-    }
+    final response =
+        await controller.pacienteController.pacienteRepo.getPaciente();
+    response.when(
+      (success) {
+        paciente = success;
+        controller.paciente = success;
+      },
+      (error) => debugPrint(error),
+    );
 
     if (paciente!.gestorCasos != null) {
       final gestorCasos = paciente!.gestorCasos!;
@@ -63,6 +63,7 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
   Widget build(BuildContext context) {
     final controller = widget.usuarioController;
     final language = AppLocalizations.of(context)!;
+    final hospitalRepo = Provider.of<HospitalRepo>(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -88,9 +89,20 @@ class _PacienteGestorCasosWidgetState extends State<PacienteGestorCasosWidget> {
                         .getGestorCasosByUid(success.uid);
 
                     responseGestorCasos.when(
-                      (success) {
+                      (success) async {
                         gestorCasosModel = success;
-                        hospitalController.text = success.hospital ?? '';
+
+                        if (success.hospital != null &&
+                            success.hospital!.isNotEmpty) {
+                          final hospitalResponse = await hospitalRepo
+                              .getHospital(uuid: success.hospital!);
+
+                          hospitalResponse.when(
+                            (success) =>
+                                hospitalController.text = success.hospital,
+                            (error) => debugPrint(error),
+                          );
+                        }
                       },
                       (error) => debugPrint(error),
                     );

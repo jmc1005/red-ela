@@ -28,7 +28,6 @@ abstract class UsuarioRepo {
   });
 
   Future<Result<dynamic, dynamic>> updateUsuario({
-    required String uid,
     required String nombre,
     required String apellido1,
     required String apellido2,

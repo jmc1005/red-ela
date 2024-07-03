@@ -119,7 +119,6 @@ class UsuarioRepoImpl extends UsuarioRepo {
 
   @override
   Future<Result<dynamic, dynamic>> updateUsuario({
-    required String uid,
     required String nombre,
     required String apellido1,
     required String apellido2,
@@ -130,6 +129,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
     required String rol,
   }) async {
     try {
+      final uid = fireAuthService.currentUser()!.uid;
       final nombreEncrypt = await EncryptData.encryptData(nombre);
       final apellido1Encrypt = await EncryptData.encryptData(apellido1);
       final apellido2Encrypt = await EncryptData.encryptData(apellido2);
@@ -148,7 +148,7 @@ class UsuarioRepoImpl extends UsuarioRepo {
         'rol': await EncryptData.encryptData(rol),
       };
 
-      if (uid == '' && currentUser.email == null && password != null) {
+      if (currentUser.email == null && password != null) {
         await linkSignUp(email, password);
         final nuevoUid = fireAuthService.currentUser()!.uid;
 

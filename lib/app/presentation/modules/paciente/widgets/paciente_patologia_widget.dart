@@ -28,7 +28,9 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
 
   void _setPacienteVacio() {
     const paciente = PacienteModel(usuarioUid: '');
-    widget.usuarioController.paciente = paciente;
+    if (widget.usuarioController.state!.paciente == null) {
+      widget.usuarioController.paciente = paciente;
+    }
   }
 
   Future<Result<PacienteModel, dynamic>> _getFuturePaciente() async {
@@ -101,10 +103,9 @@ class _PacientePatologiaWidgetState extends State<PacientePatologiaWidget> {
                 child: DropdownButtonFormField<String>(
                   value: controller.state!.paciente!.inicio,
                   borderRadius: BorderRadius.circular(8),
-                  padding: const EdgeInsets.only(left: 15, right: 5),
                   items: controller.dropdownInicioItems,
                   onChanged: (value) {
-                    if (value != null && value != inicioEnum.value) {
+                    if (value != null) {
                       controller.onChangeValueInicio(value);
                     }
                   },
