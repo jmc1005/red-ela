@@ -11,7 +11,7 @@ Este anexo va orientado a describir y documentar la información necesaria sobre
 
 \section{Estructura de directorios}
 La estructura de nuestro proyecto está orientado en la arquitectura MVVM y será la siguiente;
-\imagen{mvvm-clean-arquitecture}{mvvm}
+\imagenTam{mvvm-clean-arquitecture}{mvvm}{.7}
 
 \begin{itemize}
 	\item \textcolor{darkblue}{\url{/.github}}: carpeta contiene los actions para los despliegues CI/CD en web y android al realizar push sobre la rama \textbf{main}.
@@ -149,7 +149,19 @@ Posteriormente, sobre \textbf{Repository secrets} añadiremos nuestras variables
 
 En este punto vamos a explicar un poco a cerca de los workflows definidos en nuestro proyecto y además crear los secrets que serán necesarios para nuestro proyecto.
 
-Los workflow son acciones que nos van a permitir desplegar en el hosting de firebase nuestra web y generar nuestras apks 
+El workflow nos permite desplegar en el hosting de firebase nuestra web. Para ello vamos a explicar que hace cada parte
+
+1. Instalar la versión de java
+\imagenTam{workflow-java}{Instalar versión java}{.5}
+
+2. Crear nuestro fichero dotenv con los secrets
+\imagen{workflow-dotenv}{Crear fichero dotenv}
+
+3. Compilar y construir la web
+\imagen{workflow-build}{Compilar y generar web}
+
+4. Desplegar en el hosting de firebase
+\imagen{workflow-deploy}{Desplegar en el hosting de Firebase}
 
 \subsubsection{Google Play}
 De momento sólo estamos haciendo despliegues en plan Prueba Interna, para poder desplegar la aplicación para prueba interna necesitamos generar:
@@ -162,6 +174,8 @@ De momento sólo estamos haciendo despliegues en plan Prueba Interna, para poder
 \imagen{google-play-subir-bundle} {Subir bundle}
 \imagen{google-play-detalle-version} {Detalle versión}
 \end{enumerate}
+
+En futuras iteraciones y ante los problemas obtenidos en la versión del gradle ajustaremos el workflow de github para desplegar automáticamente.
 
 \section{Compilación}
 Para poder compilar el proyecto debemos ejecutar estos comandos \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{dart run build\_runner build} y \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{flutter pub get}. El primer comando nos generará el código automático de las clases que están con la anotación @freezed en nuestro proyecto. Estas anotaciones nos permiten generar código automático con pocas líneas de código.

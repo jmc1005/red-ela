@@ -13,9 +13,26 @@ Otras entidades que necesitaremos para nuestra aplicación son:
 \imagen{entidades}{Entidades}
 
 \section{Diseño procedimental}
-En este punto vamos a definir el aspecto más relevante de la aplicación y es la gestión de las citas por parte del gestor de casos. En ella mostramos el diagrama de secuencia con la creación y borrado de una cita donde se notificará a los pacientes.
+En este punto vamos a definir los aspectos más relevantes de la aplicación.
 
-\imagen{diagrama-secuencia-gestor-casos}{Diagrama de secuencia Gestor de casos}
+\subsection{Envío invitación}
+Planteamos la idea de que en esta aplicación los usuarios que se puedan registrar en la aplicación sea a partir de invitaciones que llegarán al correo electrónico. Para poder recibir una invitación se tiene que tener en cuenta lo siguiente:
+\begin{itemize}
+	\item Administrador puede invitar a nuevos administradores o gestores de casos.
+	\item Gestor de casos puede invitar a nuevos gestores de casos o pacientes.
+	\item Paciente puede invitar a que se registre su cuidador personal.
+\end{itemize}
+
+\imagen{diagrama-secuencia-invitación}{Diagrama de secuencia invitar Usuario}
+
+\subsection{Registro usuario invitado}
+Una vez el usuario ha recibido la invitación, este se registrará mediante OTP, que es una contraseña de un solo uso y posteriormente rellenará los datos del registro. Una vez guardado, accederá a la pantalla principal.
+
+\imagenTam{diagrama-secuencia-registro}{Diagrama de secuencia registro usuario}{.8}
+
+\subsection{Crear cita gestor de casos}
+lL gestión de las citas por parte del gestor de casos. En ella mostramos el diagrama de secuencia con la creación y borrado de una cita donde se notificará a los pacientes.
+\imagen{diagrama-secuencia-gestor-casos}{Gestión citas Gestor de casos}
 
 \section{Diseño arquitectónico}
 Al elegir hacer la aplicación con Flutter nos vimos ante la necesidad de realizar una arquitectura limpia y por esa misma razón escogimos usar MVVM (Model-View-ViewModel) estructurando nuestras carpetas de la siguiente forma:
