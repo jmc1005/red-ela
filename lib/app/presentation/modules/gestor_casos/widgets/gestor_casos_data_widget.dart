@@ -19,22 +19,31 @@ class GestorCasosDataWidget extends StatefulWidget with ValidatorMixin {
 class _GestorCasosDataWidgetState extends State<GestorCasosDataWidget> {
   String? hospital;
 
-  GestorCasosModel gestorCasosModel = const GestorCasosModel(
-    usuarioUid: '',
-    hospital: '',
-    pacientes: [],
-  );
+  void _setGestorCasosVacio() {
+    const gestorCasos = GestorCasosModel(
+      usuarioUid: '',
+      hospital: '',
+      pacientes: [],
+    );
+
+    if (widget.usuarioController.state!.gestorCasos == null) {
+      widget.usuarioController.gestorCasos = gestorCasos;
+    }
+  }
 
   Future<Result<GestorCasosModel, dynamic>> _getFutureGestorCasos() async {
-    return widget.usuarioController.gestorCasosController.gestorCasosRepo
-        .getGestorCasosByUid(widget.usuarioController.state!.usuario.uid);
+    final usuarioController = widget.usuarioController;
+    final uid = usuarioController.state!.usuario.uid;
+    final gestorCasosRepo =
+        usuarioController.gestorCasosController.gestorCasosRepo;
+
+    return gestorCasosRepo.getGestorCasosByUid(uid);
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = widget.usuarioController;
     final language = AppLocalizations.of(context)!;
-    controller.gestorCasos = gestorCasosModel;
 
     return FutureBuilder(
         future: _getFutureGestorCasos(),
@@ -46,14 +55,20 @@ class _GestorCasosDataWidgetState extends State<GestorCasosDataWidget> {
 
             data.when(
               (success) {
-                gestorCasosModel = success;
-                controller.onChangeHospital(success.hospital ?? '');
+                if (controller.state!.gestorCasos == null) {
+                  controller.gestorCasos = success;
+                }
+
                 if (success.hospital != null) {
                   uuidHospital = success.hospital;
                 }
               },
               (error) => debugPrint(error),
             );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            _setGestorCasosVacio();
           }
 
           return Container(

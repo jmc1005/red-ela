@@ -31,7 +31,6 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
     final data = {
       'usuario_uid': usuarioUid,
       'hospital': await EncryptData.encryptData(hospital),
-      'pacientes': jsonEncode([]),
     };
 
     try {
@@ -105,7 +104,7 @@ class GestorCasosRepoImpl implements GestorCasosRepo {
   }
 
   Future<Result<GestorCasosModel, dynamic>> _getGestorCasosFirebase(
-      String uid) async {
+      String uid) {
     try {
       return firebaseService
           .getFromDocument(

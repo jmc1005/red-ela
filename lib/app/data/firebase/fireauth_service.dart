@@ -155,7 +155,7 @@ class FireAuthService {
   }) async {
     await firebaseAuth.verifyPhoneNumber(
       phoneNumber: '+34$phoneNumber',
-      timeout: const Duration(seconds: 60),
+      timeout: const Duration(minutes: 30),
       codeSent: (String verificationId, int? resendToken) async {
         Navigator.push(
           context,

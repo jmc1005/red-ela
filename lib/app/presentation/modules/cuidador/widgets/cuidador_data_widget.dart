@@ -20,20 +20,29 @@ class _CuidadorDataWidgetState extends State<CuidadorDataWidget> {
   final relacionFocus = FocusNode();
   final textRelacionController = TextEditingController();
 
-  CuidadorModel cuidadorModel = const CuidadorModel(
-    usuarioUid: '',
-    pacientes: [],
-  );
+  void _setCuidadorVacio() {
+    const cuidadorModel = CuidadorModel(
+      usuarioUid: '',
+      pacientes: [],
+    );
+
+    if (widget.usuarioController.state!.cuidador == null) {
+      widget.usuarioController.cuidador = cuidadorModel;
+    }
+  }
 
   Future<Result<CuidadorModel, dynamic>> _getFutureCuidador() async {
-    return widget.usuarioController.cuidadorController.cuidadorRepo
-        .getCuidadorByUid(widget.usuarioController.state!.usuario.uid);
+    final usuarioController = widget.usuarioController;
+    final uid = usuarioController.state!.usuario.uid;
+    final cuidadorRepo = usuarioController.cuidadorController.cuidadorRepo;
+
+    return cuidadorRepo.getCuidadorByUid(uid);
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = widget.usuarioController;
-    controller.cuidador = cuidadorModel;
+
     final language = AppLocalizations.of(context)!;
 
     return FutureBuilder(
@@ -44,12 +53,19 @@ class _CuidadorDataWidgetState extends State<CuidadorDataWidget> {
 
           data.when(
             (success) {
-              cuidadorModel = success;
+              if (controller.state!.cuidador == null) {
+                controller.cuidador = success;
+              }
+
               textRelacionController.text = success.relacion;
               controller.cuidador = success;
             },
             (error) => debugPrint(error),
           );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          _setCuidadorVacio();
         }
 
         return Container(

@@ -350,18 +350,22 @@ class UsuarioRepoImpl extends UsuarioRepo {
     final verificationId = prefs.verificationId;
     final smsCode = prefs.smsCode;
 
-    final credential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+
+    debugPrint('verificationId $verificationId');
+    debugPrint('smsCode $smsCode');
 
     final phoneCredential = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: smsCode,
     );
 
-    await credential.user!.updatePhoneNumber(phoneCredential);
+    try {
+      await fireAuthService.currentUser()!.updatePhoneNumber(phoneCredential);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future<void> addDeviceToken(String uid) async {
