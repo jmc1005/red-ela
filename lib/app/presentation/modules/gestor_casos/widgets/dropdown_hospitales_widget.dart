@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../../config/color_config.dart';
 import '../../../../domain/models/hospital/hospital_model.dart';
 import '../../../../domain/repository/hospital_repo.dart';
+import '../../../global/widgets/sin_datos_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
 
 class DropdownHospitalesWidget extends StatefulWidget {
@@ -60,7 +61,7 @@ class _DropdownHospitalesWidgetState extends State<DropdownHospitalesWidget> {
                       InputDecoration(labelText: widget.label),
                 ),
               )
-            : const Center(child: CircularProgressIndicator());
+            : const SinDatosWidget();
       },
     );
   }

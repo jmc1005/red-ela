@@ -46,15 +46,15 @@ class _TratamientoDetailViewState extends State<TratamientoDetailView>
         return Scaffold(
           appBar: AppBarWidget(
             asset: 'assets/images/redela_logo.png',
-            backgroundColor: ColorConfig.primary,
+            backgroundColor: Colors.blueGrey[100],
             width: 90,
             leading: IconButton(
               onPressed: () {
-                navigateTo(Routes.tratamientoList, context);
+                navigateTo(Routes.rolList, context);
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: ColorConfig.secondary,
               ),
             ),
           ),

@@ -116,6 +116,7 @@ class RecordatorioWidget extends StatelessWidget {
                   padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Align(
                         child: Text(

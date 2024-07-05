@@ -201,5 +201,6 @@
   "creada": "created",
   "cancelada": "canceled",
   "bulbar": "Bulbar",
-  "espinal": "Spinal"
+  "espinal": "Spinal",
+  "sin_datos": "No data"
 }

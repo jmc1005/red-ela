@@ -41,16 +41,16 @@ La estructura de nuestro proyecto está orientado en la arquitectura MVVM y ser�
 Este manual está pensado para que futuros programadores puedan poner en marcha el proyecto y saber que pasos deben seguir para el correcto funcionamiento.
 
 Cómo primer requisito es instalar Flutter~\cite{flutter}, para ello tendremos que ir a la página oficial de flutter \url{https://docs.flutter.dev/get-started/install} y elegir el sistema donde vamos a realizar la instalación y para que tipo de aplicación queremos desarrollar (en nuestro caso android).
-\imagen{flutter-so}{Plataforma desarrollo}
+\imagenTam{flutter-so}{Plataforma desarrollo}{.7}
 
 Una vez realizada las instalaciones y configuraciones correspondientes, debemos comprobar que todo ha ido correctamente, para ello utilizaremos la siguiente instrucción en el terminal de \textbf{VS Code} \textbf{flutter doctor}
-\imagen{flutter-doctor-command}{Comprobación correcta instalación Flutter}
+\imagenTam{flutter-doctor-command}{Comprobación correcta instalación Flutter}{.7}
 
 \subsection{Visual Studio Code}
 Para ello debemos de tener instalado VS Code, en caso contrario descargar de la página oficial \url{https://code.visualstudio.com/}.
 
 Una vez instalado añadimos la extensión de Flutter
-\imagen{flutter-extension}{Añadir Flutter a Visual Studio Code}
+\imagenTam{flutter-extension}{Añadir Flutter a Visual Studio Code}{.7}
 
 \subsection{Flutter SDK}
 Siguiendo los pasos que indican en la guía de Flutter, nosotros escogimos instalar Flutter SDK desde VS Code, para ello debemos hacer:
@@ -65,7 +65,7 @@ Siguiendo los pasos que indican en la guía de Flutter, nosotros escogimos insta
 	\item Cuando te pregunte que plantilla usar, hay que ignorarlo.
 \end{enumerate}
 
-\imagen{flutter-command-palette}{Paleta de comandos VS Code}
+\imagenTam{flutter-command-palette}{Paleta de comandos VS Code}{.7}
 
 \subsection{Android Studio}
 Para ello si no lo tenemos instalado, tendremos que realizar la instalación de \textbf{Android Studio} desde \url{https://developer.android.com/studio/install#windows} en mi caso lo instalo para Windows. Una vez instalado deberemos instalar el plugin de Flutter para Intellij \url{https://plugins.jetbrains.com/plugin/9212-flutter}
@@ -115,7 +115,7 @@ Antes de generar el fichero, debemos seguir los pasos descritos en el paquete de
 \end{itemize}
 
 Para generar las claves seguras de manera aleatoria utilizaremos la siguiente instrucción \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{secure-random}. Con ella podremos generar claves que nos servirán para encriptar de manera segura los datos tratados por nuestra aplicación.
-\imagen{flutter-encrypt-secure-random}{Encrypt secure random}
+\imagenTam{flutter-encrypt-secure-random}{Encrypt secure random}{.7}
 
 Este fichero lo tenemos que generar dentro de la carpeta \textbf{assets} con el nombre \textbf{dotenv}, ya que está ignorado en las subidas a \textbf{Github}. El fichero contendrá unas claves necesarias para el correcto funcionamiento de la aplicación:
 \begin{itemize}
@@ -130,9 +130,9 @@ Este fichero lo tenemos que generar dentro de la carpeta \textbf{assets} con el 
 Crearemos una cuenta Firebase y agregaremos un proyecto con el nombre \textbf{RedELA}
 \begin{enumerate}
 \item Agregaremos el proyecto 
-\imagen{firebase-agregar-proyecto}{Agregar proyecto}
+\imagenTam{firebase-agregar-proyecto}{Agregar proyecto}{.7}
 \item Introduciremos el nombre del proyecto. Pulsaremos \textbf{continuar}
-\imagen{firebase-nombre-proyecto}{Agregar proyecto}
+\imagenTam{firebase-nombre-proyecto}{Nombre proyecto}{.7}
 \item Deshabilitaremos Google Analytics y pulsaremos \textbf{crear proyecto}
 \end{enumerate}
 
@@ -142,26 +142,26 @@ Una vez creado nuestro proyecto en Firebase, debemos obtener el \textbf{VAPID\_K
 
 \subsubsection{\label{subsec:github}Github}
 Para empezar, necesitamos crear nuestros secrets en Github. Para acceder a \textbf{secrets} debemos a acceder a \textbf{Settings} y luego sobre el menú lateral izquierdo ir a \textbf{Secrets and variables} y pulsaremos sobre actions
-\imagen{github-secrets}{Secrets and variables}
+\imagenTam{github-secrets}{Secrets and variables}{.7}
 
 Posteriormente, sobre \textbf{Repository secrets} añadiremos nuestras variables necesarias para los despliegues mediante los workflow.
-\imagen{github-repository-secrets}{Respository secrets}
+\imagenTam{github-repository-secrets}{Respository secrets}{.7}
 
 En este punto vamos a explicar un poco a cerca de los workflows definidos en nuestro proyecto y además crear los secrets que serán necesarios para nuestro proyecto.
 
 El workflow nos permite desplegar en el hosting de firebase nuestra web. Para ello vamos a explicar que hace cada parte
 
 1. Instalar la versión de java
-\imagenTam{workflow-java}{Instalar versión java}{.5}
+\imagenTam{workflow-java}{Instalar versión java}{.7}
 
 2. Crear nuestro fichero dotenv con los secrets
-\imagen{workflow-dotenv}{Crear fichero dotenv}
+\imagenTam{workflow-dotenv}{Crear fichero dotenv}{.7}
 
 3. Compilar y construir la web
-\imagen{workflow-build}{Compilar y generar web}
+\imagenTam{workflow-build}{Compilar y generar web}{.7}
 
 4. Desplegar en el hosting de firebase
-\imagen{workflow-deploy}{Desplegar en el hosting de Firebase}
+\imagenTam{workflow-deploy}{Desplegar en el hosting de Firebase}{.7}
 
 \subsubsection{Google Play}
 De momento sólo estamos haciendo despliegues en plan Prueba Interna, para poder desplegar la aplicación para prueba interna necesitamos generar:
@@ -169,10 +169,10 @@ De momento sólo estamos haciendo despliegues en plan Prueba Interna, para poder
 	\item Modificar nuestro fichero \textbf{pubspec\.yaml} cambiando la versión por uno más es decir, si tenemos \textbf{version: 1.0.3+3} poner \textbf{version: 1.0.4+4}
 	\item un \textbf{bundle} con el comando \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{flutter build appbundle}, una vez generado el \textbf{bundle} accedemos a nuestra \textbf{consola de google play} \url{https://play.google.com/console/u/0/developers}
 	\item pulsar en \textbf{crear nueva versión}
-\imagen{google-play-nueva-version} {Nueva versión}
+\imagenTam{google-play-nueva-version} {Nueva versión}{.9}
 	\item Subir el bundle generado y actualizar la versión, por ejemplo a 4 (1.0.4)
-\imagen{google-play-subir-bundle} {Subir bundle}
-\imagen{google-play-detalle-version} {Detalle versión}
+\imagenTam{google-play-subir-bundle}{Subir bundle}{.9}
+\imagenTam{google-play-detalle-version}{Detalle versión}{.9}
 \end{enumerate}
 
 En futuras iteraciones y ante los problemas obtenidos en la versión del gradle ajustaremos el workflow de github para desplegar automáticamente.
@@ -184,13 +184,13 @@ Para poder compilar el proyecto debemos ejecutar estos comandos \fboxrule=1pt\fb
 La aplicación se puede ejecutar tanto en la web como en un dispositivo móvil. Para ejecutar las pruebas podemos realizarlas tanto en un dispositivo móvil con Android que tenga API 34 o bien accediendo a la web.
 
 También se pueden hacer pruebas en local desde VSCode \fboxrule=1pt\fboxsep=4pt\fcolorbox{darkblue}{cgoLight}{flutter run -d chrome} si queremos que se ejecute en chrome o bien seleccionando un dispositivo como se muestra en la imagen.
-\imagen{flutter-device}{Seleccionar dispositivo}
+\imagenTam{flutter-device}{Seleccionar dispositivo}{.8}
 
 \section{Pruebas del sistema}
 Se ha generado una clase que testea mediante \textbf{flutter\_test} Firebase que será el gestione los datos que utiliza la aplicación.
 
-Para poder ejecutar los test deberemos pulsar los iconos que serán un play
-\imagen{flutter-test}{Test}
+Para poder ejecutar los test deberemos pulsar los iconos que serán un play que podemos ejecutarlos completamente todos a la vez o ir probando uno a uno.
+\imagenTam{flutter-test}{Test}{.8}
 
-Cuando los tests pasan se verá de la siguiente manera.
-\imagen{flutter-test-ok}{Test OK}
+Cuando se ejecuta uno o varios tests y estos pasan se verá el estado con un check en verde en cambio de error mostrará un icono de error.
+\imagenTam{flutter-test-ok}{Test OK}{.8}

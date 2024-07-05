@@ -6,6 +6,7 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/tratamiento/tratamiento_model.dart';
 
 import '../../../../domain/repository/tratamiento_repo.dart';
+import '../../../global/widgets/sin_datos_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
 
 class DropdownTratamientosWidget extends StatefulWidget {
@@ -63,7 +64,7 @@ class _DropdownTratamientosWidgetState
                       InputDecoration(labelText: widget.label),
                 ),
               )
-            : const Center(child: CircularProgressIndicator());
+            : const SinDatosWidget();
       },
     );
   }

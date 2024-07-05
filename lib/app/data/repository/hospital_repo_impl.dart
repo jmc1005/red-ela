@@ -90,7 +90,7 @@ class HospitalRepoImpl implements HospitalRepo {
       {required String uuid}) async {
     try {
       final usuarios = await FirebaseFirestore.instance
-          .collection('gestores')
+          .collection('gestores_casos')
           .where('hospital', isEqualTo: await EncryptData.encryptData(uuid))
           .get();
 

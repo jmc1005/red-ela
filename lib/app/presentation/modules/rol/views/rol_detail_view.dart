@@ -45,7 +45,7 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
         return Scaffold(
           appBar: AppBarWidget(
             asset: 'assets/images/redela_logo.png',
-            backgroundColor: ColorConfig.primary,
+            backgroundColor: Colors.blueGrey[100],
             width: 90,
             leading: IconButton(
               onPressed: () {
@@ -53,7 +53,7 @@ class _RolDetailViewState extends State<RolDetailView> with ValidatorMixin {
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: ColorConfig.secondary,
               ),
             ),
           ),

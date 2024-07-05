@@ -9,6 +9,7 @@ import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/enums/usuario_tipo.dart';
 import '../../../global/widgets/app_bar_widget.dart';
+import '../../../global/widgets/sin_datos_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
@@ -127,7 +128,7 @@ class _UsuariosViewState extends State<UsuariosView> {
                             },
                             itemCount: snapshot.data!.length,
                           )
-                        : const Center(child: CircularProgressIndicator());
+                        : const SinDatosWidget();
                   },
                 ),
               ),

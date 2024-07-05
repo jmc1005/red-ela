@@ -7,6 +7,7 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/gestor_casos_repo.dart';
 import '../../../../domain/repository/usuario_repo.dart';
+import '../../../global/widgets/sin_datos_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../controllers/cita_controller.dart';
 
@@ -41,7 +42,7 @@ class _DropdownPacientesWidgetState extends State<DropdownPacientesWidget> {
       builder: (_, snapshot) {
         return snapshot.hasData
             ? pacienteWidget(snapshot.data!, language)
-            : const Center(child: CircularProgressIndicator());
+            : const SinDatosWidget();
       },
     );
   }

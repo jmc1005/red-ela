@@ -53,7 +53,7 @@ android {
     defaultConfig {
         applicationId = "es.ubu.tfg2324.ela.red_ela"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
         multiDexEnabled = true

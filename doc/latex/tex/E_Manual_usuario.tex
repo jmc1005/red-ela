@@ -23,36 +23,107 @@ Para empezar esta aplicación consta por un registro por invitación, es decir, 
 \end{itemize}
 
 En la parte superior de la aplicación podremos actualizar y modificar nuestros datos o salir de la aplicación.
-	\imagenTam{redela-appbar}{Acceder a RedELA}{.7}
+	\imagenTam{redela-appbar}{Acceder a RedELA}{.4}
 
 Las pantallas de la aplicación serán:
 \begin{itemize}
-	\item Acceder mediante \textbf{correo electrónico} y \textbf{contraseña}
-	\imagenTam{redela-acceder}{Acceder a RedELA}{.5}
+	\item Acceder mediante \textbf{correo electrónico} y \textbf{contraseña}. Si el usuario y contraseña son correctos accederás a la aplicación. En caso contrario se te mostrará un mensaje de error.
+	\imagenTam{redela-acceder}{Acceder a RedELA}{.3}
 	\item Registro. Para poder registrarse se necesita haber recibido un correo electrónico que permite registrarse inicialmente a partir de una \textbf{contraseña de un sólo uso}.
-	\imagenTam{redela-registro}{Registro en RedELA}{.5}
+	\imagenTam{redela-registro}{Registro en RedELA}{.3}
 	\item Home. En esta pantalla se verán las citas que se tendrán en el día.
-	\imagenTam{redela-home}{Home}{.5}
+	\imagenTam{redela-home}{Home}{.3}
 	\item Citas. En esta parte de la aplicación podremos ver el calendario con las citas, podemos ver las citas en el calendario mensual o en el calendario de listas programadas.
-	\imagenTam{redela-citas}{Citas}{.5}
+	\imagenTam{redela-citas}{Citas}{.3}
 	\item Usuarios asociados. En esta parte veremos los usuarios relacionados. Es decir, si accede un gestor de casos, verá todos los pacientes asignados a él, el en caso de ser un paciente, se verá la información del cuidador principal y del gestor de casos, y en caso de ser un cuidador principal, aparecerá la información del paciente relacionado con él. 
-		\imagenTam{redela-asociados-gestor}{Pacientes asociados gestor de casos}{.5}
-		\imagenTam{redela-asociados-paciente}{Cuidador y gestor de casos asociado a paciente}{.5}
-		\imagenTam{redela-asociados-cuidador}{Paciente asociado a cuidador}{.5}
+		\imagenTam{redela-asociados-gestor}{Pacientes asociados gestor de casos}{.3}
+		\imagenTam{redela-asociados-paciente}{Cuidador y gestor de casos asociado a paciente}{.3}
+		\imagenTam{redela-asociados-cuidador}{Paciente asociado a cuidador}{.3}
 \end{itemize}
+
+\subsection{Acceso}
+Para poder acceder a la aplicación necesitamos haber sido invitados y estar registrados en la aplicación. Una vez registrados para acceder a la aplicación debemos introducir el correo electrónico y la contraseña.
+\imagenTam{redela-acceder}{Acceder a RedELA}{.3}
+\subsection{Registro}
+En la pantalla de registro tendremos que introducir nuestro número de teléfono. El sistema comprobará que estamos invitados a registrarnos.
+\imagenTam{redela-registro}{Registro en RedELA}{.3}
+Una vez introducido el teléfono móvil nos indicará que le introduzcamos la contraseña de un sólo uso para poder registrarnos
+\imagenTam{redela-registro-otp}{Registro con contraseña de un sólo uso}{.3}
+Una vez introducido el código recibido para el registro nos enviará a la ficha del usuario que será distinta según el rol y tendremos que completar los datos.
+\imagenTam{redela-ficha-admin}{Ficha del administrador}{.3}
+\imagenTam{redela-ficha-gestor-casos}{Ficha del gestor de casos}{.3}
+\imagenTam{redela-ficha-paciente}{Ficha del paciente}{.3}
+\imagenTam{redela-ficha-cuidador}{Ficha del cuidador}{.3}
+
+Al guardar nos llegará a la página de home.
+
+
+\subsection{Home}
+En la pantalla home, aparecerán las citas que se van a tener en el día.
+
+\subsection{Citas}
+En esta pantalla se verá en manera de calendario las citas registradas en el sistema. 
+\imagenTam{redela-citas-dia}{Citas día seleccionado}{.3}
+
+El gestor de casos, además, podrá crear nuevas citas para atender a los pacientes con ELA. Los gestores podrán realizar esta acción pulsando sobre el botón que les aparece (+).
+\imagenTam{redela-citas}{Citas}{.3}
+
+Al pulsar sobre una cita creada aparecerá un pop up. Esta se podrá cancelar.
+\imagenTam{redela-cita-seleccionada}{Cita seleccionada}{.3}
+
+\subsection{Usuarios asociados}
+Al acceder a los usuarios asociados y si se es un \textbf{gestor de casos} este podrá enviar invitaciones a otros gestores de casos o pacientes para que puedan registrarse en el sistema. Para realizar esta acción deberá pulsar sobre el botón inferior derecho azul que le aparece en la pantalla. Una vez accionado el botón, aparecerá un pop up para enviar la invitación.
+\imagenTam{redela-invitacion-gestor-casos}{Invitación de gestor de casos}{.3}
 
 \section{Manual del administrador}
 Una vez accedido como admin veremos la pantalla principal donde podrá gestionar la los usuarios, roles, hospitales y tratamientos. Además de poder salir de la aplicación.
-\imagenTam{redela-admin-home}{Home Admin}{0.5}
+\imagenTam{redela-admin-home}{Home Admin}{0.3}
 
 \subsection{Gestión de Usuarios}
 Inicialmente se concibe la aplicación para que un usuario en la \textbf{gestión del usuario} sólo pueda agregar a \textbf{administradores} o \textbf{gestores de casos}, ya que consideramos que la información de los pacientes por protección de datos es un tema que hay que proteger.
 
+Al pulsar sobre algún elemento de la gestión de usuarios nos aparecerá un listado parecido al siguiente. Si el elemento que se ha seleccionado es administradores o gestores de casos aparecerá un botón en el lado inferior derecho donde se podrán invitar a administradores o gestores de casos.
+
+\imagenTam{redela-admin-usuarios-list}{Listado de usuarios}{0.3}
+\imagenTam{redela-admin-invitar}{Invitar admin o gestor de casos}{0.3}
+
+Si se selecciona algún usuario del listado aparecerá la información relevante a ese usuario.
+
 \subsection{Gestión de Roles}
 El usuario podrá ver un listado con los roles creados, además de poder crear o eliminar algún rol.
+\imagenTam{admin-roles}{Listado de roles}{0.3}
+
+\subsubsection{Añadir rol}
+Para añadir un rol, pulsaremos sobre el botón que aparece en el lado inferior derecho. Nos aparece una pantalla nueva.
+
+Una vez rellenados los datos se añadirá un nuevo rol a la aplicación.
+\imagenTam{admin-rol-nuevo}{Añadir rol}{0.3}
+
+\subsubsection{Eliminar rol}
+Sólo se permite eliminar roles que no estén asignados a ningún usuario.
 
 \subsection{Gestión de Hospitales}
 El usuario podrá ver un listado con los hospitales creados, además de poder crear o eliminar algún hospital.
+\imagenTam{admin-hospitales}{Listado de roles}{0.3}
+
+\subsubsection{Añadir hospital}
+Para añadir un hospital, pulsaremos sobre el botón que aparece en el lado inferior derecho. Nos aparece una pantalla nueva.
+
+Una vez rellenados los datos se añadirá un nuevo rol a la aplicación.
+\imagenTam{admin-hospital-nuevo}{Añadir hospital}{0.3}
+
+\subsubsection{Eliminar hospital}
+Sólo se permite eliminar hospitales que no estén asignados a ningún gestor de casos.
 
 \subsection{Gestión de Tratamientos}
 El usuario podrá ver un listado con los tratamientos creados, además de poder crear o eliminar algún tratamiento.
+\imagenTam{admin-tratamientos}{Listado de roles}{0.3}
+
+\subsubsection{Añadir hospital}
+Para añadir un tratamiento, pulsaremos sobre el botón que aparece en el lado inferior derecho. Nos aparece una pantalla nueva.
+
+Una vez rellenados los datos se añadirá un nuevo tratamiento a la aplicación.
+\imagenTam{admin-tratamiento-nuevo}{Añadir tratamietno}{0.3}
+
+\subsubsection{Eliminar hospital}
+Sólo se permite eliminar tratamientos que no estén asignados a ningún gestor de casos.

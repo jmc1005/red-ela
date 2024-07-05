@@ -8,6 +8,7 @@ import '../../../../config/color_config.dart';
 import '../../../../domain/models/tratamiento/tratamiento_model.dart';
 import '../../../../domain/repository/tratamiento_repo.dart';
 import '../../../global/widgets/app_bar_widget.dart';
+import '../../../global/widgets/sin_datos_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../../routes/app_routes.dart';
 import '../../../routes/routes.dart';
@@ -126,7 +127,7 @@ class _TratamientosViewState extends State<TratamientosView> {
                             },
                             itemCount: snapshot.data!.length,
                           )
-                        : const Center(child: CircularProgressIndicator());
+                        : const SinDatosWidget();
                   },
                 ),
               ),

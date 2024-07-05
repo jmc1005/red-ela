@@ -95,7 +95,7 @@ class TratamientoRepoImpl implements TratamientoRepo {
       {required String uuid}) async {
     try {
       final usuarios = await FirebaseFirestore.instance
-          .collection('gestores')
+          .collection('pacientes')
           .where('tratamiento', isEqualTo: await EncryptData.encryptData(uuid))
           .get();
 

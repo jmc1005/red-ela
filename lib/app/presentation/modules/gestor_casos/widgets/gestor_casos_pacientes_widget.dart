@@ -7,6 +7,7 @@ import '../../../../domain/models/gestor_casos/gestor_casos_model.dart';
 import '../../../../domain/models/usuario/usuario_model.dart';
 import '../../../../domain/repository/usuario_repo.dart';
 import '../../../../utils/validators/validator_mixin.dart';
+import '../../../global/widgets/sin_datos_widget.dart';
 import '../../../global/widgets/text_form_widget.dart';
 import '../../user/controllers/usuario_controller.dart';
 import '../../user/widgets/usuario_row_widget.dart';
@@ -88,7 +89,7 @@ class _GestorCasosPacientesWidgetState
                       },
                       itemCount: snapshot.data!.length,
                     )
-                  : const Center(child: CircularProgressIndicator());
+                  : const SinDatosWidget();
             },
           ),
           const SizedBox(
